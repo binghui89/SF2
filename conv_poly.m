@@ -1,7 +1,14 @@
-function [a_convoluted, t_convoluted] = conv_poly(a1, t1, a2, t2)
+function [a_convoluted, t_convoluted] = conv_poly(a1, t1, a2, t2, delta_t)
 % Based on R. J. Polge and R. D. Hays, "Numerical Technique for the 
 % Convolution of Piecewise Polynomial Functions," in IEEE Transactions on 
 % Computers, vol. C-22, no. 11, pp. 970-975, Nov. 1973.
+
+% delta_t1 = mean(diff(t1));
+% delta_t2 = mean(diff(t2));
+% if abs(delta_t1 - delta_t2)/delta_t1 >= 0.01
+%     warning('X grid size and Y grid size differs greather than 1%!');
+% end
+% delta_t = delta_t1;
 
 % Convert both functions from piecewise polynomial functions to the delta
 % function forms
@@ -26,25 +33,43 @@ for i = 1: 3
 end
 
 % Merge similar terms (the same offset and degree)
-d_convoluted_unique = unique(d_convoluted(:, 2:3), 'row');
-d_convoluted_unique = [nan(size(d_convoluted_unique, 1), 1), d_convoluted_unique];
-for i = 1: size(d_convoluted_unique, 1)
+tc1 = t1(1) + t2(1); % The left end of the starting interval of the convoluted distribution
+int_offset = round((d_convoluted(:, 2) - tc1)/delta_t);
+int_degree = round(d_convoluted(:, 3));
+int_offset_degree = [int_offset int_degree];
+int_offset_degree_unique = unique(int_offset_degree, 'row');
+d_convoluted_unique_intoffset = nan(size(int_offset_degree_unique, 1), 3);
+for i = 1: size(d_convoluted_unique_intoffset, 1)
     row_selected = (...
-        d_convoluted(:, 2) == d_convoluted_unique(i, 2) ...
-        & d_convoluted(:, 3) == d_convoluted_unique(i, 3) ...
+        int_offset == int_offset_degree_unique(i, 2-1) ...
+        & int_degree == int_offset_degree_unique(i, 3-1) ...
         );
-    d_convoluted_unique(i, 1) = sum(d_convoluted(row_selected), 1);
+    d_convoluted_unique_intoffset(i, 1) = sum(d_convoluted(row_selected), 1);
+    d_convoluted_unique_intoffset(i, 2:3) = int_offset_degree_unique(i, 1:2);
 end
 
+
+% d_convoluted_unique = unique(int_offset_degree, 'row');
+% % d_convoluted_unique = unique(d_convoluted(:, 2:3), 'row');
+% d_convoluted_unique = [nan(size(d_convoluted_unique, 1), 1), d_convoluted_unique];
+% for i = 1: size(d_convoluted_unique, 1)
+%     row_selected = (...
+%         d_convoluted(:, 2) == d_convoluted_unique(i, 2) ...
+%         & d_convoluted(:, 3) == d_convoluted_unique(i, 3) ...
+%         );
+%     d_convoluted_unique(i, 1) = sum(d_convoluted(row_selected), 1);
+% end
+
 % Remove terms with zero coefficents
-d_convoluted_reduced = d_convoluted_unique;
-d_convoluted_reduced(d_convoluted_reduced(:, 1)==0, :)=[];
+d_convoluted_reduced_intoffset = d_convoluted_unique_intoffset;
+d_convoluted_reduced_intoffset(d_convoluted_reduced_intoffset(:, 1)==0, :)=[];
 
 % Convert the resulting triplet form to the delta function forms
-[c_convoluted, t_convoluted] = from_triplet_form(d_convoluted_reduced);
+[c_convoluted, t_convoluted_intoffset] = from_triplet_form(d_convoluted_reduced_intoffset);
 
 % Conver the resulting delta function forms into the piecewise polynomial
 % function forms
+t_convoluted = t_convoluted_intoffset.*delta_t + tc1;
 a_convoluted = a_by_c_and_t(c_convoluted, t_convoluted);
 end
 

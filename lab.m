@@ -1,4 +1,5 @@
 %% The Irwin–Hall distribution when n = 1 to 5
+bin_width = 1;
 a0 = [1; 0;]; % Size: I by M, I is number of segments + 1 (last segment is always 0), M is the highest order + 1 (lowest order is always 0)
 t0 = [0; 1;]; % Size: I by 1
 a = a0;
@@ -7,7 +8,7 @@ t = t0;
 fig = figure();
 for i = 1: 5
     plot_conv_poly(fig, a, t, rand(1,3));
-    [a_convoluted, t_convoluted] = conv_poly(a0, t0, a, t);
+    [a_convoluted, t_convoluted] = conv_poly(a0, t0, a, t, bin_width);
     a = a_convoluted; t = t_convoluted;
 end
 %% The paper example
@@ -101,7 +102,7 @@ for i = 1: length(btm)
 end
 suptitle('Behind-the-meter');
 
-%% The CAISO data, demonstration of convolution
+%% The CAISO data, demonstration of convolution: just two components
 all_years = [2016; 2017; 2018; 2019];
 bin_width = 0.050; % GW
 year_index = 1;
@@ -131,7 +132,7 @@ for year_index = 1: 4
     subplot(2, 2, year_index);
     nl = load{year_index} - wind{year_index};
     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:));
+    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:), bin_width);
     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
     plot(nl_bincenter, nl_pdf, 'r');
     title(all_years(year_index));
@@ -146,7 +147,7 @@ for year_index = 1: 4
         nl = load{year_index} - stpv2019;
     end
     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [pv_pdf(:); 0], pv_edges(:));
+    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [pv_pdf(:); 0], pv_edges(:), bin_width);
     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
     plot(nl_bincenter, nl_pdf, 'r');
     title(all_years(year_index));
@@ -158,7 +159,7 @@ for year_index = 1: 4
         subplot(2, 2, year_index);
         nl = load{year_index} - st{year_index};
         [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-        [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [st_pdf(:); 0], st_edges(:));
+        [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [st_pdf(:); 0], st_edges(:), bin_width);
         plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
         plot(nl_bincenter, nl_pdf, 'r');
         title(all_years(year_index));
@@ -170,7 +171,7 @@ for year_index = 1: 4
     subplot(2, 2, year_index);
     nl = load{year_index} - btm{year_index};
     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [btm_pdf(:); 0], btm_edges(:));
+    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [btm_pdf(:); 0], btm_edges(:), bin_width);
     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
     plot(nl_bincenter, nl_pdf, 'r');
     title(all_years(year_index));
@@ -181,6 +182,12 @@ for i = 1: length(all_figures)
     figure(all_figures(i));
     suptitle(all_titles{i});
 end
+
+
+%% The CAISO data, demonstration of convolution: net load
+all_years = [2016; 2017; 2018; 2019];
+bin_width = 0.050; % GW
+year_index = 1;
 
 % Net load
 fig = figure();
@@ -205,13 +212,13 @@ for year_index = 1: 4
         nl = load{year_index} - wind{year_index} - btm{year_index} - stpv2019;
     end
     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:));
-    [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [btm_pdf(:); 0], btm_edges(:));
+    [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:), bin_width);
+    [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [btm_pdf(:); 0], btm_edges(:), bin_width);
     if year_index <= 2
-        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [st_pdf(:); 0], st_edges(:));
-        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [pv_pdf(:); 0], pv_edges(:));
+        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [st_pdf(:); 0], st_edges(:), bin_width);
+        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [pv_pdf(:); 0], pv_edges(:), bin_width);
     else
-        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [pv_pdf(:); 0], pv_edges(:));
+        [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [pv_pdf(:); 0], pv_edges(:), bin_width);
     end
     
     ax = subplot(2, 2, year_index);
@@ -224,12 +231,13 @@ suptitle('Net load');
 
 %% "Convolution" with correlation using triangular distributions
 copula_discrete = [0.3 1; 1 1.7;];
+bin_width = 1;
 
 a = [0 1; 2 -1; 0 0;];
 t = [0; 1; 2;];
 
 % No correlation
-[a_convoluted, t_convoluted] = conv_poly(a, t, a, t);
+[a_convoluted, t_convoluted] = conv_poly(a, t, a, t, bin_width);
 fig = figure();
 plot_conv_poly(fig, a_convoluted, t_convoluted, 'r');
 
@@ -252,7 +260,7 @@ plot_conv_poly(fig, a_convoluted, t_convoluted, 'r');
 %     a_convcorr(k, :) = a_tmp(t_tmp==t_convcorr(k), :);
 %     t_convcorr(k+1) = tc_1+k*deltat;
 % end
-[a_convcorr, t_convcorr] = conv_poly_corr(a, t, a, t, copula_discrete);
+[a_convcorr, t_convcorr] = conv_poly_corr(a, t, a, t, copula_discrete, bin_width);
 % fig = figure();
 plot_conv_poly(fig, a_convcorr, t_convcorr, 'k');
 
@@ -289,50 +297,56 @@ for year_index = 1: 4
 %     [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:));
     Ix = size(w_edges(:), 1);
     Iy = size(l_edges(:), 1);
-    [a_convoluted, t_convoluted] = conv_poly_corr([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:), ones(Ix-1, Iy-1)); % Discretized copula does not inclue when CDF > 1.
+    [a_convoluted, t_convoluted] = conv_poly_corr([l_pdf(:); 0], l_edges(:), [w_pdf(:); 0], w_edges(:), ones(Ix-1, Iy-1), bin_width); % Discretized copula does not inclue when CDF > 1.
     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
     plot(nl_bincenter, nl_pdf, 'r');
     title(all_years(year_index));
     xlabel('GW');
 
-%     % Just load and solar PV
-%     fig = figure(all_figures(2));
-%     subplot(2, 2, year_index);
-%     if year_index <= 3
-%         nl = load{year_index} - pv{year_index};
-%     else
-%         nl = load{year_index} - stpv2019;
-%     end
-%     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-%     [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [pv_pdf(:); 0], pv_edges(:));
-%     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
-%     plot(nl_bincenter, nl_pdf, 'r');
-%     title(all_years(year_index));
-%     xlabel('GW');
-% 
-%     % Just load and solar thermal
-%     fig = figure(all_figures(3));
-%     if year_index <= 2
-%         subplot(2, 2, year_index);
-%         nl = load{year_index} - st{year_index};
-%         [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-%         [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [st_pdf(:); 0], st_edges(:));
-%         plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
-%         plot(nl_bincenter, nl_pdf, 'r');
-%         title(all_years(year_index));
-%         xlabel('GW');
-%     end
-% 
-%     % Just load and BTM data
-%     fig = figure(all_figures(4));
-%     subplot(2, 2, year_index);
-%     nl = load{year_index} - btm{year_index};
-%     [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
-%     [a_convoluted, t_convoluted] = conv_poly([l_pdf(:); 0], l_edges(:), [btm_pdf(:); 0], btm_edges(:));
-%     plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
-%     plot(nl_bincenter, nl_pdf, 'r');
-%     title(all_years(year_index));
-%     xlabel('GW');
+    % Just load and solar PV
+    fig = figure(all_figures(2));
+    subplot(2, 2, year_index);
+    if year_index <= 3
+        nl = load{year_index} - pv{year_index};
+    else
+        nl = load{year_index} - stpv2019;
+    end
+    [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
+    Ix = size(pv_edges(:), 1);
+    Iy = size(l_edges(:), 1);
+    [a_convoluted, t_convoluted] = conv_poly_corr([l_pdf(:); 0], l_edges(:), [pv_pdf(:); 0], pv_edges(:), ones(Ix-1, Iy-1), bin_width);
+    plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
+    plot(nl_bincenter, nl_pdf, 'r');
+    title(all_years(year_index));
+    xlabel('GW');
+
+    % Just load and solar thermal
+    fig = figure(all_figures(3));
+    if year_index <= 2
+        subplot(2, 2, year_index);
+        nl = load{year_index} - st{year_index};
+        [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
+        Ix = size(st_edges(:), 1);
+        Iy = size(l_edges(:), 1);
+        [a_convoluted, t_convoluted] = conv_poly_corr([l_pdf(:); 0], l_edges(:), [st_pdf(:); 0], st_edges(:), ones(Ix-1, Iy-1), bin_width);
+        plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
+        plot(nl_bincenter, nl_pdf, 'r');
+        title(all_years(year_index));
+        xlabel('GW');
+    end
+
+    % Just load and BTM data
+    fig = figure(all_figures(4));
+    subplot(2, 2, year_index);
+    nl = load{year_index} - btm{year_index};
+    [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl./1E3, bin_width);
+    Ix = size(btm_edges(:), 1);
+    Iy = size(l_edges(:), 1);
+    [a_convoluted, t_convoluted] = conv_poly_corr([l_pdf(:); 0], l_edges(:), [btm_pdf(:); 0], btm_edges(:), ones(Ix-1, Iy-1), bin_width);
+    plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
+    plot(nl_bincenter, nl_pdf, 'r');
+    title(all_years(year_index));
+    xlabel('GW');
 end
 
 for i = 1: length(all_figures)
