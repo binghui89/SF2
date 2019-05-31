@@ -353,3 +353,76 @@ for i = 1: length(all_figures)
     figure(all_figures(i));
     suptitle(all_titles{i});
 end
+
+%% Explore copula
+all_years = [2016; 2017; 2018; 2019];
+bin_width = 50; % MW
+
+all_figures = nan(length(all_years), 1);
+all_titles = {'Load - wind', 'Load - solar PV/solar', 'Load - solar thermal', 'Load - BTM'};
+for i = 1: 4 % We have 4 components: PV, thermal, wind, and BTM
+    all_figures(i) = figure();
+end
+
+for year_index = 1: 4
+
+    % gr_ indicates grid, ts indicates time series.    
+    fig = figure(all_figures(2));
+    subplot(2, 2, year_index);
+
+    % Preapare data
+    ts_load = load{year_index};
+    if year_index == 4
+        ts_pv = -stpv2019;
+    else
+        ts_pv = -pv{year_index};
+    end
+    nl = ts_load + ts_pv; % Actual net load
+    
+    % Calculate pdf
+    [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl, bin_width);
+    [gr_pdf_l,  gr_bincenter_l,  gr_edges_l] = return_pdf(ts_load, bin_width);
+    [gr_pdf_pv, gr_bincenter_pv, gr_edges_pv] = return_pdf(ts_pv, bin_width);
+
+    % Find copula
+    gr_cdf_pv = [0 cumsum(gr_pdf_pv.*bin_width)];
+    gr_cdf_pv(end) = 1;
+    
+    gr_cdf_l = [0 cumsum(gr_pdf_l.*bin_width)];
+    gr_cdf_l(end) = 1;
+
+    ts_cdf_pv = interp1(gr_edges_pv, gr_cdf_pv, ts_pv);
+    ts_cdf_l  = interp1(gr_edges_l,  gr_cdf_l,  ts_load);
+    
+    i_valid = (ts_cdf_l<1) & (ts_cdf_l>0) & (ts_cdf_pv<1) & (ts_cdf_l>0);
+    rhohat = copulafit('Gaussian', [ts_cdf_l(i_valid) ts_cdf_pv(i_valid)]);
+        
+    Ix = size(gr_cdf_pv(:), 1);
+    Iy = size(gr_cdf_l(:), 1);
+    
+    [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_pv, gr_cdf_l);
+    copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
+    copula_cdf = reshape(copula_cdf, Iy, Ix);
+    
+
+    mean_copula_pdf = nan(Iy-1, Ix-1);
+    for i = 1: Iy-1
+        for j = 1: Ix-1
+            grid_area = (gr_cdf_l(i+1) - gr_cdf_l(i))*(gr_cdf_pv(j+1) - gr_cdf_pv(j)); % Note grid area is not homogeneous!
+            mean_copula_pdf(i,j) = (copula_cdf(i+1, j+1) + copula_cdf(i, j) - copula_cdf(i+1, j) - copula_cdf(i, j+1))/grid_area;
+        end
+    end
+    
+    [a_convcorr, t_convcorr] = conv_poly_corr([gr_pdf_pv(:); 0], gr_edges_pv(:), [gr_pdf_l(:); 0], gr_edges_l(:), mean_copula_pdf, bin_width);
+    [a_conv, t_conv] = conv_poly([gr_pdf_pv(:); 0], gr_edges_pv(:), [gr_pdf_l(:); 0], gr_edges_l(:), bin_width);
+%     plot_conv_poly(fig, a_conv, t_conv, 'b');
+    plot_conv_poly(fig, a_convcorr, t_convcorr, 'b');
+    plot(nl_bincenter, nl_pdf, 'r');
+    title(all_years(year_index));
+    xlabel('MW');
+end
+
+for i = 1: length(all_figures)
+    figure(all_figures(i));
+    suptitle(all_titles{i});
+end
