@@ -1,4 +1,33 @@
 function [a_convoluted, t_convoluted] = conv_poly(a1, t1, a2, t2, delta_t)
+% Piecewise polynomial convolution
+% USE: [a_convoluted, t_convoluted] = CONV_POLY(a1, t1, a2, t2, delta_t)
+%
+% INPUT:
+% a1, a2: 2-dim array of coefficients of piecewise polynomial functions. 
+% Each row includes a segment, and the coefficients are sorted by degree 
+% in an ascending order, starting from 0, i.e., constant terms, to the 
+% highest degree term (M - 1).
+% Size: I by M, I is number of segments + 1 (last segment is always 0), 
+% M is the highest order + 1 (lowest order is always 0).
+%
+% t1, t2: column vectors of starting points of all segments.
+% Size: I by 1, the first element represents the starting point of the
+% first non-zero segment (the first segment is always 0), and the last
+% element represents the starting point of the last segment (always 0), or
+% the ending point of the last non-zero segment.
+%
+% delta_t: segment size of both piecewise polynomial functions, i.e.,
+% difference of any two adjacent elements in t1 and t2. 
+% Size: Scaler.
+% 
+% OUTPUT:
+% a_convoluted: 2-dim array of coefficients of the convoluted piecewise
+% polynomial function in the same format as a1 and a2.
+%
+% t_convoluted: column vector of starting points of all segments of the
+% convoluted piecewise polynomial function.
+%
+% Reference:
 % Based on R. J. Polge and R. D. Hays, "Numerical Technique for the 
 % Convolution of Piecewise Polynomial Functions," in IEEE Transactions on 
 % Computers, vol. C-22, no. 11, pp. 970-975, Nov. 1973.

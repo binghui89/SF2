@@ -1,4 +1,40 @@
 function [a_convcorr, t_convcorr] = conv_poly_corr(a1, t1, a2, t2, copula_discrete, delta_t)
+% Piecewise polynomial convolution with correlation
+% USE: [a_convoluted, t_convoluted] = CONV_POLY_CORR(a1, t1, a2, t2, copula_discrete, delta_t)
+%
+% INPUT:
+% a1, a2: 2-dim array of coefficients of piecewise polynomial functions. 
+% Each row includes a segment, and the coefficients are sorted by degree 
+% in an ascending order, starting from 0, i.e., constant terms, to the 
+% highest degree term (M - 1).
+% Size: I by M, I is number of segments + 1 (last segment is always 0), 
+% M is the highest order + 1 (lowest order is always 0).
+%
+% t1, t2: column vectors of starting points of all segments.
+% Size: I by 1, the first element represents the starting point of the
+% first non-zero segment (the first segment is always 0), and the last
+% element represents the starting point of the last segment (always 0), or
+% the ending point of the last non-zero segment.
+%
+% copula_discrete: 2-dim array of average copula PDF over the discretized
+% grid by t1 and t2.
+% Size: (I2 - 1) by (I1 - 1). Because a1, t1 is the x direction function,
+% which is row-wise and the 2nd dimension, and a2, t2 is the y direction
+% function, which is column-wise and the 1st dimension. I1 and I2 are
+% number of all points, so the number of segments are (I1 - 1) and (I2 -
+% 1), respectively.
+% 
+% delta_t: segment size of both piecewise polynomial functions, i.e.,
+% difference of any two adjacent elements in t1 and t2. 
+% Size: Scaler.
+% 
+% OUTPUT:
+% a_convoluted: 2-dim array of coefficients of the convoluted piecewise
+% polynomial function in the same format as a1 and a2.
+%
+% t_convoluted: column vector of starting points of all segments of the
+% convoluted piecewise polynomial function.
+
 % copula_discrete's x direction corresponds to a1 and t1, y direction 
 % corresponds to a2 and t2
 
