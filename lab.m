@@ -1,4 +1,4 @@
-%% The Irwin–Hall distribution when n = 1 to 5
+%% The Irwinï¿½Hall distribution when n = 1 to 5
 bin_width = 1;
 a0 = [1; 0;]; % Size: I by M, I is number of segments + 1 (last segment is always 0), M is the highest order + 1 (lowest order is always 0)
 t0 = [0; 1;]; % Size: I by 1
@@ -253,7 +253,7 @@ plot_conv_poly(fig, a_convoluted, t_convoluted, 'r');
 % a_convcorr(end, :) = 0;
 % 
 % for k = 1: K
-%     [cx, cy] = c_vector(copula_discrete, k);
+%     [cx, cy] = copula_decompose(copula_discrete, k);
 %     ax = repmat([cx; 0], 1, size(a, 2)).*a;
 %     ay = repmat([cy; 0], 1, size(a, 2)).*a;
 %     [a_tmp, t_tmp] = conv_poly(ax, t, ay, t);

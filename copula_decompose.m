@@ -1,7 +1,7 @@
-function [c1, c2] = c_vector(copula_discrete, k)
+function [c1, c2] = copula_decompose(copula_discrete, k)
 % Construct vector multiplier for piecewise convolution. The returned c
 % vectors are used in the convolution over interval 
-% (x^c_1 + (k-1) ?x, x^c_1 + k ?x)
+% (x^c_1 + (k-1) \delta x, x^c_1 + k \delta x)
 % Input:
 % copula_discrete is the discretized copula, size: n x m (m >= n). 1 <= k <= (m + n).
 % Note m is length of the first dimension (horizontal axis), and n is 
