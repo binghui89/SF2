@@ -264,7 +264,7 @@ plot_conv_poly(fig, a_convoluted, t_convoluted, 'r');
 % fig = figure();
 plot_conv_poly(fig, a_convcorr, t_convcorr, 'k');
 
-%% "Convolution" with correlation using CAISO's flexibility assessment dataset
+%% Convolution without correlation, but with the conv_poly_corr function, using CAISO's flexibility assessment dataset
 all_years = [2016; 2017; 2018; 2019];
 bin_width = 0.050; % GW
 year_index = 1;
@@ -354,75 +354,186 @@ for i = 1: length(all_figures)
     suptitle(all_titles{i});
 end
 
-%% Explore copula
+%% Convolution with correlation, using CAISO's flexibility assessment dataset
 all_years = [2016; 2017; 2018; 2019];
 bin_width = 50; % MW
+flag_subplot = 0; % 1 means panel graph
 
 all_figures = nan(length(all_years), 1);
 all_titles = {'Load - wind', 'Load - solar PV/solar', 'Load - solar thermal', 'Load - BTM'};
-for i = 1: 4 % We have 4 components: PV, thermal, wind, and BTM
-    all_figures(i) = figure();
-end
+% for i = 1: 4 % We have 4 components: PV, thermal, wind, and BTM
+%     all_figures(i) = figure();
+% end
 
-for year_index = 1: 4
-
-    % gr_ indicates grid, ts indicates time series.    
-    fig = figure(all_figures(2));
-    subplot(2, 2, year_index);
-
-    % Preapare data
-    ts_load = load{year_index};
-    if year_index == 4
-        ts_pv = -stpv2019;
-    else
-        ts_pv = -pv{year_index};
+for i = 2
+    if flag_subplot
+        fig = figure(i);
     end
-    nl = ts_load + ts_pv; % Actual net load
-    
-    % Calculate pdf
-    [nl_pdf, nl_bincenter, nl_edges] = return_pdf(nl, bin_width);
-    [gr_pdf_l,  gr_bincenter_l,  gr_edges_l] = return_pdf(ts_load, bin_width);
-    [gr_pdf_pv, gr_bincenter_pv, gr_edges_pv] = return_pdf(ts_pv, bin_width);
-
-    % Find copula
-    gr_cdf_pv = [0 cumsum(gr_pdf_pv.*bin_width)];
-    gr_cdf_pv(end) = 1;
-    
-    gr_cdf_l = [0 cumsum(gr_pdf_l.*bin_width)];
-    gr_cdf_l(end) = 1;
-
-    ts_cdf_pv = interp1(gr_edges_pv, gr_cdf_pv, ts_pv);
-    ts_cdf_l  = interp1(gr_edges_l,  gr_cdf_l,  ts_load);
-    
-    i_valid = (ts_cdf_l<1) & (ts_cdf_l>0) & (ts_cdf_pv<1) & (ts_cdf_l>0);
-    rhohat = copulafit('Gaussian', [ts_cdf_l(i_valid) ts_cdf_pv(i_valid)]);
-        
-    Ix = size(gr_cdf_pv(:), 1);
-    Iy = size(gr_cdf_l(:), 1);
-    
-    [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_pv, gr_cdf_l);
-    copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
-    copula_cdf = reshape(copula_cdf, Iy, Ix);
-    
-
-    mean_copula_pdf = nan(Iy-1, Ix-1);
-    for i = 1: Iy-1
-        for j = 1: Ix-1
-            grid_area = (gr_cdf_l(i+1) - gr_cdf_l(i))*(gr_cdf_pv(j+1) - gr_cdf_pv(j)); % Note grid area is not homogeneous!
-            mean_copula_pdf(i,j) = (copula_cdf(i+1, j+1) + copula_cdf(i, j) - copula_cdf(i+1, j) - copula_cdf(i, j+1))/grid_area;
+    for year_index = 2
+        % Select component 1 (x axis component) based on i
+        switch i
+            case 1 % Wind
+                ts_1 = -wind{year_index};
+            case 2 % Solar PV
+                if year_index == 4
+                    ts_1 = -stpv2019;
+                else
+                    ts_1 = -pv{year_index};
+                end
+            case 3 % Solar thermal
+                if year_index > 2
+                    continue;
+                else
+                    ts_1 = -st{year_index};
+                end
+            case 4 % BTM
+                ts_1 = -btm{year_index};
         end
+        ts_2 = load{year_index}; % Y axis component
+        ts_3 = ts_2 + ts_1; % Actual net load
+
+        % Calculate pdf
+        [gr_pdf_3, gr_bincenter_3, gr_edges_3] = return_pdf(ts_3, bin_width);
+        [gr_pdf_2, gr_bincenter_2, gr_edges_2] = return_pdf(ts_2, bin_width);
+        [gr_pdf_1, gr_bincenter_1, gr_edges_1] = return_pdf(ts_1, bin_width);
+
+        % Find copula
+        gr_cdf_1 = [0 cumsum(gr_pdf_1.*bin_width)];
+        gr_cdf_1(end) = 1;
+
+        gr_cdf_2 = [0 cumsum(gr_pdf_2.*bin_width)];
+        gr_cdf_2(end) = 1;
+
+        ts_cdf_1 = interp1(gr_edges_1, gr_cdf_1, ts_1);
+        ts_cdf_2  = interp1(gr_edges_2,  gr_cdf_2,  ts_2);
+
+        i_valid = (ts_cdf_2<1) & (ts_cdf_2>0) & (ts_cdf_1<1) & (ts_cdf_2>0);
+        rhohat = copulafit('Gaussian', [ts_cdf_2(i_valid) ts_cdf_1(i_valid)]);
+
+        Ix = size(gr_cdf_1(:), 1);
+        Iy = size(gr_cdf_2(:), 1);
+
+        [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_1, gr_cdf_2);
+        copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
+        copula_cdf = reshape(copula_cdf, Iy, Ix);
+
+
+        mean_copula_pdf = nan(Iy-1, Ix-1);
+        for ii = 1: Iy-1
+            for jj = 1: Ix-1
+                grid_area = (gr_cdf_2(ii+1) - gr_cdf_2(ii))*(gr_cdf_1(jj+1) - gr_cdf_1(jj)); % Note grid area is not homogeneous!
+                mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
+            end
+        end
+
+        [a_convcorr, t_convcorr] = conv_poly_corr([gr_pdf_1(:); 0], gr_edges_1(:), [gr_pdf_2(:); 0], gr_edges_2(:), mean_copula_pdf, bin_width);
+        [a_conv, t_conv] = conv_poly([gr_pdf_1(:); 0], gr_edges_1(:), [gr_pdf_2(:); 0], gr_edges_2(:), bin_width);
+        
+        if flag_subplot
+            subplot(2, 2, year_index);
+        else
+            fig = figure();
+        end
+        plot_conv_poly(fig, a_conv, t_conv, 'b');
+        plot_conv_poly(fig, a_convcorr, t_convcorr, 'g');
+        plot(gr_bincenter_3, gr_pdf_3, 'r');
+        title(all_years(year_index));
+        xlabel('MW');
+        
     end
-    
-    [a_convcorr, t_convcorr] = conv_poly_corr([gr_pdf_pv(:); 0], gr_edges_pv(:), [gr_pdf_l(:); 0], gr_edges_l(:), mean_copula_pdf, bin_width);
-    [a_conv, t_conv] = conv_poly([gr_pdf_pv(:); 0], gr_edges_pv(:), [gr_pdf_l(:); 0], gr_edges_l(:), bin_width);
-%     plot_conv_poly(fig, a_conv, t_conv, 'b');
-    plot_conv_poly(fig, a_convcorr, t_convcorr, 'b');
-    plot(nl_bincenter, nl_pdf, 'r');
-    title(all_years(year_index));
-    xlabel('MW');
+    if flag_subplot
+        figure(i);
+        suptitle(all_titles{i});
+    end
 end
 
-for i = 1: length(all_figures)
-    figure(all_figures(i));
-    suptitle(all_titles{i});
+%% Net load convolution with correlation, using CAISO's flexibility assessment dataset
+all_years = [2016; 2017; 2018; 2019];
+bin_width = 50; % GW
+year_index = 1;
+
+
+
+for year_index = 1:4
+    fig = figure();
+%     ts = array; % Place holder
+    switch year_index
+        case 1 % 2016
+            ts = [load{year_index}, -wind{year_index}, -st{year_index}, -btm{year_index}, -pv{year_index}];
+        case 2 % 2017
+            ts = [load{year_index}, -wind{year_index}, -st{year_index}, -btm{year_index}, -pv{year_index}];
+        case 3 % 2018
+            ts = [load{year_index}, -wind{year_index}, -btm{year_index}, -pv{year_index}];
+        case 4 % 2019
+            ts = [load{year_index}, -wind{year_index}, -btm{year_index}, -stpv2019];
+    end
+    
+    for i = 2: size(ts, 2)
+        ts_1 = sum(ts(:, 1:i-1), 2);
+        ts_2 = ts(:, i);
+        ts_3 = ts_2 + ts_1; % Actual net load
+
+        % Calculate pdf
+        [gr_pdf_3, gr_bincenter_3, gr_edges_3] = return_pdf(ts_3, bin_width);
+        [gr_pdf_2, gr_bincenter_2, gr_edges_2] = return_pdf(ts_2, bin_width);
+        [gr_pdf_1, gr_bincenter_1, gr_edges_1] = return_pdf(ts_1, bin_width);
+
+        % Find copula
+        gr_cdf_1 = [0 cumsum(gr_pdf_1.*bin_width)];
+        gr_cdf_1(end) = 1;
+
+        gr_cdf_2 = [0 cumsum(gr_pdf_2.*bin_width)];
+        gr_cdf_2(end) = 1;
+
+        ts_cdf_1 = interp1(gr_edges_1, gr_cdf_1, ts_1);
+        ts_cdf_2  = interp1(gr_edges_2,  gr_cdf_2,  ts_2);
+
+        i_valid = (ts_cdf_2<1) & (ts_cdf_2>0) & (ts_cdf_1<1) & (ts_cdf_1>0);
+        rhohat = copulafit('Gaussian', [ts_cdf_2(i_valid) ts_cdf_1(i_valid)]);
+        
+        % Determine convoluted functions
+        if i == 2
+            a_prev = [gr_pdf_1(:); 0];
+            t_prev = gr_edges_1(:);
+            a_prev_corr = a_prev;
+            t_prev_corr = t_prev;
+            
+            gr_cdf_forconv_1 = gr_cdf_1;
+            gr_cdf_forconv_2 = gr_cdf_2;
+        else
+            a_prev = a_conv;
+            t_prev = t_conv;
+            a_prev_corr = a_convcorr;
+            t_prev_corr = t_convcorr;
+            
+            gr_cdf_forconv_1 = cdf_poly(a_prev_corr, t_prev_corr);
+            gr_cdf_forconv_2 = gr_cdf_2;
+        end
+        
+        
+        % Calculate discretized copula pdf
+        Ix = size(gr_cdf_forconv_1(:), 1);
+        Iy = size(gr_cdf_forconv_2(:), 1);
+
+        [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_forconv_1, gr_cdf_forconv_2);
+        copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
+        copula_cdf = reshape(copula_cdf, Iy, Ix);
+
+
+        mean_copula_pdf = nan(Iy-1, Ix-1);
+        for ii = 1: Iy-1
+            for jj = 1: Ix-1
+                grid_area = (gr_cdf_forconv_2(ii+1) - gr_cdf_forconv_2(ii))*(gr_cdf_forconv_1(jj+1) - gr_cdf_forconv_1(jj)); % Note grid area is not homogeneous!
+                mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
+            end
+        end 
+        
+        [a_convcorr, t_convcorr] = conv_poly_corr(a_prev_corr, t_prev_corr, [gr_pdf_2(:); 0], gr_edges_2(:), mean_copula_pdf, bin_width);
+        [a_conv, t_conv] = conv_poly(a_prev, t_prev, [gr_pdf_2(:); 0], gr_edges_2(:), bin_width);
+    end
+    plot_conv_poly(fig, a_conv, t_conv, 'b');
+    plot_conv_poly(fig, a_convcorr, t_convcorr, 'g');
+    plot(gr_bincenter_3, gr_pdf_3, 'r');
+    title(all_years(year_index));
+    xlabel('GW');
 end
