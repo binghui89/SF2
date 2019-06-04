@@ -213,6 +213,26 @@ def read_paris():
 ###########################################################
 # IBM paris data starts here.
 
+def site_name(lat, lon):
+    coord_caiso = {
+        "CA_Topaz": [35.38, -120.18],
+        "RSAC1":    [38.47, -122.71],
+        "RLKC1":    [40.25, -123.31],
+        "SBVC1":    [34.45, -119.70],
+        "KNNC1":    [40.71, -123.92],
+        "MIAC1":    [37.41, -119.74],
+        "MNCC1":    [34.31, -117.50],
+        "STFC1":    [34.12, -117.94],
+        "DEMC1":    [35.53, -118.63],
+        "COWC1":    [39.12, -123.07],
+    }
+
+    df_caiso = pd.DataFrame(coord_caiso).T
+    df_caiso.columns = ['lat', 'lon']
+
+    site = df_caiso.loc[(df_caiso['lat']==lat) & (df_caiso['lon']==lon), :].index[0]
+    return site
+
 def read_paris1():
     os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM')
     df_results = pd.DataFrame()
@@ -427,7 +447,8 @@ def process_paris(write_flag=False):
             df_results.loc[:, l] = df_tmp['value']
         ls_df_results.append(df_results)
 
-        csvname = '_'.join(['IBM_processed', str(lat), str(lon)]) + '.csv'
+        s = site_name(lat, lon)
+        csvname = '_'.join(['IBM_processed', s]) + '.csv'
         col_to_write = [
             'Year', 
             'Month', 
@@ -518,6 +539,63 @@ def process_paris(write_flag=False):
         # ac = pvlib.pvsystem.snlinverter(dc['v_mp'], dc['p_mp'], inverter)
         # df_results.loc[:, 'Actual'] = ac
         # IP()
+
+def process_paris_global_solar_irradiance(write_flag=False):
+    '''
+    Only process actual GHI data, since it is hourly data.
+    '''
+
+    # Sadly we cannot use the load_dir function, bummer.
+    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM'
+
+    os.chdir(dir_work)
+    ls_csv, ls_df = load_dir(dir_work)
+
+    df_all = pd.concat(ls_df, ignore_index=True)
+    df_all = df_all[['latitude', 'longitude', 'timestamp', 'layerName', 'value']].drop_duplicates().reset_index(drop=True)
+    df_all.dropna(how='any', subset=['latitude', 'longitude'], inplace=True)
+    # Stupid datatime only works for INDEX, and the 'dt' accessor must be used for Series
+    df_all.loc[:, 'timestamp'] = pd.to_datetime(df_all['timestamp']).dt.tz_localize('UTC') #.dt.tz_convert(timezone)
+    locations = df_all[['latitude', 'longitude']].drop_duplicates().values
+    df_all.loc[:, 'TIME_STR'] = df_all['timestamp'].dt.strftime('%Y-%m-%d %H')
+    layers = df_all['layerName'].unique()
+    layers_wanted = ['global_solar_irradiance',]
+    ls_df_results = list()
+    for lat, lon in locations:
+        df_site = df_all.loc[
+            (df_all['latitude'] == lat) & (df_all['longitude'] == lon)
+            &
+            (df_all['layerName'] == 'global_solar_irradiance'),
+            :
+        ]
+        index_datetime = pd.date_range(
+            df_site['timestamp'].min(), 
+            df_site['timestamp'].max(), 
+            freq='1H',
+        )
+        df_results = pd.DataFrame(
+            index=index_datetime.strftime('%Y-%m-%d %H')
+        )
+        df_results.loc[:, 'timestamp'] = index_datetime
+        df_results.loc[:, 'Year']      = index_datetime.year
+        df_results.loc[:, 'Month']     = index_datetime.month
+        df_results.loc[:, 'Day']       = index_datetime.day
+        df_results.loc[:, 'Hour']      = index_datetime.hour
+        for l in layers_wanted:
+            df_tmp = df_site.loc[df_site['layerName']==l, ['TIME_STR', 'value']].set_index('TIME_STR')
+            df_results.loc[:, l] = df_tmp['value']
+        ls_df_results.append(df_results)
+
+        s = site_name(lat, lon)
+        csvname = '_'.join(['IBM_processed', s]) + '.hourly' + '.csv'
+        col_to_write = [
+            'Year', 
+            'Month', 
+            'Day', 
+            'Hour', 
+        ] + layers_wanted
+        if write_flag:
+            df_results[col_to_write].to_csv(csvname, index=False)
 
 def read_paris_April():
     os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM')
@@ -2182,8 +2260,9 @@ if __name__ == '__main__':
     ############################################################################
     # read_paris()
     # read_paris1()
-    read_paris_April()
     # process_paris()
+    # read_paris_April()
+    process_paris_global_solar_irradiance(write_flag=True)
 
     # CAISO OASIS data collection and save
     ############################################################################
