@@ -519,6 +519,118 @@ def process_paris(write_flag=False):
         # df_results.loc[:, 'Actual'] = ac
         # IP()
 
+def read_paris_April():
+    os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM')
+    df_results = pd.DataFrame()
+    # From Rui's code
+    server = 'https://pairs.res.ibm.com/v2/query'
+    global_pairs_auth = ('bxl180002@utdallas.edu', '?HOoper40$')
+
+    dict_layers = {
+        "GHI mean":        {"type": "vector", "id": "P274C4230"}, # GHI mean 
+        "GHI upper 95%":   {"type": "vector", "id": "P275C4234"}, # GHI upper 95% CI
+        "GHI lower 95%":   {"type": "vector", "id": "P276C4238"}, # GHI lower 95% CI
+        "DNI mean":        {"type": "vector", "id": "P280C4254"}, # DNI mean
+        "DNI lower 95%":   {"type": "vector", "id": "P283C4266"}, # DNI lower 95% CI
+        "DNI upper 95%":   {"type": "vector", "id": "P282C4262"}, # DNI upper 95% CI
+        "DHI mean":        {"type": "vector", "id": "P284C4270"}, # DHI mean
+        "DHI lower 95%":   {"type": "vector", "id": "P286C4278"}, # DHI lower 95% CI
+        "DHI upper 95%":   {"type": "vector", "id": "P285C4274"}, # DHI upper 95% CI
+        "Power mean":      {"type": "vector", "id": "P277C4242"}, # Power, mean
+        "Power lower 95%": {"type": "vector", "id": "P279C4250"}, # Power, 95% low
+        "Power upper 95%": {"type": "vector", "id": "P278C4246"}, # Power, 95% high
+        "GHI actual":      {"type": "vector", "id": "P221C3743"}, # GHI, actual. Unfortunately they do not provide actual DNI and DHI.
+    }
+
+    coord_caiso = {
+        "CA_Topaz": ["35.38", "-120.18"],
+        "RSAC1":    ["38.47", "-122.71"],
+        "RLKC1":    ["40.25", "-123.31"],
+        "SBVC1":    ["34.45", "-119.70"],
+        "KNNC1":    ["40.71", "-123.92"],
+        "MIAC1":    ["37.41", "-119.74"],
+        "MNCC1":    ["34.31", "-117.50"],
+        "STFC1":    ["34.12", "-117.94"],
+        "DEMC1":    ["35.53", "-118.63"],
+        "COWC1":    ["39.12", "-123.07"],
+    }
+
+    coord_miso = {
+        "AMOA4": ["33.58", "-91.80"],
+        "FRMI4": ["40.64", "-91.72"],
+        "BNRI2": ["37.24", "-89.37"],
+        "SULI3": ["39.07", "-87.35"],
+        "NATL1": ["31.49", "-93.19"],
+        "BDLM4": ["42.62", "-85.65"],
+        "CASM5": ["47.37", "-94.61"],
+        "CKWM6": ["30.52", "-88.98"],
+        "TS428": ["46.89", "-103.37"],
+        "RHRS2": ["43.87", "-103.44"],
+    }
+    intervals = [
+        {"start": "2019-04-01T00:00:00Z", "end": "2019-05-01T00:00:00Z"},
+    ]
+
+    query_json = {
+        "layers": [
+            {"type": "vector", "id": "P274C4230"}, # GHI mean 
+            {"type": "vector", "id": "P275C4234"}, # GHI upper 95% CI
+            {"type": "vector", "id": "P276C4238"}, # GHI lower 95% CI
+            {"type": "vector", "id": "P280C4254"}, # DNI mean
+            {"type": "vector", "id": "P283C4266"}, # DNI lower 95% CI
+            {"type": "vector", "id": "P282C4262"}, # DNI upper 95% CI
+            {"type": "vector", "id": "P284C4270"}, # DHI mean
+            {"type": "vector", "id": "P286C4278"}, # DHI lower 95% CI
+            {"type": "vector", "id": "P285C4274"}, # DHI upper 95% CI
+            {"type": "vector", "id": "P277C4242"}, # Power, mean
+            {"type": "vector", "id": "P279C4250"}, # Power, 95% low
+            {"type": "vector", "id": "P278C4246"}, # Power, 95% high
+            {"type": "vector", "id": "P221C3743"}, # GHI, actual. Unfortunately they do not provide actual DNI and DHI.
+        ],
+        "spatial": {
+            "type": "point", 
+            # "coordinates": ["35.38", "-120.18"], # CAISO Station 1
+            "coordinates": ["38.47", "-122.71"], # CAISO Station 2
+            # "coordinates": ["40.25", "-123.31"], # CAISO Station 3
+            # "coordinates": ["34.45", "-119.70"], # CAISO Station 4
+            # "coordinates": ["40.71", "-123.92"], # CAISO Station 5
+            # "coordinates": ["37.41", "-119.74"], # CAISO Station 6
+            # "coordinates": ["34.31", "-117.50"], # CAISO Station 7
+            # "coordinates": ["34.12", "-117.94"], # CAISO Station 8
+            # "coordinates": ["35.53", "-118.63"], # CAISO Station 9
+            # "coordinates": ["39.12", "-123.07"], # CAISO Station 10
+        },
+        "temporal": {
+            "intervals": [{"start": "2018-09-16T00:00:00Z", "end": "2018-09-30T00:00:00Z"}],
+        }
+    }
+
+    for s in coord_caiso:
+        c = coord_caiso[s]
+        ls_df = list()
+        query_json["spatial"]["coordinates"] = c
+        for layer_name in dict_layers:
+            query_json["temporal"]["intervals"] = [{"start": "2019-04-01T00:00:00Z", "end": "2019-05-01T00:00:00Z"}] # Only April this time
+            query_json["layers"] = [dict_layers[layer_name]]
+            response = requests.post(
+                url=server,
+                json=query_json, 
+                auth=global_pairs_auth,
+            )
+            if response.status_code == 200:
+                ls_df.append(pd.DataFrame(response.json()['data']))
+                print s, layer_name, 'Done!'
+            else:
+                print s, layer_name, 'no'
+
+        data = pd.concat(ls_df, axis=0)
+        data.loc[:, 'timestamp'] = pd.to_datetime(data['timestamp'], unit='ms')
+
+        csvname = 'IBM_raw_' + s + '.csv'
+        data.to_csv(csvname, index=False)
+
+    IP()
+
 ###########################################################
 # This is a bit weird, but this function is to generate a time series for the 
 # AGC data in the wind ramp project by using the ACE data from CAISO
@@ -2070,6 +2182,7 @@ if __name__ == '__main__':
     ############################################################################
     # read_paris()
     # read_paris1()
+    read_paris_April()
     # process_paris()
 
     # CAISO OASIS data collection and save
@@ -2088,7 +2201,7 @@ if __name__ == '__main__':
     # tmp_plot_forecast()
     # baseline_flexiramp_for_day(2019, 2, 22, use_persistence=True)
     # baseline_flexiramp()
-    estimate_validation()
+    # estimate_validation()
 
     # CAISO regulation analysis
     ############################################################################
