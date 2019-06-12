@@ -760,9 +760,9 @@ def read_paris_May():
         "TS428": ["46.89", "-103.37"],
         "RHRS2": ["43.87", "-103.44"],
     }
-    intervals = [
-        {"start": "2019-05-01T00:00:00Z", "end": "2019-06-01T00:00:00Z"},
-    ]
+    # intervals = [
+    #     {"start": "2019-05-01T00:00:00Z", "end": "2019-06-01T00:00:00Z"},
+    # ]
 
     query_json = {
         "layers": [
@@ -803,7 +803,7 @@ def read_paris_May():
         ls_df = list()
         query_json["spatial"]["coordinates"] = c
         for layer_name in dict_layers:
-            query_json["temporal"]["intervals"] = [{"start": "2019-04-01T00:00:00Z", "end": "2019-05-01T00:00:00Z"}] # Only April this time
+            query_json["temporal"]["intervals"] = [{"start": "2019-05-01T00:00:00Z", "end": "2019-06-01T00:00:00Z"}] # Only April this time
             query_json["layers"] = [dict_layers[layer_name]]
             response = requests.post(
                 url=server,
@@ -2375,7 +2375,7 @@ if __name__ == '__main__':
     ############################################################################
     # read_paris()
     # read_paris1()
-    process_paris(write_flag=True)
+    process_paris(write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance(write_flag=False)
