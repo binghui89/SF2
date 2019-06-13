@@ -8,8 +8,9 @@ IBMsitenames = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'
 
 %% Convert GHI into power using Elina's script: April, forecast
 SiteLatitude=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-SiteLongitude=[-117.5,-177.94, -177.94, -177.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
-dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst';
+SiteLongitude=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst';
+% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst';
 % dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst';
 
 dir_home = pwd;
@@ -35,6 +36,8 @@ for k = 1:length(sitenames)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Fix 2, capped by clear-sky GHI
     % Prepare for ac power calculation.
+    
+    clear Time;
     Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
     Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
     Time.year(1:size(M,1),1)   = M(:, 1);
@@ -65,16 +68,16 @@ for k = 1:length(sitenames)
     compare_result(3) = sum(ac_lb(:, end) > ac_mean(:, end));
     compare_result(4) = sum(ac_mean(:, end) > ac_ub(:, end));
     
+    tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
+    tarray.TimeZone = 'America/Los_Angeles';
+    tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
+
     figure();
-    h = plot(1: size(M, 1), [ac_lb(:, end), ac_mean(:, end), ac_ub(:, end)]);
+    h = plot(tarray_local, [ac_lb(:, end), ac_mean(:, end), ac_ub(:, end)]);
     set(h, {'color'}, {'b'; 'k'; 'r'});
     title(strcat(gen, ',', ibm_site));
     ylabel('kW');
     fprintf('%6s %8s %6g %6g %6g %6g\n', gen, ibm_site, compare_result(1), compare_result(2), compare_result(3), compare_result(4));
-
-    tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
-    tarray.TimeZone = 'America/Los_Angeles';
-    tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
     
     ac_lb(:, 1:6)   = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second];
     ac_mean(:, 1:6) = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second];
@@ -133,6 +136,7 @@ for k = 1:length(sitenames)
 end
 
 %% Explore DNI, DHI, and GHI
+clear;
 sitenames={'gen55','gen56','gen57','gen58','gen59','gen60','gen61','gen62','gen63','gen64'};
 IBMsitenames = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
 dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst'; % April data
@@ -164,8 +168,8 @@ for k = 1: length(sitenames)
     utc_minute = M(:, 5);
     utc_second = zeros(size(M, 1), 1);
 
-    SiteLatitude=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-    SiteLongitude=[-117.5,-177.94, -177.94, -177.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+    SiteLatitude  = [ 34.31,  34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31,  34.31,   35.53];
+    SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
     modulepv=134; %Topaz uses first solar panels (FS272 is probably the oldest they have)
     inverterid=759; 
 %     Site_tilt=[0,0,0,25,0,0,25,22.5,0,0];
@@ -217,6 +221,7 @@ for k = 1: length(sitenames)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Fix 2: GHI capped by GHI_cs
+    M0 = M;
     ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
     fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
     for i = 1:length(fixrow)
@@ -287,11 +292,14 @@ for k = 1: length(sitenames)
         h2 = plot(tarray_local, ghi);
         ylabel('GHI');
         hold on;
-        h3 = plot(tarray_local, I0h);
+%         h3 = plot(tarray_local, I0h);
+        h3 = plot(tarray_local, ghi_clearsky);
+        h5 = plot(tarray_local, M0(:, j));
         yyaxis right;
         h4 = plot(tarray_local, SunEl);
         ylabel('Elevation angle');
-        legend([h2, h3, h4], {'GHI', 'GHI (E)', 'Elevation angle'});
+        legend([h2, h3, h4, h5], {'GHI', 'GHI (CS)', 'Elevation angle', 'GHI0'});
+%         legend([h2, h3, h4, h5], {'GHI', 'GHI (E)', 'Elevation angle', 'GHI0'});
         
         ax2 = subplot(2, 1, 2);
         h1 = plot(tarray_local, clearness_index);
@@ -346,6 +354,7 @@ for k = 1: length(sitenames)
 
         ax_h = subplot(4, 1, 3);
         plot(tarray_local, ghi, linestyle);
+        plot(tarray_local, M0(:, j), '--k');
         hold on;
         ylabel('GHI');
         
@@ -372,9 +381,9 @@ for k = 1: length(sitenames)
     ylabel('Power');
     legend('Low', 'Mean', 'High');
     linkaxes([ax_l, ax_m, ax_h, ax_p],'x');
+    clear M M0;
         
 end
-
 %% Examine if 50% CI > 95% in Aprils data
 dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
 dir_home = pwd;
@@ -401,7 +410,7 @@ end
 sitenames     = {'gen55', 'gen56',  'gen57', 'gen58', 'gen59', 'gen60',    'gen61', 'gen62', 'gen63', 'gen64'};
 IBMsitenames  = {'MNCC1', 'STFC1',  'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
 SiteLatitude  = [34.31,     34.12,    34.12,   34.12,   37.41,   35.53,      35.38,   34.31,   34.31,  35.53];
-SiteLongitude = [-117.5,   -177.94, -177.94, -177.94, -119.74, -118.63,    -120.18,  -117.5,  -117.5, -118.63];
+SiteLongitude = [-117.5,   -117.94, -117.94, -117.94, -119.74, -118.63,    -120.18,  -117.5,  -117.5, -118.63];
 
 for k = 1:length(sitenames)
     
@@ -492,7 +501,7 @@ PresPa=101325;
 
 sitenames    = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
 SiteLatitude=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-SiteLongitude=[-117.5,-177.94, -177.94, -177.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+SiteLongitude=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
 
 % figure; 
 for h = -10:2

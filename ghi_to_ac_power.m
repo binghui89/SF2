@@ -18,7 +18,7 @@ function ACPower = ghi_to_ac_power(site_name, utc_year, utc_month, utc_day, utc_
 
 sitenames={'gen55','gen56','gen57','gen58','gen59','gen60','gen61','gen62','gen63','gen64'};
 SiteLatitude=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-SiteLongitude=[-117.5,-177.94, -177.94, -177.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+SiteLongitude=[-117.5,-117.94, -117.94, -177.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
 IBMsitenames={'MNCC1','STFC1','STFC1','STFC1','MIAC1','DEMC1','Topaz','MNCC1','MNCC1', 'DEMC1'};
 modulepv=134; %Topaz uses first solar panels (FS272 is probably the oldest they have)
 inverterid=759; 
