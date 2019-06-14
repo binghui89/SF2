@@ -386,7 +386,7 @@ def process_paris(write_flag=False):
 
 
     # Sadly we cannot use the load_dir function, bummer.
-    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_May'
+    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_tmp'
 
     os.chdir(dir_work)
     ls_csv, ls_df = load_dir(dir_work)
@@ -546,7 +546,7 @@ def process_paris_global_solar_irradiance(write_flag=False):
     '''
 
     # Sadly we cannot use the load_dir function, bummer.
-    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_old'
+    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_tmp'
 
     os.chdir(dir_work)
     ls_csv, ls_df = load_dir(dir_work)
@@ -810,18 +810,28 @@ def read_paris_May():
                 json=query_json, 
                 auth=global_pairs_auth,
             )
+            ntry = 1
+            while (response.status_code != 200) & (ntry<=10):
+                response = requests.post(
+                    url=server,
+                    json=query_json, 
+                    auth=global_pairs_auth,
+                )
+                ntry = ntry+1
+                time.sleep(5) # Let's wait for 5 seconds to give a second try
+
             if response.status_code == 200:
                 ls_df.append(pd.DataFrame(response.json()['data']))
-                print s, layer_name, 'Done!'
+                print s, layer_name, 'Done!', 'ntry =', ntry
             else:
                 print s, layer_name, 'no'
+                # IP()
 
         data = pd.concat(ls_df, axis=0)
         data.loc[:, 'timestamp'] = pd.to_datetime(data['timestamp'], unit='ms')
 
         csvname = 'IBM_raw_' + s + '.csv'
         data.to_csv(csvname, index=False)
-
 
 ###########################################################
 # This is a bit weird, but this function is to generate a time series for the 
