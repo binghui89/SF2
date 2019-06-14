@@ -71,17 +71,21 @@ for iday = 1: size(days_unique, 1)
     i_scale    = i_selected & (M_pst(:, 4)>=7) & (M_pst(:, 4)<17);
     kcs_scale = M_pst(i_scale, 6:8)./repmat(ghi_clearsky(i_scale), 1, 3);
     kcs_max = max(kcs_scale(:));
-    M_pst(i_scale, 6:8) = M_pst(i_scale, 6:8)./kcs_max;
+    if kcs_max > 1
+        M_pst(i_selected, 6:8) = M_pst(i_selected, 6:8)./kcs_max;
+    end
     
     i_cap = i_selected & ((M_pst(:, 4)<7) | (M_pst(:, 4)>=17));
     rows_cap = find(i_cap);
     for j = 1:length(rows_cap)
         irow = rows_cap(j);
         ghi_max = max(M_pst(irow, 6:8));
-        if ghi_clearsky(irow) == 0
-            M_pst(irow, 6:8) = 0;
-        else
-            M_pst(irow, 6:8) = M_pst(irow, 6:8).*ghi_clearsky(irow)/ghi_max;
+        if ghi_max > ghi_clearsky(irow)
+            if ghi_clearsky(irow) == 0
+                M_pst(irow, 6:8) = 0;
+            else
+                M_pst(irow, 6:8) = M_pst(irow, 6:8).*ghi_clearsky(irow)/ghi_max;
+            end
         end
     end
 end

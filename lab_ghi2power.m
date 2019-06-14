@@ -3,15 +3,15 @@ addpath('C:\Users\bxl180002\git\MATLAB_PV_LIB');
 addpath('C:\Users\bxl180002\git\MATLAB_PV_LIB\Example Data');
 addpath('C:\Users\bxl180002\git\MATLAB_PV_LIB\Required Data');
 
-sitenames    = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
-IBMsitenames = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
-
-%% Convert GHI into power using Elina's script: April, forecast
-SiteLatitude=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-SiteLongitude=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
-dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst';
+%% Convert GHI into power using Elina's script: forecast
+clear;
+sitenames     = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+IBMsitenames  = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+SiteLatitude  = [34.31,   34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31, 34.31,    35.53];
+SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
+% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst';
 % dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst';
-% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst';
+dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst';
 
 dir_home = pwd;
 fprintf('%6s %8s %6s %6s %6s %6s\n', 'gen', 'site', 'L>M(I)', 'M>U(I)', 'L>M(P)', 'M>U(P)');
@@ -26,16 +26,14 @@ for k = 1:length(sitenames)
     M = csvread(csvname_read, 1, 0);
     cd(dir_home);
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Fix 1, time shift back by 30 min (2 x 15 min interval)
-    toff = 2;
-    Mp = [M(1:size(M, 1) - toff, 1: 5), M(toff + 1: end, 6:8)];
-    M = Mp;
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Fix 2, capped by clear-sky GHI
-    % Prepare for ac power calculation.
+    M = fix_ibm(M, SiteLatitude(k),SiteLongitude(k));
+        
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     % Fix 1, time shift back by 30 min (2 x 15 min interval)
+%     toff = 2;
+%     Mp = [M(1:size(M, 1) - toff, 1: 5), M(toff + 1: end, 6:8)];
+%     M = Mp;
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     clear Time;
     Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
@@ -46,16 +44,19 @@ for k = 1:length(sitenames)
     Time.hour(1:size(M,1),1)   = M(:, 4);
     Time.minute(1:size(M,1),1) = M(:, 5);
     Time.second(1:size(M,1),1) = zeros(size(M,1), 1);
-    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
-
-    ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
-    fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
-    for i = 1:length(fixrow)
-        ifixrow = fixrow(i);
-        ghi_max = max(M(ifixrow, 6:8));
-        M(ifixrow, 6:8) = M(ifixrow, 6:8).*ghi_clearsky(ifixrow)/ghi_max;
-    end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     % Fix 2, capped by clear-sky GHI
+%     % Prepare for ac power calculation.
+%     [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+%     ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
+%     fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
+%     for i = 1:length(fixrow)
+%         ifixrow = fixrow(i);
+%         ghi_max = max(M(ifixrow, 6:8));
+%         M(ifixrow, 6:8) = M(ifixrow, 6:8).*ghi_clearsky(ifixrow)/ghi_max;
+%     end
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     
     ac_lb   = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 6));
@@ -139,9 +140,12 @@ end
 clear;
 sitenames={'gen55','gen56','gen57','gen58','gen59','gen60','gen61','gen62','gen63','gen64'};
 IBMsitenames = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst'; % Old data
 dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst'; % April data
 % dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst'; % May data
 dir_home = pwd;
+SiteLatitude  = [ 34.31,  34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31,  34.31,   35.53];
+SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
 
 fprintf('%6s %8s %6s %6s %6s %6s %6s %6s %6s\n', 'gen', 'site', 'L>M(I)', 'M>U(I)', 'L>M(P)', 'M>U(P)', 'kt>1(L)', 'kt>1(M)', 'kt>1(H)');
 
@@ -153,12 +157,14 @@ for k = 1: length(sitenames)
     cd(dir_work);
     M = csvread(csvname_read, 1, 0);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Fix 1: Time shift
+    % Fix 1: Time shift, this is included in fix_ibm, added here for
+    % plotting purpose
     toff=2;
-    Mp = [M(1:size(M, 1)-toff, 1: 5), M(toff+1: end, 6:8)];
-    M = Mp;
+    M0 = [M(1:size(M, 1)-toff, 1: 5), M(toff+1: end, 6:8)];
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     cd(dir_home);
+    M = fix_ibm(M, SiteLatitude(k), SiteLongitude(k));
+    M(any(isnan(M(:, 6:8)), 2), 6:8) = 0; 
     
     site_name = gen;
     utc_year   = M(:, 1);
@@ -168,8 +174,6 @@ for k = 1: length(sitenames)
     utc_minute = M(:, 5);
     utc_second = zeros(size(M, 1), 1);
 
-    SiteLatitude  = [ 34.31,  34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31,  34.31,   35.53];
-    SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
     modulepv=134; %Topaz uses first solar panels (FS272 is probably the oldest they have)
     inverterid=759; 
 %     Site_tilt=[0,0,0,25,0,0,25,22.5,0,0];
@@ -219,17 +223,17 @@ for k = 1: length(sitenames)
     dayofyear = pvl_date2doy(Time.year, Time.month, Time.day);
     [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Fix 2: GHI capped by GHI_cs
-    M0 = M;
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     % Fix 2: GHI capped by GHI_cs
+%     M0 = M;
     ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
-    fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
-    for i = 1:length(fixrow)
-        ifixrow = fixrow(i);
-        ghi_max = max(M(ifixrow, 6:8));
-        M(ifixrow, 6:8) = M(ifixrow, 6:8).*ghi_clearsky(ifixrow)/ghi_max;
-    end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
+%     for i = 1:length(fixrow)
+%         ifixrow = fixrow(i);
+%         ghi_max = max(M(ifixrow, 6:8));
+%         M(ifixrow, 6:8) = M(ifixrow, 6:8).*ghi_clearsky(ifixrow)/ghi_max;
+%     end
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     if Site_tilt(k)==0    
         [TrkrTheta, AOI, SurfTilt, SurfAz] = pvl_singleaxis(90-AppSunEl, SunAz, Location.latitude, 0, 180, 45);
