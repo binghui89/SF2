@@ -546,7 +546,7 @@ def process_paris_global_solar_irradiance(write_flag=False):
     '''
 
     # Sadly we cannot use the load_dir function, bummer.
-    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_tmp'
+    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_May'
 
     os.chdir(dir_work)
     ls_csv, ls_df = load_dir(dir_work)
@@ -581,6 +581,7 @@ def process_paris_global_solar_irradiance(write_flag=False):
         df_results.loc[:, 'Month']     = index_datetime.month
         df_results.loc[:, 'Day']       = index_datetime.day
         df_results.loc[:, 'Hour']      = index_datetime.hour
+        df_results.loc[:, 'Minute']    = index_datetime.minute
         for l in layers_wanted:
             df_tmp = df_site.loc[df_site['layerName']==l, ['TIME_STR', 'value']].set_index('TIME_STR')
             df_results.loc[:, l] = df_tmp['value']
@@ -593,6 +594,7 @@ def process_paris_global_solar_irradiance(write_flag=False):
             'Month', 
             'Day', 
             'Hour', 
+            'Minute', 
         ] + layers_wanted
         if write_flag:
             df_results[col_to_write].to_csv(csvname, index=False)
@@ -2385,10 +2387,10 @@ if __name__ == '__main__':
     ############################################################################
     # read_paris()
     # read_paris1()
-    process_paris(write_flag=False)
+    # process_paris(write_flag=False)
     # read_paris_April()
     # read_paris_May()
-    # process_paris_global_solar_irradiance(write_flag=False)
+    process_paris_global_solar_irradiance(write_flag=False)
 
     # CAISO OASIS data collection and save
     ############################################################################
