@@ -1,6 +1,103 @@
 function lab_IBM()
-ibm_april(5);
+% ibm_april(5);
 % CAISO_10_sites();
+explore_correlation(4);
+end
+
+function explore_correlation(m)
+if m == 4
+    dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
+elseif m == 5
+    dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_actual';
+end
+dir_home = pwd;
+
+% IBMsitenames   = {'MNCC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'};
+% SiteLatitude  = [34.31,   34.12,    37.41,   35.53,   35.38];
+% SiteLongitude = [-117.5,-117.94,  -119.74, -118.63, -120.18];
+
+IBMsitenames  = {'CA_Topaz','RSAC1', 'RLKC1', 'SBVC1', 'KNNC1', 'MIAC1', 'MNCC1', 'STFC1', 'DEMC1',  'COWC1'};
+SiteLatitude  = [35.38,       38.47,   40.25,   34.45,   40.71,   37.41,   34.31,   34.12,   35.53,   39.12];
+SiteLongitude = [-120.18,   -122.71, -123.31, -119.70, -123.92, -119.74, -117.50, -117.94, -118.63, -123.07];
+
+dir_home = pwd;
+ghi_actual = [];
+ghi_clearsky = [];
+
+for k = 1:length(IBMsitenames)
+    ibm_site = IBMsitenames{k};
+    csvname_read  = strcat('IBM_processed_', ibm_site, '.hourly.csv');
+    
+    cd(dir_work);
+    M = csvread(csvname_read, 1, 0);
+    cd(dir_home);
+    
+    Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
+    Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
+    Time.year(1:size(M,1),1)   = M(:, 1);
+    Time.month(1:size(M,1),1)  = M(:, 2);
+    Time.day(1:size(M,1),1)    = M(:, 3);
+    Time.hour(1:size(M,1),1)   = M(:, 4);
+    Time.minute(1:size(M,1),1) = M(:, 5);
+    Time.second(1:size(M,1),1) = zeros(size(M,1), 1);
+    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    
+    ghi_clearsky(:, k) = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
+    ghi_actual(:, k) = M(:, end);
+end
+
+tarray = datetime(M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), M(:, 6), 'TimeZone', 'UTC');
+tarray.TimeZone = '-08:00'; % Let's just use PST, so that 12:00 is noon
+tarray_pst = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
+
+kcs = ghi_actual./ghi_clearsky;
+kcs_midday = kcs((tarray_pst.Hour>=7) & (tarray_pst.Hour<17), :);
+kcs_other  = kcs((tarray_pst.Hour<7) | (tarray_pst.Hour>=17), :);
+
+figure();
+subplot(2, 1, 1);
+hist(kcs_midday(:), 50);
+title('7am to 5pm (PST)');
+xlabel('Clear-sky index');
+subplot(2, 1, 2);
+hist(kcs_other(:), 50);
+title('Other time');
+xlabel('Clear-sky index');
+
+dist_gc = nan(numel(IBMsitenames), numel(IBMsitenames));
+for i = 1: size(kcs_midday, 2) - 1
+    lat1 = SiteLatitude(i);
+    lon1 = SiteLongitude(i);
+    dist_gc(i, i) = 0;
+    for j = i+1: size(kcs_midday, 2)
+        lat2 = SiteLatitude(j);
+        lon2 = SiteLongitude(j);
+        d = DISTANCE(lat1/180*pi, lon1/180*pi, lat2/180*pi, lon2/180*pi);
+        dist_gc(i, j) = d;
+        dist_gc(j, i) = d;
+    end
+end
+dist_gc(end) = 0;
+
+corr_site = corrcoef(kcs_midday);
+figure();
+scatter(dist_gc(:), corr_site(:));
+xlabel('Distance (km)');
+ylabel('Linear correlation coefficient');
+
+% Plot out scatter+histograms between any two pairs of sites
+% for i = 1: size(kcs_midday, 2) - 1
+%     lat1 = SiteLatitude(i);
+%     lon1 = SiteLongitude(i);
+%     for j = i+1: size(kcs_midday, 2)
+%         figure();
+%         lat2 = SiteLatitude(i);
+%         lon2 = SiteLongitude(i);
+%         scatterhist(kcs_midday(:, i), kcs_midday(:, j));
+%         d = distance('gc', lat1, lon1, lat2, lon2);
+%     end
+% end
+
 end
 
 function ibm_april(m)
@@ -456,4 +553,26 @@ end
 
 function y = logit(x)
 y = log(x./(1-x));
+end
+
+function [d] = DISTANCE(lat1, lon1, lat2, lon2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Return the distance between two point(lat1, lon1) and (lat2, lon2).
+% Input: in rad; Output: in km.
+% Reference: http://www.movable-type.co.uk/scripts/latlong.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% It is worth noting that the transmission cable length is not necessarily
+% equal to the distance between two points, there might be a coefficient to
+% convert between straight-line distance and transmission distance. A
+% literature review will be necessary.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+R = 6361; % Earth radius
+dlat = lat2 - lat1;
+dlon = lon2 - lon1;
+a = sin(dlat./2).^2 + sin(dlon./2).^2.*cos(lat1).*cos(lat2);
+d = R.*2.*atan2(sqrt(a), sqrt(1 - a));
+% d = R.*c;
+
+% Spherical Law of Cosines
+% d = R*acos(sin(lat1)*sin(lat2) + cos(lat1)*cos(lat2)*cos(dlat));
 end
