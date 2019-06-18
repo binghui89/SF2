@@ -97,7 +97,13 @@ for k = 1:length(sitenames)
 
     
 end
-%% Convert GHI into power using Elina's script: April, actual
+%% Convert GHI into power using Elina's script: actual
+clear;
+sitenames     = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+IBMsitenames  = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+SiteLatitude  = [34.31,   34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31, 34.31,    35.53];
+SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
+
 % dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
 dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
 
@@ -113,25 +119,67 @@ for k = 1:length(sitenames)
     M = csvread(csvname_read, 1, 0);
     cd(dir_home);
     
-    ac_actual = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), zeros(size(M, 1), 1), zeros(size(M, 1), 1), M(:, 5));
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     % Fix 1: Time shift
+%     toff=1;
+%     Mp = [M(1:size(M, 1)-toff, 1: 5), M(toff+1: end, 6:end)];
+%     M = Mp;
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     
+    ac_actual = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 6));
+        
+    % Calculate clear-sky GHI
+    utc_year   = M(:, 1);
+    utc_month  = M(:, 2);
+    utc_day    = M(:, 3);
+    utc_hour   = M(:, 4);
+    utc_minute = M(:, 5);
+    utc_second = zeros(size(M, 1), 1);    
+    Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
+    Time.year(1:size(M,1),1)   = utc_year;
+    Time.month(1:size(M,1),1)  = utc_month;
+    Time.day(1:size(M,1),1)    = utc_day;
+    Time.hour(1:size(M,1),1)   = utc_hour;
+    Time.minute(1:size(M,1),1) = utc_minute;
+    Time.second(1:size(M,1),1) = utc_second;
+    Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
+    dayofyear = pvl_date2doy(Time.year, Time.month, Time.day);
+    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
+
+    % Plot them out
+    tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
+    tarray.TimeZone = 'America/Los_Angeles';
+    tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
+
     figure();
-    h = plot(1: size(M, 1), ac_actual(:, end));
-    set(h, {'color'}, {'k'});
+    subplot(2, 1, 1);
+    h1 = plot(tarray_local, M(:, 6), '-s');
+%     h1 = plot(1: size(M, 1), ac_actual(:, end));
+    set(h1, {'color'}, {'k'});
+    hold on;
+    h2 = plot(tarray_local, ghi_clearsky,  '-s');
     title(strcat(gen, ',', ibm_site));
-    ylabel('kW');
+    legend([h1, h2], 'Actual' ,'Clear-sky');
+    ylabel('W/m^2');
     
-    cd(dir_work);
-    cHeader = {'Year' 'Month' 'Day' 'Hour' 'Actual'}; %dummy header
-    commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
-    commaHeader = commaHeader(:)';
-    textHeader = cell2mat(commaHeader); %cHeader in text with commas
-    %write header to file
-    fid = fopen(csvname_write,'w'); 
-    fprintf(fid,'%s\n',textHeader);
-    fclose(fid);
-    dlmwrite(csvname_write,[M(:, 1:4), ac_actual],'-append');
-    cd(dir_home);
+    subplot(2, 1, 2);
+    kcs_actual = M(:, 6)./ghi_clearsky;
+    kcs_actual(ghi_clearsky==0) = nan;
+    hist(kcs_actual, 50);
+    
+%     cd(dir_work);
+%     cHeader = {'Year' 'Month' 'Day' 'Hour' 'Actual'}; %dummy header
+%     commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
+%     commaHeader = commaHeader(:)';
+%     textHeader = cell2mat(commaHeader); %cHeader in text with commas
+%     %write header to file
+%     fid = fopen(csvname_write,'w'); 
+%     fprintf(fid,'%s\n',textHeader);
+%     fclose(fid);
+%     dlmwrite(csvname_write,[M(:, 1:4), ac_actual],'-append');
+%     cd(dir_home);
 
     
 end
@@ -388,25 +436,46 @@ for k = 1: length(sitenames)
     clear M M0;
         
 end
-%% Examine if 50% CI > 95% in Aprils data
-dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
+%% Find out places where lower percentiles are higher than higher percentiles
+clear;
+IBMsitenames  = {'CA_Topaz','COWC1','DEMC1','KNNC1','MIAC1','MNCC1','RLKC1','RSAC1','SBVC1','STFC1'};
+dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst';
+% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst';
+% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst';
 dir_home = pwd;
 
-for k = 1:length(sitenames)
-    gen = sitenames{k};
+for k = 1:length(IBMsitenames)
     ibm_site = IBMsitenames{k};
-    csvname_read  = strcat('power_', gen, '.csv');
+    csvname_read  = strcat('IBM_processed_', ibm_site, '.csv');
+    csvname_write = strcat('Errors_', ibm_site, '.csv');
     
     cd(dir_work);
     M = csvread(csvname_read, 1, 0);
     cd(dir_home);
+    tarray = datetime( M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), 'TimeZone', 'UTC');
     
-    cl_05 = M(:, 7);
-    cl_50 = M(:, 8);
-    cl_95 = M(:, 9);
+    cl_05 = M(:, 6);
+    cl_50 = M(:, 7);
+    cl_95 = M(:, 8);
     
-    fprintf('gen %s - site %s, cl_50 > cl_95: %f, cl_05 > cl_50: %f\n', gen, ibm_site, sum(cl_50>cl_95)/size(M, 1), sum(cl_05>cl_50)/size(M, 1));
+    fprintf('site %s, 5-p > mean: %3g, mean > 95-p: %3g\n', ibm_site, sum(cl_05>cl_50), sum(cl_50>cl_95));
+    idx = find((cl_05>cl_50) | (cl_50>cl_95));
+    for i = 1: length(idx)
+        isample = idx(i);
+        fprintf('%s %6.2f  %6.2f  %6.2f\n', datestr(tarray(isample),'yyyy-mm-dd HH:MM'), cl_05(isample), cl_50(isample), cl_95(isample));
+    end
     
+%     cd(dir_work);
+%     cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' '5-p' 'Mean' '95-p'}; %dummy header
+%     commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
+%     commaHeader = commaHeader(:)';
+%     textHeader = cell2mat(commaHeader); % cHeader in text with commas
+%     fid = fopen(csvname_write,'w'); 
+%     fprintf(fid,'%s\n',textHeader); % write header to file
+%     fclose(fid);
+%     dlmwrite(csvname_write,[M(idx, :)],'-append');
+%     cd(dir_home);
+
 end
 
 
