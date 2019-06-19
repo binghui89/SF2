@@ -1602,6 +1602,48 @@ def process_raw_ace_error(write_flag=False, plot_flag=False):
 
         plt.show()
 
+def prepare_data_for_mucun(write_flag=False):
+    # RTD B and RTD actual
+    df = load_and_process_netload_data(use_persistence=False)
+    df.loc[:, 'TIME_STAMP'] = pd.to_datetime(
+        df['OPR_DT'].astype(str) 
+        + 
+        ' ' 
+        + 
+        (df['OPR_HR']-1).map('{:02g}'.format) 
+        + 
+        ':'
+        + 
+        ((df['OPR_INTERVAL']-1)*5).map('{:02g}'.format), 
+        format='%Y-%m-%d %H:%M'
+    )
+    df.loc[:, 'Year']   = df['TIME_STAMP'].dt.year
+    df.loc[:, 'Month']  = df['TIME_STAMP'].dt.month
+    df.loc[:, 'Day']    = df['TIME_STAMP'].dt.day
+    df.loc[:, 'Hour']   = df['TIME_STAMP'].dt.hour
+    df.loc[:, 'Minute'] = df['TIME_STAMP'].dt.minute
+    if write_flag:
+        df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL', 'NET_LOAD_B_RTD']].to_csv('RTD_B.csv', index=False)
+
+    # RTPD, just actual data, not forecast
+    df = load_and_process_netload_data(use_persistence=False)
+    df.loc[:, 'RTPD_INTERVAL'] = (df['OPR_INTERVAL']-1) - (df['OPR_INTERVAL']-1)%3
+    df.loc[:, 'RTPD_INTERVAL'] = (df.loc[:, 'RTPD_INTERVAL']/3).astype(int) + 1
+    df.loc[:, 'TIME_STR_RTPD'] = df['OPR_DT'].astype(str) + ' ' + (df['OPR_HR']-1).map('{:02g}'.format) + ':'+ ((df['RTPD_INTERVAL']-1)*15).map('{:02g}'.format)
+    df_rtpd = df.groupby(by='TIME_STR_RTPD').mean()
+    df_rtpd.loc[:, 'TIME_STAMP'] = pd.to_datetime(
+        df_rtpd.index, 
+        format='%Y-%m-%d %H:%M'
+    )
+    df_rtpd.loc[:, 'Year']   = df_rtpd['TIME_STAMP'].dt.year
+    df_rtpd.loc[:, 'Month']  = df_rtpd['TIME_STAMP'].dt.month
+    df_rtpd.loc[:, 'Day']    = df_rtpd['TIME_STAMP'].dt.day
+    df_rtpd.loc[:, 'Hour']   = df_rtpd['TIME_STAMP'].dt.hour
+    df_rtpd.loc[:, 'Minute'] = df_rtpd['TIME_STAMP'].dt.minute
+    if write_flag:
+        df_rtpd[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL']].to_csv('RTPD.csv', index=False)
+
+
 ###########################################################
 # Flexible ramp reserve requirement analysis starts here
 
@@ -2401,7 +2443,7 @@ if __name__ == '__main__':
     # collect_SLD_REN_FCST_rtpd()
     # collect_SLD_ADV_FCST()
     # collect_ENE_FLEX_RAMP_REQT()
-    process_raw_for_flexiramp()
+    # process_raw_for_flexiramp()
 
     # CAISO flexiramp reserve analysis
     ############################################################################
@@ -2415,5 +2457,9 @@ if __name__ == '__main__':
     # process_raw_reg_req()
     # process_raw_ace_error()
     # baseline_reg_for_day(2019, 2, 22, oasis='RT')
+
+    # Others
+    ############################################################################
+    prepare_data_for_mucun(write_flag=False)
 
     # IP()
