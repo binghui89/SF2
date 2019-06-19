@@ -1041,7 +1041,7 @@ def collect_SLD_FCST_rtd():
         'resultformat':   6,  # Let's just use csv format, 6 for csv, 1 for xml
     }
     d_begin = datetime.datetime(2014, 1, 1, 8, 0)  # This is PST 2014-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1069,7 +1069,7 @@ def collect_SLD_FCST_rtpd():
         'resultformat':   6,  # Let's just use csv format, 6 for csv, 1 for xml
     }
     d_begin = datetime.datetime(2015, 1, 1, 8, 0)  # This is PST 2015-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam, days_interval=29)
@@ -1101,7 +1101,7 @@ def collect_SLD_REN_FCST_rtd():
     }
     # When I start download this data, somehow 2014 does not work, so I have to use 2015...
     d_begin = datetime.datetime(2015, 1, 1, 8, 0)  # This is PST 2015-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1133,7 +1133,7 @@ def collect_SLD_REN_FCST_rtpd():
     }
     # When I start download this data, somehow 2014 does not work, so I have to use 2015...
     d_begin = datetime.datetime(2015, 1, 1, 8, 0)  # This is PST 2017-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1157,7 +1157,7 @@ def collect_SLD_ADV_FCST():
     }
     # Sadly CAISO only provides this data up to 2017...
     d_begin = datetime.datetime(2017, 1, 1, 8, 0)  # This is PST 2017-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1190,7 +1190,7 @@ def collect_ENE_FLEX_RAMP_REQT():
     }
     # Sadly CAISO only provides this data up to 2017...
     d_begin = datetime.datetime(2017, 1, 1, 8, 0)  # This is PST 2017-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1230,7 +1230,7 @@ def process_raw_for_flexiramp(write_flag=False):
     reserve requirements, and actual net load forecasts and save them into a 
     csv file (default name: for_flexiramp_summary.csv).
     '''
-    # Load OASIS data, renewable forecast, data availability: 20150101 to 20190228
+    # Load OASIS data, renewable forecast, data availability: 20150101 to 20190531
     _, ls_df = load_dir('./CAISO_OASIS/SLD_REN_FCST_rtd.zip')
     df_ren_f = pd.concat(ls_df, ignore_index=True)
     _, ls_df = load_dir('./CAISO_OASIS/SLD_REN_FCST_rtpd.zip')
@@ -1238,23 +1238,23 @@ def process_raw_for_flexiramp(write_flag=False):
     df_ren_f = pd.concat(ls_df, ignore_index=True)
 
     # Load OASIS data, binding (?) load forecast, data availability: 
-    # RTD: 20140101 to 20190228, RTPD: 20150101 to 20190228
+    # RTD: 20140101 to 20190228, RTPD: 20150101 to 20190531
     _, ls_df = load_dir('./CAISO_OASIS/SLD_FCST_rtd.zip')
     df_load_bf = pd.concat(ls_df, ignore_index=True)
     _, ls_df = load_dir('./CAISO_OASIS/SLD_FCST_rtpd.zip')
     ls_df.append(df_load_bf)
     df_load_bf = pd.concat(ls_df, ignore_index=True)
 
-    # Load OASIS data, advisory load forecast, data availability: 20170101 to 20190228
+    # Load OASIS data, advisory load forecast, data availability: 20170101 to 20190531
     _, ls_df = load_dir('./CAISO_OASIS/SLD_ADV_FCST.zip')
     df_load_af = pd.concat(ls_df, ignore_index=True)
     df_load_af = df_load_af.rename(columns={'VALUE': 'MW'})
 
-    # Load OASIS data, flexible ramp reserve requirements, data availability: 20170101 to 20190228
+    # Load OASIS data, flexible ramp reserve requirements, data availability: 20170101 to 20190531
     _, ls_df = load_dir('./CAISO_OASIS/ENE_FLEX_RAMP_REQT.zip')
     df_frrq = pd.concat(ls_df, ignore_index=True)
 
-    # Load actual net load data, data availability: 20180410 to 20190228
+    # Load actual net load data, data availability: 20180410 to 20190531
     ls_csv, ls_df = load_dir('./CAISO_OASIS/NetDemand.zip')
     for i in range(0, len(ls_csv)):
         fname = ls_csv[i]
@@ -2390,7 +2390,7 @@ if __name__ == '__main__':
     # process_paris(write_flag=False)
     # read_paris_April()
     # read_paris_May()
-    process_paris_global_solar_irradiance(write_flag=False)
+    # process_paris_global_solar_irradiance(write_flag=False)
 
     # CAISO OASIS data collection and save
     ############################################################################
@@ -2401,7 +2401,7 @@ if __name__ == '__main__':
     # collect_SLD_REN_FCST_rtpd()
     # collect_SLD_ADV_FCST()
     # collect_ENE_FLEX_RAMP_REQT()
-    # process_raw_for_flexiramp()
+    process_raw_for_flexiramp()
 
     # CAISO flexiramp reserve analysis
     ############################################################################
