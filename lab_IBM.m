@@ -1,7 +1,7 @@
 function lab_IBM()
-% ibm_april(5);
+ibm_april(4, true);
 % CAISO_10_sites();
-explore_correlation(4);
+% explore_correlation(4);
 end
 
 function explore_correlation(m)
@@ -100,7 +100,10 @@ ylabel('Linear correlation coefficient');
 
 end
 
-function ibm_april(m)
+function ibm_april(m, write_flag)
+if nargin == 1
+    write_flag = true;
+end
 if m == 4
     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
 elseif m == 5
@@ -113,6 +116,7 @@ ibm_sites   = {'MNCC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'};
 capacity_gen =  [232.44, 107.58, 116.05, 140.4, 151.32, ];
 capacity_site = [372.84, 134.88, 116.05, 338.52, 151.32];
 cap_scaler = capacity_site./capacity_gen;
+csv_write = 'power_convolution.csv';
 
 % Read data
 capacity = nan(length(siteforconv), 1);
@@ -314,6 +318,19 @@ legend([h1, h2], {'CI 5%', 'CI 95%'});
 ylabel('kW');
 % ylim([-10, 800]);
 % sum(isnan(x_agg_050))/size(x_agg_050, 1);
+
+if write_flag
+    results = [M(:, 1: 6), x_agg_050, x_agg_950];
+    cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' 'Second' 'Low' 'High'}; %dummy header
+    commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
+    commaHeader = commaHeader(:)';
+    textHeader = cell2mat(commaHeader); % cHeader in text with commas
+    fid = fopen(csv_write,'w');
+    fprintf(fid,'%s\n',textHeader); % write header to file
+    fclose(fid);
+    dlmwrite(csv_write, results,'-append');
+end
+
 end
 
 function CAISO_10_sites()
