@@ -1,5 +1,5 @@
 function lab_IBM()
-ibm_april(4);
+ibm_april(5);
 % CAISO_10_sites();
 % explore_correlation(4);
 end
@@ -171,28 +171,72 @@ x_agg_050 = nan(nT, 1);
 for d = 1: 29 % Day 1 to 29
     x_agg_950_d = nan(24*4, 1);
     x_agg_050_d = nan(24*4, 1);
+%     for t = 31:36 % Test samples
     for t = t_idx(i_valid&(M(:, 3)==d))
     % for t = 2466-28 % This is the row with negative distribution, 28 is the number of rows in March
         n = 0;
         a_convoluted = [];
         t_convoluted = [];
-%         fig = figure();
+%         fig_distapprox = figure();
+%         fig_convbystep = figure();
+        x_agg_050_sum = 0;
+        x_agg_950_sum = 0;
+        x_agg_bar_sum = 0;
         for i = 1:length(cell_data)
             M = cell_data{i};
             cap = capacity(i);
-            normalized_binwidth = 0.04;
+            normalized_binwidth = 0.02;
 
             % Use logit-normal function to fit the distribution
             x500_normalized = M(t, 8)/cap;
             x050_normalized = M(t, 7)/cap;
             x950_normalized = M(t, 9)/cap;
+            x_agg_050_sum = x_agg_050_sum + M(t, 7);
+            x_agg_bar_sum = x_agg_bar_sum + M(t, 8);
+            x_agg_950_sum = x_agg_950_sum + M(t, 9);
 %             [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
+%             [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
             [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
+
+
+%             % Visualize the approximation, plot out the given percentiles
+%             % and mean (red lines), the logit-normal approximation (curve)
+%             % and its percentiles and mean (green lines), and the
+%             % discretized approximation (stairs) and its percentiles and
+%             % mean (blue lines).
+%             figure(fig_distapprox);
+%             subplot(3, 3, i)
+%             plot_logit(MU, SIGMA);
+%             hold on;
+%             stairs_conv_poly(fig_distapprox, [normalized_h_bin(:);0], normalized_binedge, 'b');
+%             y1 = get(gca, 'ylim');
+%             x500 = x500_normalized;
+%             x050 = x050_normalized;
+%             x950 = x950_normalized;
+%             plot([x500 x500],y1 ,'r', 'LineWidth', 1.5)
+%             plot([x050 x050],y1 ,'r')
+%             plot([x950 x950],y1 ,'r')
+%             p = percentile_logit([0.05;0.95], MU, SIGMA);
+%             deltax = 0.01;
+%             x_mc = 0.01:deltax:0.99;
+%             p_mc = pdf_logit_normal(x_mc, MU, SIGMA);
+%             x_bar = deltax*sum(x_mc(:).*p_mc(:));
+%             plot([x_bar x_bar],y1 ,'g')
+%             plot([p(1) p(1)],y1 ,'g')
+%             plot([p(2) p(2)],y1 ,'g')
+%             edge_cdf = cdf_logit_normal(normalized_binedge, MU, SIGMA);
+%             x050_d = interp1(edge_cdf, normalized_binedge, 0.05); % Discretized
+%             x950_d = interp1(edge_cdf, normalized_binedge, 0.95);
+%             x_bar_d = normalized_h_bin*(normalized_binedge(2:end).^2 - normalized_binedge(1:length(normalized_binedge)-1).^2)'/2;
+%             plot([x_bar_d x_bar_d],y1 ,'b')
+%             plot([x050_d x050_d],y1 ,'b')
+%             plot([x950_d x950_d],y1 ,'b')
+
             if flag_success
                 h_bin = normalized_h_bin./cap;
                 binedge = normalized_binedge.*cap;
                 a_fitted = [h_bin(:); 0];
-                t_fitted = binedge;
+                t_fitted = binedge(:);
 
                 if (i == 1) || isempty(t_convoluted)
                     a_convoluted = a_fitted;
@@ -205,47 +249,35 @@ for d = 1: 29 % Day 1 to 29
             else
                 continue
             end
-%             if (x500~=0) && (x050~=0)
-%                 param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.050-0.5)) 1]\[log(x500/(1-x500)); log(x050/(1-x050))];
-%             elseif (x050~=0) && (x950~=0)
-%                 if x950==cap
-%                     x950=x950-eps;
-%                 end
-%                 param = [sqrt(2)*erfinv(2*(0.050-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x050/(1-x050)); log(x950/(1-x950))];
-%             elseif (x500~=0) && (x950~=0)
-%                 if x950==cap
-%                     x950=x950-eps;
-%                 end
-%                 param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x500/(1-x500)); log(x950/(1-x950))];
-%             else
-%                 continue % We need at least two non-zero points, otherwise we consider it as zero
-%             end
-%             n = n + 1;
-%             SIGMA = param(1);
-%             MU = param(2);
-%         %     plot_logit(MU, SIGMA);
-%         %     hold on;
-% 
-%             % Prepare for convolution        
-%             normalized_binwidth = 0.04;
-%             normalized_binedge = 0:normalized_binwidth:1; % This is normalized bin edges
-%             edge_cdf = cdf_logit_normal(normalized_binedge, MU, SIGMA);
-%             normalized_h_bin = (edge_cdf(2:end) - edge_cdf(1:length(edge_cdf)-1)).*1/normalized_binwidth;
-% 
-%             h_bin = normalized_h_bin./cap;
-%             binedge = normalized_binedge.*cap;
 
-%             if (i == 1) || isempty(t_convoluted)
-%                 a_convoluted = [h_bin(:); 0];
-%                 t_convoluted = binedge;
-%             else
-%                 [a_convoluted, t_convoluted] = conv_poly(a_convoluted, t_convoluted, [h_bin(:); 0], binedge, normalized_binwidth*cap);
+            
+%             % Visualize convolution step by step
+%             figure(fig_convbystep);
+%             subplot(3, 3, i);
+%             stairs_conv_poly(fig_convbystep, a_convoluted, t_convoluted, 'b');
+%             if ~isempty(a_convoluted)
+%                 cdf_agg = cdf_poly(a_convoluted, t_convoluted);
+%                 if any(diff(cdf_agg)==0)
+%                     % This case, we cannot use interp1 function
+%                     [~, imin] = min(abs(cdf_agg - 0.05));
+%                     x_agg_050_convstep = t_convoluted(imin);
+%                     [~, imin] = min(abs(cdf_agg - 0.95));
+%                     x_agg_950_convstep = t_convoluted(imin);
+%                 else
+%                     x_agg_050_convstep = interp1(cdf_agg, t_convoluted, 0.05);
+%                     x_agg_950_convstep = interp1(cdf_agg, t_convoluted, 0.95);
+%                 end
+%                 x_agg_bar_convstep = a_convoluted(1:size(a_convoluted, 1)-1)'*(t_convoluted(2:end).^2 - t_convoluted(1:length(t_convoluted)-1).^2)/2;
 %             end
-    %         a_convoluted(end, :) = 0;
-%             ax = subplot(3, 3, i);
-%             plot_conv_poly(fig, a_convoluted, t_convoluted, 'b');
-%             [a_convoluted, t_convoluted] = reformulate_poly(a_convoluted, t_convoluted);
-%             title(n);
+%             hold on;
+%             y2 = get(gca, 'ylim');
+%             plot([x_agg_bar_convstep x_agg_bar_convstep],y2 ,'b')
+%             plot([x_agg_050_convstep x_agg_050_convstep],y2 ,'b')
+%             plot([x_agg_950_convstep x_agg_950_convstep],y2 ,'b')
+%             plot([x_agg_bar_sum x_agg_bar_sum],y2 ,'r')
+%             plot([x_agg_050_sum x_agg_050_sum],y2 ,'r')
+%             plot([x_agg_950_sum x_agg_950_sum],y2 ,'r')
+
         end
         cell_a{t} = a_convoluted;
         cell_t{t} = t_convoluted;
@@ -253,12 +285,21 @@ for d = 1: 29 % Day 1 to 29
         t_thatday = t - (d-1)*24*4;
         if ~isempty(a_convoluted)
             cdf_agg = cdf_poly(a_convoluted, t_convoluted);
-            [~, imin] = min(abs(cdf_agg - 0.05));
-            x_agg_050(t) = t_convoluted(imin);
-            x_agg_050_d(t_thatday) = t_convoluted(imin);
-            [~, imin] = min(abs(cdf_agg - 0.95));
-            x_agg_950(t) = t_convoluted(imin);
-            x_agg_950_d(t_thatday) = t_convoluted(imin);
+            if any(diff(cdf_agg)<=0)
+                % This case, we cannot use interp1 function
+                [~, imin] = min(abs(cdf_agg - 0.05));
+                x_agg_050(t) = t_convoluted(imin);
+                x_agg_050_d(t_thatday) = t_convoluted(imin);
+                [~, imin] = min(abs(cdf_agg - 0.95));
+                x_agg_950(t) = t_convoluted(imin);
+                x_agg_950_d(t_thatday) = t_convoluted(imin);
+            else
+                x_agg_050(t) = interp1(cdf_agg, t_convoluted, 0.05);
+                x_agg_050_d(t_thatday) = x_agg_050(t);
+                x_agg_950(t) = interp1(cdf_agg, t_convoluted, 0.95);
+                x_agg_950_d(t_thatday) = x_agg_950(t);
+            end
+
         end
         if i_allzero(t)
             x_agg_050(t) = 0;
@@ -269,19 +310,6 @@ for d = 1: 29 % Day 1 to 29
         fprintf('%4g/%g Done.\n', t, nT);
     end
     
-    % One day's snapshot
-%     figure();
-%     tarray_d = tarray((M(:, 2)==4)&(M(:, 3)==d)); % T array for the day
-%     h1 = plot(tarray_d, x_agg_050_d, 'b');
-%     hold on;
-%     h2 = plot(tarray_d, x_agg_950_d, 'r');
-%     hold on;
-%     h3 = plot(tarray_d, M_agg(M(:, 3)==d, :));
-%     set(h3, {'linestyle'}, {'--'; '--'; '--'});
-%     set(h3, {'color'}, {'b'; 'k'; 'r'});
-%     legend([h1; h2; h3], {'CI 5%'; 'CI 95%'; 'SUM 5%'; 'SUM MEAN'; 'SUM 95%'});
-%     ylabel('kW');
-%     title(d);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -292,6 +320,7 @@ x_agg_950(isnan(x_agg_950)) = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for d = 1: 29
+    % One day's snapshot
     figure();
     x_agg_950_d = x_agg_950((M(:, 2)==m)&(M(:, 3)==d));
     x_agg_050_d = x_agg_050((M(:, 2)==m)&(M(:, 3)==d));
@@ -331,6 +360,10 @@ if write_flag
     fclose(fid);
     dlmwrite(csv_write, results,'-append');
 end
+
+end
+
+function debug_convolution()
 
 end
 
@@ -551,7 +584,7 @@ end
 
 end
 
-function [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1(x050, x500, x950, normalized_binwidth)
+function [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(x050, x500, x950, normalized_binwidth)
 % Fit IBM's forecasted percentiles to distributions
 % All inputs should be normalized, i.e., between 0 and 1
 flag_lack_data = false;
@@ -559,14 +592,10 @@ if (x050~=0) && (x950~=0)
     if x950==1
         x950=x950-eps;
     end
-%     param = [sqrt(2)*erfinv(2*(0.050-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x050/(1-x050)); log(x950/(1-x950))];
-% elseif (x500~=0) && (x050~=0)
-%     param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.050-0.5)) 1]\[log(x500/(1-x500)); log(x050/(1-x050))];
 elseif (x500~=0) && (x950~=0)
     if x050==0
         x050=x050-eps;
     end
-%     param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x500/(1-x500)); log(x950/(1-x950))];
 else
     flag_lack_data = true; % We need at least two non-zero points, otherwise we consider it as zero
 end
@@ -574,8 +603,8 @@ end
 if ~flag_lack_data
     % Find the best mu and sigma by absolute difference of 5, 95 percentiles
     % and mean
-    MU_all    = -3:0.1:3;
-    SIGMA_all = 0.1: 0.1: 3;
+    MU_all    = -3:0.05:3;
+    SIGMA_all = 0.1: 0.05: 3;
     absdiff = nan(numel(SIGMA_all), numel(MU_all));
     for i = 1: length(SIGMA_all)
         for j = 1: length(MU_all)
@@ -593,8 +622,7 @@ if ~flag_lack_data
     [subi, subj] = ind2sub(size(absdiff), imin);
     SIGMA = SIGMA_all(subi);
     MU    = MU_all(subj);
-    %     plot_logit(MU, SIGMA);
-    %     hold on;
+    
 
     % Prepare for convolution        
     normalized_binedge = 0:normalized_binwidth:1; % This is normalized bin edges
@@ -602,11 +630,14 @@ if ~flag_lack_data
     normalized_h_bin = (edge_cdf(2:end) - edge_cdf(1:length(edge_cdf)-1)).*1/normalized_binwidth;
 
     flag_success = true;
+    
 else
     normalized_binedge = nan;
     normalized_h_bin = nan;
     flag_success = false;
 end
+
+
 
 end
 
