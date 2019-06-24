@@ -1,5 +1,5 @@
 function lab_IBM()
-ibm_april(4, true);
+ibm_april(4);
 % CAISO_10_sites();
 % explore_correlation(4);
 end
@@ -102,7 +102,7 @@ end
 
 function ibm_april(m, write_flag)
 if nargin == 1
-    write_flag = true;
+    write_flag = false;
 end
 if m == 4
     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
@@ -186,7 +186,8 @@ for d = 1: 29 % Day 1 to 29
             x500_normalized = M(t, 8)/cap;
             x050_normalized = M(t, 7)/cap;
             x950_normalized = M(t, 9)/cap;
-            [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
+%             [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
+            [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
             if flag_success
                 h_bin = normalized_h_bin./cap;
                 binedge = normalized_binedge.*cap;
@@ -550,6 +551,67 @@ end
 
 end
 
+function [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1(x050, x500, x950, normalized_binwidth)
+% Fit IBM's forecasted percentiles to distributions
+% All inputs should be normalized, i.e., between 0 and 1
+flag_lack_data = false;
+if (x050~=0) && (x950~=0)
+    if x950==1
+        x950=x950-eps;
+    end
+%     param = [sqrt(2)*erfinv(2*(0.050-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x050/(1-x050)); log(x950/(1-x950))];
+% elseif (x500~=0) && (x050~=0)
+%     param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.050-0.5)) 1]\[log(x500/(1-x500)); log(x050/(1-x050))];
+elseif (x500~=0) && (x950~=0)
+    if x050==0
+        x050=x050-eps;
+    end
+%     param = [sqrt(2)*erfinv(2*(0.500-0.5)) 1; sqrt(2)*erfinv(2*(0.950-0.5)) 1]\[log(x500/(1-x500)); log(x950/(1-x950))];
+else
+    flag_lack_data = true; % We need at least two non-zero points, otherwise we consider it as zero
+end
+
+if ~flag_lack_data
+    % Find the best mu and sigma by absolute difference of 5, 95 percentiles
+    % and mean
+    MU_all    = -3:0.1:3;
+    SIGMA_all = 0.1: 0.1: 3;
+    absdiff = nan(numel(SIGMA_all), numel(MU_all));
+    for i = 1: length(SIGMA_all)
+        for j = 1: length(MU_all)
+            MU = MU_all(j);
+            SIGMA = SIGMA_all(i);
+            p = percentile_logit([0.05;0.95], MU, SIGMA);
+            deltax = 0.01;
+            x_mc = 0.01:deltax:0.99;
+            p_mc = pdf_logit_normal(x_mc, MU, SIGMA);
+            x_bar = deltax*sum(x_mc(:).*p_mc(:));
+            absdiff(i, j) = sum(abs([x050; x950; x500] - [p; x_bar]));
+        end
+    end
+    [~, imin] = min(absdiff(:));
+    [subi, subj] = ind2sub(size(absdiff), imin);
+    SIGMA = SIGMA_all(subi);
+    MU    = MU_all(subj);
+    %     plot_logit(MU, SIGMA);
+    %     hold on;
+
+    % Prepare for convolution        
+    normalized_binedge = 0:normalized_binwidth:1; % This is normalized bin edges
+    edge_cdf = cdf_logit_normal(normalized_binedge, MU, SIGMA);
+    normalized_h_bin = (edge_cdf(2:end) - edge_cdf(1:length(edge_cdf)-1)).*1/normalized_binwidth;
+
+    flag_success = true;
+else
+    normalized_binedge = nan;
+    normalized_h_bin = nan;
+    flag_success = false;
+end
+
+end
+
+
+
 function y = cdf_logit_normal(x, MU, SIGMA)
 
 y = 0.5.*( 1+erf((logit(x)-MU)./(sqrt(2)*SIGMA)) );
@@ -558,6 +620,13 @@ end
 function y = pdf_logit_normal(x, MU, SIGMA)
 logitx = logit(x);
 y = 1/(SIGMA*sqrt(2*pi))*1./(x.*(1-x)).*exp(-(logitx-MU).^2./(2*SIGMA^2));
+end
+
+function x = percentile_logit(ALPHA, MU, SIGMA)
+% Return the percentiles specified by ALPHA, MU and SIGMA are scalers
+tmp = MU + sqrt(2)*SIGMA*erfinv(2.*ALPHA - 1);
+x = exp(tmp)./(1+exp(tmp));
+
 end
 
 function plot_logit(MU, SIGMA)
