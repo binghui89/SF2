@@ -1271,6 +1271,23 @@ def process_raw_for_flexiramp(write_flag=False):
         ls_df[i] = df
     df_netload = pd.concat(ls_df, ignore_index=True)
 
+    # Load actual solar and wind data, data availability: 20180410 to 20190531
+    ls_csv, ls_df = load_dir('./CAISO_OASIS/Renewables.zip')
+    for i in range(0, len(ls_csv)):
+        fname = ls_csv[i]
+        df    = ls_df[i]
+        thisday = datetime.datetime.strptime(fname, 'CAISO-renewables-%Y%m%d.csv')
+        df = df.T.iloc[1:-1, :] # The first row is the header
+        df.columns = ['Solar', 'Wind', 'Geothermal', 'Biomass', 'Biogass', 'Small hydro', 'Batteries']
+        df['OPR_DT'] = thisday.strftime('%Y-%m-%d')
+        df['YEAR']   = thisday.year
+        df['MONTH']  = thisday.month
+        df['DAY']    = thisday.day
+        df['HOUR']     = pd.to_datetime(df.index).hour + 1 # CAISO OPR_HR starts from 1
+        df['INTERVAL'] = pd.to_datetime(df.index).minute/5 + 1 # CAISO OPR_INTERVAL starts from 1
+        ls_df[i] = df
+    df_actualver = pd.concat(ls_df, ignore_index=True)
+
     print('Data loaded!')
 
     # Determine the starting time and ending time
@@ -1380,6 +1397,13 @@ def process_raw_for_flexiramp(write_flag=False):
     df_netload['TIME_STR'] = df_netload['OPR_DT'] + '-' +  df_netload['HOUR'].astype('str') + '-' + df_netload['INTERVAL'].astype(str)
     df_netload = df_netload.set_index('TIME_STR')
     df_results['NET_LOAD_ACTUAL'] = df_netload['NET LOAD']
+
+    # Add actual renewables, we only care about solar and wind, note solar may 
+    # also includes solar thermal.
+    df_actualver['TIME_STR'] = df_actualver['OPR_DT'] + '-' +  df_actualver['HOUR'].astype('str') + '-' + df_actualver['INTERVAL'].astype(str)
+    df_actualver = df_actualver.set_index('TIME_STR')
+    df_results['SOLAR_ACTUAL'] = df_actualver['Solar']
+    df_results['WIND_ACTUAL']  = df_actualver['Wind']
 
     if write_flag:
         df_results.to_csv('for_flexiramp_summary.csv', index=False)
@@ -2443,7 +2467,7 @@ if __name__ == '__main__':
     # collect_SLD_REN_FCST_rtpd()
     # collect_SLD_ADV_FCST()
     # collect_ENE_FLEX_RAMP_REQT()
-    # process_raw_for_flexiramp()
+    process_raw_for_flexiramp()
 
     # CAISO flexiramp reserve analysis
     ############################################################################
@@ -2460,6 +2484,6 @@ if __name__ == '__main__':
 
     # Others
     ############################################################################
-    prepare_data_for_mucun(write_flag=False)
+    # prepare_data_for_mucun(write_flag=False)
 
     # IP()
