@@ -166,11 +166,13 @@ cell_a = cell(nT, 1);
 cell_t = cell(nT, 1);
 x_agg_950 = nan(nT, 1);
 x_agg_050 = nan(nT, 1);
+x_agg_bar = nan(nT, 1);
 % Do convolution
 % for t = 1: nT
 for d = 1: 29 % Day 1 to 29
     x_agg_950_d = nan(24*4, 1);
     x_agg_050_d = nan(24*4, 1);
+    x_agg_bar_d = nan(24*4, 1);
 %     for t = 31:36 % Test samples
     for t = t_idx(i_valid&(M(:, 3)==d))
     % for t = 2466-28 % This is the row with negative distribution, 28 is the number of rows in March
@@ -299,7 +301,8 @@ for d = 1: 29 % Day 1 to 29
                 x_agg_950(t) = interp1(cdf_agg, t_convoluted, 0.95);
                 x_agg_950_d(t_thatday) = x_agg_950(t);
             end
-
+            x_agg_bar(t) = a_convoluted(1:size(a_convoluted, 1)-1)'*(t_convoluted(2:end).^2 - t_convoluted(1:length(t_convoluted)-1).^2)/2;
+            x_agg_bar_d(t_thatday) = x_agg_bar(t);
         end
         if i_allzero(t)
             x_agg_050(t) = 0;
@@ -317,6 +320,7 @@ end
 % 95 CI is not zero, we assume it is zero
 x_agg_050(isnan(x_agg_050)) = 0;
 x_agg_950(isnan(x_agg_950)) = 0;
+x_agg_bar(isnan(x_agg_bar)) = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for d = 1: 29
@@ -324,16 +328,17 @@ for d = 1: 29
     figure();
     x_agg_950_d = x_agg_950((M(:, 2)==m)&(M(:, 3)==d));
     x_agg_050_d = x_agg_050((M(:, 2)==m)&(M(:, 3)==d));
+    x_agg_bar_d = x_agg_bar((M(:, 2)==m)&(M(:, 3)==d));
 
     tarray_d = tarray((M(:, 2)==m)&(M(:, 3)==d)); % T array for the day
     h1 = plot(tarray_d, x_agg_050_d, 'b');
     hold on;
     h2 = plot(tarray_d, x_agg_950_d, 'r');
-    hold on;
-    h3 = plot(tarray_d, M_agg(M(:, 3)==d, :));
-    set(h3, {'linestyle'}, {'--'; '--'; '--'});
-    set(h3, {'color'}, {'b'; 'k'; 'r'});
-    legend([h1; h2; h3], {'CI 5%'; 'CI 95%'; 'SUM 5%'; 'SUM MEAN'; 'SUM 95%'});
+    h3 = plot(tarray_d, x_agg_bar_d, 'k');
+    h4 = plot(tarray_d, M_agg(M(:, 3)==d, :));
+    set(h4, {'linestyle'}, {'--'; '--'; '--'});
+    set(h4, {'color'}, {'b'; 'k'; 'r'});
+    legend([h1; h2; h3; h4], {'CI 5%'; 'CI 95%'; 'CI MEAN'; 'SUM 5%'; 'SUM MEAN'; 'SUM 95%'});
     ylabel('kW');
     title(d);
 
@@ -344,14 +349,15 @@ tarray = datetime(M(:, 1), M(:, 2), M(:,3), M(:, 4), M(:, 5), 0);
 h1 = plot(tarray, x_agg_050, 'b');
 hold on;
 h2 = plot(tarray, x_agg_950, 'r');
-legend([h1, h2], {'CI 5%', 'CI 95%'});
+h3 = plot(tarray, x_agg_bar, 'k');
+legend([h1, h2, h3], {'CI 5%', 'CI 95%', 'CI MEAN'});
 ylabel('kW');
 % ylim([-10, 800]);
 % sum(isnan(x_agg_050))/size(x_agg_050, 1);
 
 if write_flag
-    results = [M(:, 1: 6), x_agg_050, x_agg_950];
-    cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' 'Second' 'Low' 'High'}; %dummy header
+    results = [M(:, 1: 6), x_agg_050, x_agg_bar, x_agg_950];
+    cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' 'Second' '5p' 'Mean' '95p'}; %dummy header
     commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
     commaHeader = commaHeader(:)';
     textHeader = cell2mat(commaHeader); % cHeader in text with commas
