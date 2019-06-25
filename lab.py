@@ -1397,6 +1397,7 @@ def process_raw_for_flexiramp(write_flag=False):
     df_netload['TIME_STR'] = df_netload['OPR_DT'] + '-' +  df_netload['HOUR'].astype('str') + '-' + df_netload['INTERVAL'].astype(str)
     df_netload = df_netload.set_index('TIME_STR')
     df_results['NET_LOAD_ACTUAL'] = df_netload['NET LOAD']
+    df_results['LOAD_ACTUAL']     = df_netload['LOAD']
 
     # Add actual renewables, we only care about solar and wind, note solar may 
     # also includes solar thermal.
