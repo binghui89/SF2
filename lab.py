@@ -1629,7 +1629,7 @@ def process_raw_ace_error(write_flag=False, plot_flag=False):
 
 def prepare_data_for_mucun(write_flag=False):
     # RTD B and RTD actual
-    df = load_and_process_netload_data(use_persistence=False)
+    df = load_and_process_netload_data(use_persistence=True)
     df.loc[:, 'TIME_STAMP'] = pd.to_datetime(
         df['OPR_DT'].astype(str) 
         + 
@@ -1649,6 +1649,7 @@ def prepare_data_for_mucun(write_flag=False):
     df.loc[:, 'Minute'] = df['TIME_STAMP'].dt.minute
     if write_flag:
         df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL', 'NET_LOAD_B_RTD']].to_csv('RTD_B.csv', index=False)
+        df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL', 'NET_LOAD_A_RTD']].to_csv('RTD_A.csv', index=False)
 
     # RTPD, just actual data, not forecast
     df = load_and_process_netload_data(use_persistence=False)
@@ -1666,7 +1667,7 @@ def prepare_data_for_mucun(write_flag=False):
     df_rtpd.loc[:, 'Hour']   = df_rtpd['TIME_STAMP'].dt.hour
     df_rtpd.loc[:, 'Minute'] = df_rtpd['TIME_STAMP'].dt.minute
     if write_flag:
-        df_rtpd[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL']].to_csv('RTPD.csv', index=False)
+        df_rtpd[['Year', 'Month', 'Day', 'Hour', 'Minute', 'NET_LOAD_ACTUAL', 'NET_LOAD_B_RTPD']].to_csv('RTPD_B.csv', index=False)
 
 
 ###########################################################
@@ -1691,6 +1692,7 @@ def load_and_process_netload_data(use_persistence=False):
     This function load for_flexiramp_summary.csv and calculates net load and net load 
     forecast errors
     '''
+    import pvlib
     df = pd.read_csv('for_flexiramp_summary.csv')
 
     # We have all forecast for binding intervals, so just use it
@@ -1719,52 +1721,122 @@ def load_and_process_netload_data(use_persistence=False):
         df['Wind_NP15_A_RTPD']  = df['Wind_NP15_RTPD']
         df['Wind_SP15_A_RTPD']  = df['Wind_SP15_RTPD']
     else:
+        # RTD solar
+        ########################################################################
         # We use persistence forecast, wind is shifted by 1 interval, and 
         # solar from Cong's forecast
-        df_rtd_a  = pd.read_csv('C:/Users/bxl180002/Downloads/RampSolar/CAISO/RTD_Forecasts.csv')
-        df_rtpd_a = pd.read_csv('C:/Users/bxl180002/Downloads/RampSolar/CAISO/RTPD_Forecasts.csv')
+        df.loc[:, 'timestamp'] = pd.to_datetime(
+            df['OPR_DT'].astype(str) 
+            + 
+            ' ' 
+            + 
+            (df['OPR_HR']-1).map('{:02g}'.format) 
+            + 
+            ':'
+            + 
+            ((df['OPR_INTERVAL']-1)*5).map('{:02g}'.format), 
+            format='%Y-%m-%d %H:%M'
+        ).dt.tz_localize('US/Pacific', nonexistent='NaT', ambiguous='NaT')
+
+        loc = dict()
+        loc['NP15'] = pvlib.location.Location(38.548, -121.531, 'US/Pacific',4)
+        loc['ZP26'] = pvlib.location.Location(35.853, -120.212, 'US/Pacific',446)
+        loc['SP15'] = pvlib.location.Location(33.907, -116.257, 'US/Pacific',753)
+
+        dict_df_csghi = dict()
+        for k in loc.keys():
+            df_csghi = loc[k].get_clearsky(pd.DatetimeIndex(df['timestamp']), model='ineichen')
+            # Due to daylight saving time conversion, we'll get NaT at the 
+            # transitioning time, however, we know for sure GHI = 0 at that time
+            df_csghi.loc['NaT', :] = 0
+            dict_df_csghi[k] = df_csghi
+
+        # Use persistence clear-sky index to get advisory solar power forecast
+        for k in loc.keys():
+            cs_ghi = dict_df_csghi[k]['ghi'].values
+            power  = df['Solar_'+k+'_B_RTD'].values
+            csindex = np.zeros(power.shape)
+            csindex[~(cs_ghi==0)] = power[~(cs_ghi==0)]/cs_ghi[~(cs_ghi==0)]
+            csindex[np.isnan(csindex)] = 0
+            csindex[np.isinf(csindex)] = 0
+            frcst_adv = np.concatenate(
+                [[np.nan], dict_df_csghi[k]['ghi'].values[1:]*csindex[0:-1]]
+            )
+            df.loc[:, 'Solar_'+k+'_A_RTD'] = frcst_adv
+
+            df.loc[:, 'AB_diff_'+k] = np.abs(df['Solar_'+k+'_A_RTD'] - df['Solar_'+k+'_B_RTD'])/df['Solar_'+k+'_B_RTD']
+
+        # Fix numeric error when CS GHI is small and adv forecast is too large.
+        # Basically, whenever B-A forecast percentage error > 100%, use binding 
+        # forecast.
+        for k in loc.keys():
+            df.loc[df['AB_diff_'+k]>1, 'Solar_'+k+'_A_RTD'] = df.loc[df['AB_diff_'+k]>1, 'Solar_'+k+'_B_RTD']
+
+            # # Uncomment the following part to visualize
+            # fig = plt.figure()
+            # ax = plt.subplot(111)
+            # ax1 = ax.twinx()
+            # df[['timestamp', 'Solar_'+k+'_A_RTD', 'Solar_'+k+'_B_RTD']].plot(ax=ax, x='timestamp')
+            # df[['timestamp', 'AB_diff_'+k]].plot(ax=ax1, x='timestamp', style='r-')
+
+        # RTD wind
+        ########################################################################
+        df['Wind_NP15_A_RTD']  = np.concatenate([ [np.nan], df['Wind_NP15_RTD'].values[0:-1] ])
+        df['Wind_SP15_A_RTD']  = np.concatenate([ [np.nan], df['Wind_SP15_RTD'].values[0:-1] ])
+
+        # RTPD solar and wind, just use binding forecast as advisory forecat 
+        # because it was never used in flexiramp calculation
+        ########################################################################
+        df['Solar_NP15_A_RTPD'] = df['Solar_NP15_RTPD']
+        df['Solar_SP15_A_RTPD'] = df['Solar_SP15_RTPD']
+        df['Solar_ZP26_A_RTPD'] = df['Solar_ZP26_RTPD']
+        df['Wind_NP15_A_RTPD']  = df['Wind_NP15_RTPD']
+        df['Wind_SP15_A_RTPD']  = df['Wind_SP15_RTPD']
+
+        # df_rtd_a  = pd.read_csv('C:/Users/bxl180002/Downloads/RampSolar/CAISO/RTD_Forecasts.csv')
+        # df_rtpd_a = pd.read_csv('C:/Users/bxl180002/Downloads/RampSolar/CAISO/RTPD_Forecasts.csv')
         # df_rtd_a  = pd.read_csv('~/Downloads/Tmp/RTD_Forecasts.csv')
         # df_rtpd_a = pd.read_csv('~/Downloads/Tmp/RTPD_Forecasts.csv')
-        df_rtd_a['Wind_A_NP15_RTD']   = np.concatenate([ [np.nan], df['Wind_NP15_RTD'].values[0:-1] ])
-        df_rtd_a['Wind_A_SP15_RTD']   = np.concatenate([ [np.nan], df['Wind_SP15_RTD'].values[0:-1] ])
-        df_rtpd_a['Wind_A_NP15_RTPD'] = np.concatenate([ [np.nan], df.loc[df['OPR_INTERVAL']%3 == 0, 'Wind_NP15_RTPD'].values[0:-1] ])
-        df_rtpd_a['Wind_A_SP15_RTPD'] = np.concatenate([ [np.nan], df.loc[df['OPR_INTERVAL']%3 == 0, 'Wind_SP15_RTPD'].values[0:-1] ])
+        # df_rtd_a['Wind_A_NP15_RTD']   = np.concatenate([ [np.nan], df['Wind_NP15_RTD'].values[0:-1] ])
+        # df_rtd_a['Wind_A_SP15_RTD']   = np.concatenate([ [np.nan], df['Wind_SP15_RTD'].values[0:-1] ])
+        # df_rtpd_a['Wind_A_NP15_RTPD'] = np.concatenate([ [np.nan], df.loc[df['OPR_INTERVAL']%3 == 0, 'Wind_NP15_RTPD'].values[0:-1] ])
+        # df_rtpd_a['Wind_A_SP15_RTPD'] = np.concatenate([ [np.nan], df.loc[df['OPR_INTERVAL']%3 == 0, 'Wind_SP15_RTPD'].values[0:-1] ])
 
-        df['Solar_NP15_A_RTD'] = df_rtd_a['Forc_Solar_NP15_RTD'].values
-        df['Solar_SP15_A_RTD'] = df_rtd_a['Forc_Solar_SP15_RTD'].values
-        df['Solar_ZP26_A_RTD'] = df_rtd_a['Forc_Solar_ZP26_RTD'].values
-        df['Wind_NP15_A_RTD']  = df_rtd_a['Wind_A_NP15_RTD'].values
-        df['Wind_SP15_A_RTD']  = df_rtd_a['Wind_A_SP15_RTD'].values
+        # df['Solar_NP15_A_RTD'] = df_rtd_a['Forc_Solar_NP15_RTD'].values
+        # df['Solar_SP15_A_RTD'] = df_rtd_a['Forc_Solar_SP15_RTD'].values
+        # df['Solar_ZP26_A_RTD'] = df_rtd_a['Forc_Solar_ZP26_RTD'].values
+        # df['Wind_NP15_A_RTD']  = df_rtd_a['Wind_A_NP15_RTD'].values
+        # df['Wind_SP15_A_RTD']  = df_rtd_a['Wind_A_SP15_RTD'].values
 
-        df['Solar_NP15_A_RTPD'] = df_rtpd_a['Forc_Solar_NP15_RTPD'].values.repeat(3)
-        df['Solar_SP15_A_RTPD'] = df_rtpd_a['Forc_Solar_SP15_RTPD'].values.repeat(3)
-        df['Solar_ZP26_A_RTPD'] = df_rtpd_a['Forc_Solar_ZP26_RTPD'].values.repeat(3)
-        df['Wind_NP15_A_RTPD']  = df_rtpd_a['Wind_A_NP15_RTPD'].values.repeat(3)
-        df['Wind_SP15_A_RTPD']  = df_rtpd_a['Wind_A_SP15_RTPD'].values.repeat(3)
+        # df['Solar_NP15_A_RTPD'] = df_rtpd_a['Forc_Solar_NP15_RTPD'].values.repeat(3)
+        # df['Solar_SP15_A_RTPD'] = df_rtpd_a['Forc_Solar_SP15_RTPD'].values.repeat(3)
+        # df['Solar_ZP26_A_RTPD'] = df_rtpd_a['Forc_Solar_ZP26_RTPD'].values.repeat(3)
+        # df['Wind_NP15_A_RTPD']  = df_rtpd_a['Wind_A_NP15_RTPD'].values.repeat(3)
+        # df['Wind_SP15_A_RTPD']  = df_rtpd_a['Wind_A_SP15_RTPD'].values.repeat(3)
 
-        # Fix spikes due to persistence forecast.
-        threshold = 600.0/100 # Percentage threshold: 100%
-        columns_with_spikes = [
-            ('Solar_NP15_B_RTD', 'Solar_NP15_A_RTD'),
-            ('Solar_SP15_B_RTD', 'Solar_SP15_A_RTD'),
-            ('Solar_ZP26_B_RTD', 'Solar_ZP26_A_RTD'),
-            ('Solar_NP15_B_RTPD', 'Solar_NP15_A_RTPD'),
-            ('Solar_SP15_B_RTPD', 'Solar_SP15_A_RTPD'),
-            ('Solar_ZP26_B_RTPD', 'Solar_ZP26_A_RTPD'),
-        ]
-        print 'Summary of persistence forecast of solar power, thredhold = {:>.2f}%'.format(threshold*100)
-        for c_b, c_a in columns_with_spikes:
-            # Column of binding forecast, column of advisory forecast
-            tmp = (df[c_a] - df[c_b])/df[c_b] # Relative errors
-            index_spikes = tmp[tmp>threshold].index
-            # df.loc[index_spikes, c_a] = (df.loc[index_spikes-1, c_a].values + df.loc[index_spikes+1, c_a].values)/2
-            df.loc[index_spikes, c_a] = df.loc[index_spikes, c_b]
-            print '{:<20s} has {:>4g} spikes out of {:>7g} points. Fraction: {:>4.3}%'.format(
-                c_a,
-                index_spikes.size,
-                df.index.size,
-                float(index_spikes.size)/df.index.size*100,
-            )
+        # # Fix spikes due to persistence forecast.
+        # threshold = 600.0/100 # Percentage threshold: 100%
+        # columns_with_spikes = [
+        #     ('Solar_NP15_B_RTD', 'Solar_NP15_A_RTD'),
+        #     ('Solar_SP15_B_RTD', 'Solar_SP15_A_RTD'),
+        #     ('Solar_ZP26_B_RTD', 'Solar_ZP26_A_RTD'),
+        #     ('Solar_NP15_B_RTPD', 'Solar_NP15_A_RTPD'),
+        #     ('Solar_SP15_B_RTPD', 'Solar_SP15_A_RTPD'),
+        #     ('Solar_ZP26_B_RTPD', 'Solar_ZP26_A_RTPD'),
+        # ]
+        # print 'Summary of persistence forecast of solar power, thredhold = {:>.2f}%'.format(threshold*100)
+        # for c_b, c_a in columns_with_spikes:
+        #     # Column of binding forecast, column of advisory forecast
+        #     tmp = (df[c_a] - df[c_b])/df[c_b] # Relative errors
+        #     index_spikes = tmp[tmp>threshold].index
+        #     # df.loc[index_spikes, c_a] = (df.loc[index_spikes-1, c_a].values + df.loc[index_spikes+1, c_a].values)/2
+        #     df.loc[index_spikes, c_a] = df.loc[index_spikes, c_b]
+        #     print '{:<20s} has {:>4g} spikes out of {:>7g} points. Fraction: {:>4.3}%'.format(
+        #         c_a,
+        #         index_spikes.size,
+        #         df.index.size,
+        #         float(index_spikes.size)/df.index.size*100,
+        #     )
         # IP()
 
     # Now we can calculate the net load for both the advisory and binding intervals
@@ -2468,7 +2540,7 @@ if __name__ == '__main__':
     # collect_SLD_REN_FCST_rtpd()
     # collect_SLD_ADV_FCST()
     # collect_ENE_FLEX_RAMP_REQT()
-    process_raw_for_flexiramp()
+    # process_raw_for_flexiramp()
 
     # CAISO flexiramp reserve analysis
     ############################################################################
@@ -2485,6 +2557,6 @@ if __name__ == '__main__':
 
     # Others
     ############################################################################
-    # prepare_data_for_mucun(write_flag=False)
+    prepare_data_for_mucun(write_flag=False)
 
     # IP()
