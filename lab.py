@@ -1414,7 +1414,9 @@ def process_raw_for_flexiramp(write_flag=False):
 def process_raw_reg_req(write_flag=False):
     ''' 
     Process raw regulation requirements data from CAISO, DAM and RTM, output is 
-    for_reg_reg_requirement.csv by default
+    for_reg_reg_requirement.csv by default. 
+    Note that DAM requirements are for every 1 hour, while RTM requirements are 
+    for every 15 min.
     '''
     _, ls_df = load_dir(r'C:/Users/bxl180002/Downloads/RampSolar/CAISO/AS_REQ.zip')
     df = pd.concat(ls_df, ignore_index=True)
@@ -1477,6 +1479,65 @@ def process_raw_reg_req(write_flag=False):
     # df_results['RD_MIN_diff'] = df_results['RD_MIN_RTM'] - df_results['RD_MIN_DAM']
     # df_results[['RU_MAX_diff', 'RU_MIN_diff', 'RD_MAX_diff', 'RD_MIN_diff']].plot()
     # plt.show()
+
+def process_raw_reg_results(write_flag=False):
+    ''' 
+    Process raw regulation results data from CAISO, DAM and RTM, output is ...
+    Note that DAM results are for every 1 hour, while RTM results are for every 
+    15 min.
+    '''
+    _, ls_df = load_dir(r'C:/Users/bxl180002/Downloads/RampSolar/CAISO/AS_RESULTS.zip')
+    df = pd.concat(ls_df, ignore_index=True)
+
+    print 'Data loaded!'
+
+    # Determine the starting time and ending time
+    ls_dates = df['OPR_DT'].unique()
+    ls_dates.sort()
+
+    # Prepare results container
+    interval_perday = range(1, 5)*24 # The finiest interval is every 15 min (RTM)
+    hour_perday     = [i for i in range(1, 25) for j in range(1, 5)]
+    dict_results = {'OPR_DT': [], 'OPR_HR': [], 'OPR_INTERVAL': []}
+    for d in ls_dates:
+        dict_results['OPR_DT'] += [d]*24*4
+        dict_results['OPR_HR'] += hour_perday
+        dict_results['OPR_INTERVAL'] += interval_perday
+    df_results = pd.DataFrame(dict_results)
+    df_results.loc[:, 'TIME_STR'] = df_results['OPR_DT'] + '-' + df_results['OPR_HR'].astype('str') + '-' + df_results['OPR_INTERVAL'].astype('str')
+    df_results = df_results.set_index('TIME_STR')
+
+    # Assign regulation
+    ls_as_region = ['AS_CAISO', 'AS_CAISO_EXP'] # Let's take a look at both regions
+    for rtype in ['RU', 'RD']:
+        for region in ls_as_region:
+            for mtype in ['RTM', 'DAM']: # Market type
+                df_this = df.loc[
+                    (df['MARKET_RUN_ID']==mtype) 
+                    & (df['ANC_TYPE']==rtype) 
+                    & (df['ANC_REGION']==region)
+                    & (df['RESULT_TYPE']=='AS_MW'), # This is the total procurement
+                    :
+                ]
+                df_this.loc[:, 'TIME_STR'] = df_this['OPR_DT'] +'-'+ df_this['OPR_HR'].astype('str') +'-'+ df_this['OPR_INTERVAL'].astype('str')
+                df_this = df_this.set_index('TIME_STR')
+                if mtype is 'DAM':
+                    # Because OPR_INTERVAL for all DAM products are 0, we have to add them manually
+                    ls_tmp = list()
+                    for i in range(1, 5):
+                        df_tmp = df_this.copy()
+                        df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ str(i)
+                        df_tmp = df_tmp.set_index('TIME_STR')
+                        ls_tmp.append(df_tmp)
+                    df_this = pd.concat(ls_tmp)
+
+                k = '_'.join([rtype, mtype, region])
+                df_results[k] = df_this['MW']
+
+    if write_flag:
+        df_results.to_csv('for_reg_reg_results.csv', index=False)
+    else:
+        IP()
 
 def process_raw_ace_error(write_flag=False, plot_flag=False):
     ''' 
@@ -2511,8 +2572,6 @@ def baseline_reg_for_day(YYYY, MM, DD, oasis='DA'):
     plt.show()
 
 
-
-
 if __name__ == '__main__':
 
     # dist_tx2kb_spdis()
@@ -2552,11 +2611,12 @@ if __name__ == '__main__':
     # CAISO regulation analysis
     ############################################################################
     # process_raw_reg_req()
+    process_raw_reg_results()
     # process_raw_ace_error()
-    # baseline_reg_for_day(2019, 2, 22, oasis='RT')
+    # baseline_reg_for_day(2019, 2, 22, oasis='DA')
 
     # Others
     ############################################################################
-    prepare_data_for_mucun(write_flag=False)
+    # prepare_data_for_mucun(write_flag=False)
 
     # IP()
