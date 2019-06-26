@@ -989,31 +989,34 @@ def collect_caiso_api(dir_work, d_begin, d_end, urlparam, days_interval=29):
     os.chdir(dir_home)
     return ls_df
 
-def collect_AS_REQ():
-    # Collect as requirements and results
+def collect_AS_REQ_or_RESULTS(whichone='req'):
+    # Collect as requirements (whichone='req') and results (whichone='res').
     # Note that PST is UTC-8, PDT is UTC-7
     if platform.system() == 'Windows':
-        dir_work = 'C:\\Users\\bxl180002\\Downloads\\RampSolar\\CAISO\\AS_REQ'
-        # dir_work = 'C:\\Users\\bxl180002\\Downloads\\RampSolar\\CAISO\\AS_RESULTS'
+        dir_work = (
+            'C:\\Users\\bxl180002\\Downloads\\RampSolar\\CAISO\\AS_REQ' 
+            if whichone == 'req' 
+            else 'C:\\Users\\bxl180002\\Downloads\\RampSolar\\CAISO\\AS_RESULTS'
+        )
     elif platform.system() == 'Linux':
         pass  # To be added if running on the hpc
     else:
         pass
 
+    queryname = 'AS_REQ' if whichone == 'req' else 'AS_RESULTS'
     urlparam = {
-        'queryname':     'AS_REQ',  # Mandatory for singlezip
-        # 'queryname':     'AS_RESULTS',  # Mandatory for singlezip
-        'startdatetime': None,  # Mandatory for singlezip
-        'enddatetime':   None,  # Mandatory for singlezip
-        'market_run_id': 'ALL',  # Mandatory for singlezip
-        'version':       1,  # Mandatory for singlezip
+        'queryname':     queryname,  # Mandatory for singlezip
+        'startdatetime': None,       # Mandatory for singlezip
+        'enddatetime':   None,       # Mandatory for singlezip
+        'market_run_id': 'ALL',      # Mandatory for singlezip
+        'version':       1,          # Mandatory for singlezip
         'as_type':       'ALL',
         'as_region':     'ALL',
         'resultformat':  6,  # Let's just use csv format, 6 for csv, 1 for xml
     }
 
-    d_begin = datetime.datetime(2014, 1, 1, 8, 0)  # This is PST 2014-01-01 00:00
-    d_end   = datetime.datetime(2019, 3, 1, 8, 0)  # This is PST 2019-02-28 24:00
+    d_begin = datetime.datetime(2017, 1, 1, 8, 0)  # This is PST 2017-01-01 00:00
+    d_end   = datetime.datetime(2019, 6, 1, 7, 0)  # This is PDT 2019-05-31 24:00
     if not os.path.isdir(dir_work):
         os.mkdir(dir_work)
     ls_df = collect_caiso_api(dir_work, d_begin, d_end, urlparam)
@@ -1418,7 +1421,7 @@ def process_raw_reg_req(write_flag=False):
     Note that DAM requirements are for every 1 hour, while RTM requirements are 
     for every 15 min.
     '''
-    _, ls_df = load_dir(r'C:/Users/bxl180002/Downloads/RampSolar/CAISO/AS_REQ.zip')
+    _, ls_df = load_dir('./CAISO_OASIS/AS_REQ.zip')
     df = pd.concat(ls_df, ignore_index=True)
 
     print 'Data loaded!'
@@ -1436,7 +1439,7 @@ def process_raw_reg_req(write_flag=False):
         dict_results['OPR_HR'] += hour_perday
         dict_results['OPR_INTERVAL'] += interval_perday
     df_results = pd.DataFrame(dict_results)
-    df_results['TIME_STR'] = df_results['OPR_DT'] + '-' + df_results['OPR_HR'].astype('str') + '-' + df_results['OPR_INTERVAL'].astype('str')
+    df_results.loc[:, 'TIME_STR'] = df_results['OPR_DT'] + '-' + df_results['OPR_HR'].astype('str') + '-' + df_results['OPR_INTERVAL'].astype('str')
     df_results = df_results.set_index('TIME_STR')
 
     # Assign regulation
@@ -1486,7 +1489,7 @@ def process_raw_reg_results(write_flag=False):
     Note that DAM results are for every 1 hour, while RTM results are for every 
     15 min.
     '''
-    _, ls_df = load_dir(r'C:/Users/bxl180002/Downloads/RampSolar/CAISO/AS_RESULTS.zip')
+    _, ls_df = load_dir('./CAISO_OASIS/AS_RESULTS.zip')
     df = pd.concat(ls_df, ignore_index=True)
 
     print 'Data loaded!'
@@ -2594,15 +2597,16 @@ if __name__ == '__main__':
     ############################################################################
     # collect_SLD_FCST_rtd()
     # collect_SLD_FCST_rtpd()
-    # collect_AS_REQ()
+    # collect_AS_REQ_or_RESULTS()
+    # collect_AS_REQ_or_RESULTS('res')
     # collect_SLD_REN_FCST_rtd()
     # collect_SLD_REN_FCST_rtpd()
     # collect_SLD_ADV_FCST()
     # collect_ENE_FLEX_RAMP_REQT()
-    # process_raw_for_flexiramp()
 
     # CAISO flexiramp reserve analysis
     ############################################################################
+    # process_raw_for_flexiramp()
     # tmp_plot_forecast()
     # baseline_flexiramp_for_day(2019, 2, 22, use_persistence=True)
     # baseline_flexiramp()
