@@ -2574,6 +2574,108 @@ def baseline_reg_for_day(YYYY, MM, DD, oasis='DA'):
     ax.legend()
     plt.show()
 
+def lab_reg():
+    from pandas.plotting import register_matplotlib_converters
+    register_matplotlib_converters()
+
+    # Load ACE error data
+    df_ace = pd.read_csv('for_reg_ACE.csv')
+    df_ace['T'] = pd.to_datetime(df_ace['T'])
+
+    # Load regulation requirements from CAISO OASIS
+    df_reg_req = pd.read_csv('for_reg_reg_requirement.csv')
+
+    # Load regulation results from CAISO OASIS
+    df_reg_res = pd.read_csv('for_reg_reg_results.csv')
+    df_reg_res.loc[:, 'RU_TOT_AS_CAISO_EXP'] = df_reg_res[['RU_RTM_AS_CAISO_EXP', 'RU_DAM_AS_CAISO_EXP']].sum(axis=1)
+    df_reg_res.loc[:, 'RD_TOT_AS_CAISO_EXP'] = df_reg_res[['RD_RTM_AS_CAISO_EXP', 'RD_DAM_AS_CAISO_EXP']].sum(axis=1)
+
+    df = pd.concat(
+        [
+            df_reg_req,
+            df_reg_res[['RU_TOT_AS_CAISO_EXP', 'RD_TOT_AS_CAISO_EXP']],
+        ],
+        axis=1
+    )
+
+    df.loc[:, 'timestamp'] = pd.to_datetime(
+        df['OPR_DT'].astype(str) 
+        + 
+        ' ' 
+        + 
+        (df['OPR_HR']-1).map('{:02g}'.format) 
+        + 
+        ':'
+        + 
+        ((df['OPR_INTERVAL']-1)*15).map('{:02g}'.format), 
+        format='%Y-%m-%d %H:%M'
+    )
+    df.set_index('timestamp', inplace=True)
+
+    plt.figure()
+    ax = plt.subplot(1, 1, 1)
+
+    ax.fill_between(
+        df.index,
+        df_reg_req.loc[:, 'RU_MIN_RTM'],
+        df_reg_req.loc[:, 'RU_MAX_RTM'],
+        alpha=0.2,
+        color='k',
+    )
+    ax.fill_between(
+        df.index,
+        -df_reg_req.loc[:, 'RD_MIN_RTM'],
+        -df_reg_req.loc[:, 'RD_MAX_RTM'],
+        alpha=0.2,
+        facecolor='k',
+    )
+    ax.plot(df.index, df['RU_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
+    ax.plot(df.index, -df['RD_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
+    plt.show()
+
+    # Load net load probabilistic forecast
+    df_prob = pd.read_csv(r'C:\Users\bxl180002\Downloads\RampSolar\Mucun\binghui_10min.csv')
+    df_prob.loc[:, 'timestamp'] = pd.to_datetime(df_prob[['Year', 'Month', 'Day', 'Hour', 'Minute']])
+    df_prob.set_index('timestamp', inplace=True)
+
+    plt.figure()
+    ax = plt.subplot(1, 1, 1)
+
+    # ax.fill_between(
+    #     df_prob.index,
+    #     df_prob.loc[:, 'Q5'],
+    #     df_prob.loc[:, 'Q95'],
+    #     alpha=0.2,
+    #     facecolor='k',
+    # )
+    # ax.fill_between(
+    #     df_prob.index,
+    #     df_prob.loc[:, 'Q25'],
+    #     df_prob.loc[:, 'Q75'],
+    #     alpha=0.4,
+    #     facecolor='k',
+    # )
+    # ax.fill_between(
+    #     df_prob.index,
+    #     df_prob.loc[:, 'Q55'],
+    #     df_prob.loc[:, 'Q65'],
+    #     alpha=0.6,
+    #     facecolor='k',
+    # )
+
+    # ax.plot(df_prob.index, df_prob['Deterministic'], 'b', linewidth=1)
+    # ax.plot(df_prob.index, df_prob['Actual'], 'k', linewidth=1)
+
+    df_prob.loc[:, 'Q97-D'] = df_prob['Q97'] - df_prob['Deterministic']
+    df_prob.loc[:, 'D-Q3']  = df_prob['Deterministic'] - df_prob['Q3']
+
+    (df_prob['D-Q3']).plot(ax=ax) # Down uncertainty of net load, so we need reg-up
+    (-df_prob['Q97-D']).plot(ax=ax) # Up uncertainty of net load, so we need reg-dn
+    df.loc[df.index.month>=5, 'RU_TOT_AS_CAISO_EXP'].plot(ax=ax)
+    (-df.loc[df.index.month>=5, 'RD_TOT_AS_CAISO_EXP']).plot(ax=ax)
+    plt.show()
+    IP()
+
 
 if __name__ == '__main__':
 
@@ -2608,16 +2710,17 @@ if __name__ == '__main__':
     ############################################################################
     # process_raw_for_flexiramp()
     # tmp_plot_forecast()
-    # baseline_flexiramp_for_day(2019, 2, 22, use_persistence=True)
+    baseline_flexiramp_for_day(2019, 2, 22, use_persistence=False)
     # baseline_flexiramp()
     # estimate_validation()
 
     # CAISO regulation analysis
     ############################################################################
     # process_raw_reg_req()
-    process_raw_reg_results()
+    # process_raw_reg_results()
     # process_raw_ace_error()
     # baseline_reg_for_day(2019, 2, 22, oasis='DA')
+    # lab_reg()
 
     # Others
     ############################################################################
