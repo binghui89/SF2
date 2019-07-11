@@ -1,23 +1,26 @@
 function lab_milestone()
 % test_logn_distribution();
 % test_discretize_lognormal();
-% ramping_requirement_rtd_nl()
-ramping_requirement_rtpd_nl()
+ramping_requirement_rtd_nl;
+% ramping_requirement_rtpd_nl()
 % cell_history = return_30_days(2019, 5, 31);
 end
 
-function cell_history= return_30_days(YYYY, MM, DD)
+function cell_history= return_historical_days(YYYY, MM, DD, ndays)
+if nargin==3
+    ndays = 30;
+end
 thisday = datetime(YYYY, MM, DD);
 if mod(weekday(thisday), 6) == 1
     todayisweekday = false;
 else
     todayisweekday = true;
 end
-cell_history = cell(30, 1);
+cell_history = cell(ndays, 1);
 
 validnumber = 0;
 historyday  = thisday;
-while validnumber < 30
+while validnumber < ndays
     historyday = historyday - day(1);
     if mod(weekday(historyday), 6) == 1
         historyisweekday = false;
@@ -32,11 +35,32 @@ end
 
 end
 
-function ramping_requirement_rtpd_nl()
-load frp_20190501;
-selected_day = 1;
-M_b = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghui\binghui_10min.csv', 1, 0); % Binding forecast
-M_a = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghui\binghui_40min.csv', 1, 0); % Advisory forecast
+function ramping_requirement_rtpd_nl(write_flag)
+if nargin == 0
+    write_flag = false;
+end
+oasis = readtable('for_flexiramp_summary.csv');
+
+M_b = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghuinew\binghui_10min.csv', 1, 0); % Binding forecast
+M_a = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghuinew\binghui_40min.csv', 1, 0); % Advisory forecast
+
+
+% Replace 0 with nan
+M_b(M_b(:, 6) ==0, 6) = nan;
+M_b(M_b(:, 7) ==0, 7) = nan;
+M_a(M_a(:, 6) ==0, 6) = nan;
+M_a(M_a(:, 7) ==0, 7) = nan;
+
+% Show the actual NL and the deterministically forecasted NL
+figure();
+subplot(2, 1, 1);
+plot(datetime(M_b(:, 1), M_b(:, 2), M_b(:, 3), M_b(:, 4), M_b(:, 5), 0), M_b(:, 7), datetime(M_b(:, 1), M_b(:, 2), M_b(:, 3), M_b(:, 4), M_b(:, 5), 0), M_b(:, 6))
+legend('Advisory RTPD', 'Actual 15-min mean');
+title('Advisory RTPD');
+subplot(2, 1, 2);
+plot(datetime(M_a(:, 1), M_a(:, 2), M_a(:, 3), M_a(:, 4), M_a(:, 5), 0), M_a(:, 7), datetime(M_a(:, 1), M_a(:, 2), M_a(:, 3), M_a(:, 4), M_a(:, 5), 0), M_a(:, 6))
+legend('Binding RTD', 'Actual 5-min');
+title('Binding RTD');
 
 % Since M_a is 15min, we need to repeat it three times.
 M_a5 = nan(size(M_b));
@@ -56,11 +80,45 @@ nldeterm_a = M_a(:, 7);
 
 p = 1:99; % 1 to 99 quantiles
 binsize = 100;
+select_month = 5;
 
-for selected_day = 1: 30
-    irows = find(M_b(:, 3) == selected_day); % Let's just take a look at May 1.
-    frd_rtd = nan(size(irows, 1), 1);
-    fru_rtd = nan(size(irows, 1), 1);
+for select_day = 27: 31
+    
+    % Let's calculate the baseline requirement first
+    % First, collect historical NL forecast errors
+    cell_history = return_historical_days(2019, select_month, select_day, 40);
+    ndays = numel(cell_history);
+    nlerr_rtpd_max = nan(96, ndays);
+    nlerr_rtpd_min = nan(96, ndays);
+    nlerr_rtpd = nan(96, ndays, 3); % One 15-min interval includes three 5-min
+    for i = 1: ndays
+        for j = 0: 2
+            frcst_a_rtpd = M_a((M_a(:, 2) ==cell_history{i}.Month)&(M_a(:, 3) ==cell_history{i}.Day)&(mod(M_a(:, 5), 15)==5*j), 7);
+            frcst_b_rtd  = M_b((M_b(:, 2) ==cell_history{i}.Month)&(M_b(:, 3) ==cell_history{i}.Day)&(mod(M_b(:, 5), 15)==5*j), 7);
+            nlerr_rtpd(:, i, j+1) = frcst_b_rtd - frcst_a_rtpd;
+        end
+    end
+    nlerr_rtpd_max = max(nlerr_rtpd, [], 3);
+    nlerr_rtpd_min = min(nlerr_rtpd, [], 3);
+
+    % Next, calculate ramping reserve requirements
+    fru_determ = nan(24, 1);
+    frd_determ = nan(24, 1);
+    for i = 1: 24
+        rtpd_col = (i-1)*4+1: i*4;
+        samples_fru = nlerr_rtpd_max(rtpd_col, :);
+        [f,x] = ecdf(samples_fru(:));
+        fru_determ(i) = interp1(f, x, 0.975);
+
+        samples_frd = nlerr_rtpd_min(rtpd_col, :);
+        [f,x] = ecdf(samples_frd(:));
+        frd_determ(i) = interp1(f, x, 0.025);
+    end
+
+    % Now, let's calculate probabilistic requirements
+    irows = find((M_b(:, 2) ==select_month)&(M_b(:, 3) == select_day));
+    frd_prob = nan(size(irows, 1), 1);
+    fru_prob = nan(size(irows, 1), 1);
     for i = irows'
         Mrow_b = Mquantiles_b(i, :);
         Mrow_a = Mquantiles_a(i, :);
@@ -68,8 +126,8 @@ for selected_day = 1: 30
         [h_bin_a, binedge_a] = discretize_lognormal(Mrow_a, p, binsize);
         [a_convoluted, t_convoluted] = conv_poly([h_bin_a(:); 0], binedge_a(:), [flipud(h_bin_b(:)); 0], flipud(-binedge_b(:)), binsize); % Distribution of binding - advisory forecast NL
 
-        frd_rtd(i - (selected_day-1)*288) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.05);  % 5 percentile
-        fru_rtd(i - (selected_day-1)*288) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.95);  % 95 percentile
+        frd_prob(irows==i) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.025);  % 5 percentile
+        fru_prob(irows==i) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.975);  % 95 percentile
 
 %         if mod(i, 12) == 1
 %             fig = figure();
@@ -83,26 +141,99 @@ for selected_day = 1: 30
     end
 
     figure();
-    xtime = datetime(2019,5,selected_day,0,5,0):minutes(5): datetime(2019,5,selected_day+1,0,0,0);
-    h1= plot(xtime, reshape(repmat(min(reshape(frd_rtd, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(max(reshape(fru_rtd, 12, 24)), 12, 1), 288, 1));
     hold on;
-    % plot(1:288, reshape(repmat(min(reshape(frd_rtd, 12, 24)), 12, 1), 288, 1), 1:288, reshape(repmat(min(reshape(fru_rtd, 12, 24)), 12, 1), 288, 1))
-    % plot(1:288, reshape(repmat(mean(reshape(frd_rtd, 12, 24), 1), 12, 1), 288, 1), 1:288, reshape(repmat(mean(reshape(fru_rtd, 12, 24), 1), 12, 1), 288, 1))
-    h2 = plot(xtime, fru_rtpd_20190501, xtime,-frd_rtpd_20190501);
-    set(h1, 'linewidth', 2, 'color', 'k');
-    set(h2, 'linewidth', 2, 'color', 'r');
-    legend([h1(1); h2(1)], 'FRD prob', 'FRD OASIS');
+    xtime = datetime(2019,select_month,select_day,0,5,0):minutes(5): (datetime(2019,select_month,select_day,0,5,0) + day(1) - minutes(5));
 
-    % h3 = plot(xtime, frd_rtd, xtime, fru_rtd);
-    % set(h3, 'color', 'k');
-    % legend([h1(1); h2(1); h3(1)], 'FRD prob', 'FRD OASIS', 'FRP 5-min');
+    % h1 = plot(xtime, reshape(repmat(min(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(max(reshape(fru_prob, 12, 24)), 12, 1), 288, 1));
+    h1 =plot(xtime, reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1));
+%     h1 = plot(xtime, reshape(repmat(mean(reshape(frd_prob, 12, 24), 1), 12, 1), 288, 1), xtime, reshape(repmat(mean(reshape(fru_prob, 12, 24), 1), 12, 1), 288, 1));
+    set(h1, 'linewidth', 2, 'color', 'k');
+
+    h2 = plot(xtime, reshape(repmat(fru_determ, 1, 12)', 288, 1), xtime, reshape(repmat(frd_determ, 1, 12)', 288, 1));
+    set(h2, 'linewidth', 2, 'color', 'r');
+
+%     fru_oasis = oasis.UP_RTPD((oasis.OPR_DT.Year==2019) & (oasis.OPR_DT.Month==select_month) & (oasis.OPR_DT.Day==select_day));
+%     frd_oasis = oasis.DOWN_RTPD((oasis.OPR_DT.Year==2019) & (oasis.OPR_DT.Month==select_month) & (oasis.OPR_DT.Day==select_day));
+%     h3 = plot(xtime, fru_oasis, xtime, -frd_oasis);
+%     set(h3, 'linewidth', 2,  'color', 'b');
+
+    ylabel('MW');
+    legend([h1(1); h2(1)], 'Prob', 'Baseline');
+%     legend([h1(1); h2(1); h3(1)], 'FRD prob', 'FRD determ', 'FRP OASIS');
+%     legend([h2(1); h3(1)], 'Baseline', 'OASIS');
+    set(findall(gcf,'-property','FontSize'),'FontSize',14);
+    
+    figure();
+    hold on;
+    h1 = plot(xtime, reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(frd_determ, 1, 12)', 288, 1));
+    h2 = plot(xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(fru_determ, 1, 12)', 288, 1));
+    h3 = plot(xtime, 0.9.*ones(288, 1), 'r');
+    set([h1,h2], 'linewidth', 2);
+    set(gca, 'YScale', 'log')
+    legend([h1, h2], 'FRU', 'FRD');
+    ylabel('Ratio of Prob/Baseline');
+    set(findall(gcf,'-property','FontSize'),'FontSize',14);
+    
+    % Save results
+    if write_flag
+        M = [... 
+            xtime(:).Year, ...
+            xtime(:).Month, ...
+            xtime(:).Day, ...
+            xtime(:).Hour, ...
+            xtime(:).Minute, ...
+            xtime(:).Second, ...
+            fru_oasis, ...
+            -frd_oasis, ...
+            reshape(repmat(fru_determ, 1, 12)', 288, 1), ...
+            reshape(repmat(frd_determ, 1, 12)', 288, 1), ... 
+            reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1), ... 
+            reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1) ...
+            ];
+
+        csvname_write = strcat(int2str(select_day), '.csv');
+        dirhome = pwd;
+        cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' 'Second' 'FRU_OASIS' 'FRD_OASIS' 'FRU_BASELINE' 'FRD_BASELINE' 'FRU_PROB' 'FRD_PROB'}; %dummy header
+        commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
+        commaHeader = commaHeader(:)';
+        textHeader = cell2mat(commaHeader); % cHeader in text with commas
+
+        cd('FRP_RTPD');
+        fid = fopen(csvname_write,'w'); 
+        fprintf(fid,'%s\n',textHeader); % write header to file
+        fclose(fid);
+        dlmwrite(csvname_write, M, '-append');
+        cd(dirhome);
+    end
+
 end
 
 end
 
 function ramping_requirement_rtd_nl()
-M_b = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghui\binghui_10min.csv', 1, 0); % Binding forecast
-M_a = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghui\binghui_15min.csv', 1, 0); % Advisory forecast
+oasis = readtable('for_flexiramp_summary.csv');
+
+M_b = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghuinew\binghui_10min.csv', 1, 0); % Binding forecast
+M_a = csvread('C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghuinew\binghui_15min.csv', 1, 0); % Advisory forecast
+
+
+% Replace 0 with nan
+M_b(M_b(:, 6) ==0, 6) = nan;
+M_b(M_b(:, 7) ==0, 7) = nan;
+M_a(M_a(:, 6) ==0, 6) = nan;
+M_a(M_a(:, 7) ==0, 7) = nan;
+
+% Show the actual NL and the deterministically forecasted NL
+figure();
+ax1 = subplot(2, 1, 1);
+xtime = datetime(M_b(:, 1), M_b(:, 2), M_b(:, 3), M_b(:, 4), M_b(:, 5), 0);
+plot(xtime, M_b(:, 7), xtime, M_b(:, 6), xtime, M_a(:, 7))
+legend('Binding RTD', 'Actual 5-min', 'Advisory RTD');
+ax2 = subplot(2, 1, 2);
+plot(xtime, M_b(:, 7)-M_a(:, 7))
+title('B - A');
+linkaxes([ax1, ax2],'x');
+
 Mquantiles_b = M_b(:, 8:end);
 Mquantiles_a = M_a(:, 8:end);
 nlactual_b = M_b(:, 6);
@@ -112,13 +243,36 @@ nldeterm_a = M_a(:, 7);
 
 p = 1:99; % 1 to 99 quantiles
 binsize = 100;
+select_month = 5;
 
+for select_day = 27: 31
+    
+    % Let's calculate the baseline requirement first
+    % First, collect historical NL forecast errors
+    cell_history = return_historical_days(2019, select_month, select_day);
+    ndays = numel(cell_history);
+    nlerr_rtpd = nan(288, ndays); % One 15-min interval includes three 5-min
+    for i = 1: ndays
+        frcst_a_rtd = M_a((M_a(:, 2) ==cell_history{i}.Month)&(M_a(:, 3) ==cell_history{i}.Day), 7);
+        frcst_b_rtd = M_b((M_b(:, 2) ==cell_history{i}.Month)&(M_b(:, 3) ==cell_history{i}.Day), 7);
+        nlerr_rtpd(:, i) = frcst_b_rtd - frcst_a_rtd;
+    end
 
-for selected_day = 1: 30
-    irows = find(M_b(:, 3) == selected_day); % Let's just take a look at May 1.
-    frd_rtd = nan(size(irows, 1), 1);
-    fru_rtd = nan(size(irows, 1), 1);
+    % Next, calculate ramping reserve requirements
+    fru_determ = nan(24, 1);
+    frd_determ = nan(24, 1);
+    for i = 1: 24
+        rtpd_col = (i-1)*12+1: i*12;
+        samples_fru = nlerr_rtpd(rtpd_col, :);
+        [f,x] = ecdf(samples_fru(:));
+        fru_determ(i) = interp1(f, x, 0.975);
+        frd_determ(i) = interp1(f, x, 0.025);
+    end
 
+    % Now, let's calculate probabilistic requirements
+    irows = find((M_b(:, 2) ==select_month)&(M_b(:, 3) == select_day));
+    frd_prob = nan(size(irows, 1), 1);
+    fru_prob = nan(size(irows, 1), 1);
     for i = irows'
         Mrow_b = Mquantiles_b(i, :);
         Mrow_a = Mquantiles_a(i, :);
@@ -126,8 +280,8 @@ for selected_day = 1: 30
         [h_bin_a, binedge_a] = discretize_lognormal(Mrow_a, p, binsize);
         [a_convoluted, t_convoluted] = conv_poly([h_bin_a(:); 0], binedge_a(:), [flipud(h_bin_b(:)); 0], flipud(-binedge_b(:)), binsize); % Distribution of binding - advisory forecast NL
 
-        frd_rtd(i - (selected_day-1)*288) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.05);  % 5 percentile
-        fru_rtd(i - (selected_day-1)*288) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.95);  % 95 percentile
+        frd_prob(irows==i) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.025);  % 5 percentile
+        fru_prob(irows==i) = interp1(cdf_poly(a_convoluted, t_convoluted), t_convoluted, 0.975);  % 95 percentile
 
 %         if mod(i, 12) == 1
 %             fig = figure();
@@ -140,21 +294,39 @@ for selected_day = 1: 30
 %         end
     end
 
-    figure();
-    xtime = datetime(2019,5,selected_day,0,5,0):minutes(5): datetime(2019,5,selected_day+1,0,0,0);
-    h1= plot(xtime, reshape(repmat(min(reshape(frd_rtd, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(max(reshape(fru_rtd, 12, 24)), 12, 1), 288, 1));
+    figure(); 
     hold on;
-    % plot(1:288, reshape(repmat(min(reshape(frd_rtd, 12, 24)), 12, 1), 288, 1), 1:288, reshape(repmat(min(reshape(fru_rtd, 12, 24)), 12, 1), 288, 1))
-    % plot(1:288, reshape(repmat(mean(reshape(frd_rtd, 12, 24), 1), 12, 1), 288, 1), 1:288, reshape(repmat(mean(reshape(fru_rtd, 12, 24), 1), 12, 1), 288, 1))
-    load frp_20190501;
-    h2 = plot(xtime, fru_rtd_20190501, xtime,-frd_rtd_20190501);
-    set(h1, 'linewidth', 2, 'color', 'k');
-    set(h2, 'linewidth', 2, 'color', 'r');
-    legend([h1(1); h2(1)], 'FRD prob', 'FRD OASIS');
+    xtime = datetime(2019,select_month,select_day,0,5,0):minutes(5): (datetime(2019,select_month,select_day,0,5,0) + day(1) - minutes(5));
 
-    % h3 = plot(xtime, frd_rtd, xtime, fru_rtd);
-    % set(h3, 'color', 'k');
-    % legend([h1(1); h2(1); h3(1)], 'FRD prob', 'FRD OASIS', 'FRP 5-min');
+    % h1 = plot(xtime, reshape(repmat(min(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(max(reshape(fru_prob, 12, 24)), 12, 1), 288, 1));
+    % h1 =plot(xtime, reshape(repmat(min(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1))
+    h1 = plot(xtime, reshape(repmat(mean(reshape(frd_prob, 12, 24), 1), 12, 1), 288, 1), xtime, reshape(repmat(mean(reshape(fru_prob, 12, 24), 1), 12, 1), 288, 1));
+    set(h1, 'linewidth', 2, 'color', 'k');
+
+    h2 = plot(xtime, reshape(repmat(fru_determ, 1, 12)', 288, 1), xtime, reshape(repmat(frd_determ, 1, 12)', 288, 1));
+    set(h2, 'linewidth', 2, 'color', 'r');
+
+%     fru_oasis = oasis.UP_RTD((oasis.OPR_DT.Year==2019) & (oasis.OPR_DT.Month==select_month) & (oasis.OPR_DT.Day==select_day));
+%     frd_oasis = oasis.DOWN_RTD((oasis.OPR_DT.Year==2019) & (oasis.OPR_DT.Month==select_month) & (oasis.OPR_DT.Day==select_day));
+%     h3 = plot(xtime, fru_oasis, xtime, -frd_oasis);
+%     set(h3, 'linewidth', 2,  'color', 'b');
+
+    legend([h1(1); h2(1)], 'Prob', 'Baseline');
+%     legend([h1(1); h2(1); h3(1)], 'FRD prob', 'FRD determ', 'FRP OASIS');
+%     legend([h2(1); h3(1)], 'Baseline', 'OASIS');
+    set(findall(gcf,'-property','FontSize'),'FontSize',14);
+    
+    figure();
+    hold on;
+    h1 = plot(xtime, reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(frd_determ, 1, 12)', 288, 1));
+    h2 = plot(xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(fru_determ, 1, 12)', 288, 1));
+    h3 = plot(xtime, 0.9.*ones(288, 1), 'r');
+    set([h1,h2], 'linewidth', 2);
+    set(gca, 'YScale', 'log')
+    legend([h1, h2], 'FRU', 'FRD');
+    ylabel('Ratio of Prob/Baseline');
+    set(findall(gcf,'-property','FontSize'),'FontSize',14);
+
 end
 
 end
