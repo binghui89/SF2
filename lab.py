@@ -359,7 +359,7 @@ def read_paris1():
     
     # IP()
 
-def process_paris(write_flag=False):
+def process_paris(dir_work, write_flag=False):
     '''
     Use Sandia's PVlib to get solar power generation
     '''
@@ -386,10 +386,9 @@ def process_paris(write_flag=False):
 
 
     # Sadly we cannot use the load_dir function, bummer.
-    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_tmp'
 
-    os.chdir(dir_work)
     ls_csv, ls_df = load_dir(dir_work)
+    os.chdir(dir_work)
 
     df_all = pd.concat(ls_df, ignore_index=True)
     df_all = df_all[['latitude', 'longitude', 'timestamp', 'layerName', 'value']].drop_duplicates().reset_index(drop=True)
@@ -540,16 +539,16 @@ def process_paris(write_flag=False):
         # df_results.loc[:, 'Actual'] = ac
         # IP()
 
-def process_paris_global_solar_irradiance(write_flag=False):
+def process_paris_global_solar_irradiance(dir_work, write_flag=False):
     '''
     Only process actual GHI data, since it is hourly data.
     '''
 
     # Sadly we cannot use the load_dir function, bummer.
-    dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_May'
+    # dir_work = r'C:\Users\bxl180002\Downloads\RampSolar\IBM_May'
 
-    os.chdir(dir_work)
     ls_csv, ls_df = load_dir(dir_work)
+    os.chdir(dir_work)
 
     df_all = pd.concat(ls_df, ignore_index=True)
     df_all = df_all[['latitude', 'longitude', 'timestamp', 'layerName', 'value']].drop_duplicates().reset_index(drop=True)
@@ -602,7 +601,7 @@ def process_paris_global_solar_irradiance(write_flag=False):
 
 def read_paris_April():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
-    os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM')
+    os.chdir('./IBM/April')
     df_results = pd.DataFrame()
     # From Rui's code
     server = 'https://pairs.res.ibm.com/v2/query'
@@ -692,16 +691,27 @@ def read_paris_April():
         ls_df = list()
         query_json["spatial"]["coordinates"] = c
         for layer_name in dict_layers:
-            query_json["temporal"]["intervals"] = [{"start": "2019-04-01T00:00:00Z", "end": "2019-05-01T00:00:00Z"}] # Only April this time
+            query_json["temporal"]["intervals"] = [{"start": "2019-04-01T07:00:00Z", "end": "2019-05-01T07:00:00Z"}] # Starts and ends at 0 PDT
             query_json["layers"] = [dict_layers[layer_name]]
             response = requests.post(
                 url=server,
                 json=query_json, 
                 auth=global_pairs_auth,
             )
+
+            ntry = 1
+            while (response.status_code != 200) & (ntry<=10):
+                response = requests.post(
+                    url=server,
+                    json=query_json, 
+                    auth=global_pairs_auth,
+                )
+                ntry = ntry+1
+                time.sleep(5) # Let's wait for 5 seconds to give a second try
+
             if response.status_code == 200:
                 ls_df.append(pd.DataFrame(response.json()['data']))
-                print s, layer_name, 'Done!'
+                print s, layer_name, 'Done!', 'ntry =', ntry
             else:
                 print s, layer_name, 'no'
 
@@ -715,7 +725,7 @@ def read_paris_April():
 
 def read_paris_May():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
-    os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM_May')
+    os.chdir('./IBM/May')
     df_results = pd.DataFrame()
     # From Rui's code
     server = 'https://pairs.res.ibm.com/v2/query'
@@ -805,7 +815,7 @@ def read_paris_May():
         ls_df = list()
         query_json["spatial"]["coordinates"] = c
         for layer_name in dict_layers:
-            query_json["temporal"]["intervals"] = [{"start": "2019-05-01T00:00:00Z", "end": "2019-06-01T00:00:00Z"}] # Only April this time
+            query_json["temporal"]["intervals"] = [{"start": "2019-05-01T07:00:00Z", "end": "2019-06-01T07:00:00Z"}] # Starts and ends at 0 PDT
             query_json["layers"] = [dict_layers[layer_name]]
             response = requests.post(
                 url=server,
@@ -837,7 +847,7 @@ def read_paris_May():
 
 def read_paris_5min():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
-    os.chdir('./IBM/May')
+    os.chdir('./IBM/May.5min')
     df_results = pd.DataFrame()
     # From Rui's code
     server = 'https://pairs.res.ibm.com/v2/query'
@@ -919,7 +929,7 @@ def read_paris_5min():
         ls_df = list()
         query_json["spatial"]["coordinates"] = c
         for layer_name in dict_layers:
-            query_json["temporal"]["intervals"] = [{"start": "2019-05-01T07:00:00Z", "end": "2019-06-01T07:00:00Z"}] # Only April this time
+            query_json["temporal"]["intervals"] = [{"start": "2019-05-01T07:00:00Z", "end": "2019-06-01T07:00:00Z"}] # Start and end at 0 PDT this time
             query_json["layers"] = [dict_layers[layer_name]]
             response = requests.post(
                 url=server,
@@ -2693,6 +2703,15 @@ def lab_reg():
     df_reg_res.loc[:, 'RU_TOT_AS_CAISO_EXP'] = df_reg_res[['RU_RTM_AS_CAISO_EXP', 'RU_DAM_AS_CAISO_EXP']].sum(axis=1)
     df_reg_res.loc[:, 'RD_TOT_AS_CAISO_EXP'] = df_reg_res[['RD_RTM_AS_CAISO_EXP', 'RD_DAM_AS_CAISO_EXP']].sum(axis=1)
 
+    # Load net load probabilistic forecast
+    df_prob = pd.read_csv(r'C:\Users\bxl180002\Downloads\RampSolar\Mucun\tobinghui\binghui_10min.csv')
+    df_prob.loc[:, 'timestamp'] = pd.to_datetime(df_prob[['Year', 'Month', 'Day', 'Hour', 'Minute']])
+    df_prob.set_index('timestamp', inplace=True)
+
+    # Calculate 95 and 5 prediction interval
+    df_prob.loc[:, 'Q97-D'] = df_prob['Q97'] - df_prob['Forecast']
+    df_prob.loc[:, 'D-Q3']  = df_prob['Forecast'] - df_prob['Q3']
+
     df = pd.concat(
         [
             df_reg_req,
@@ -2715,31 +2734,94 @@ def lab_reg():
     )
     df.set_index('timestamp', inplace=True)
 
-    plt.figure()
-    ax = plt.subplot(1, 1, 1)
+    year_selected  = 2019
+    month_selected = 5
 
-    ax.fill_between(
-        df.index,
-        df_reg_req.loc[:, 'RU_MIN_RTM'],
-        df_reg_req.loc[:, 'RU_MAX_RTM'],
-        alpha=0.2,
-        color='k',
-    )
-    ax.fill_between(
-        df.index,
-        -df_reg_req.loc[:, 'RD_MIN_RTM'],
-        -df_reg_req.loc[:, 'RD_MAX_RTM'],
-        alpha=0.2,
-        facecolor='k',
-    )
-    ax.plot(df.index, df['RU_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
-    ax.plot(df.index, -df['RD_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
+    for d in df.index[(df.index.year==year_selected) & (df.index.month==month_selected)].day.unique():
+        fig = plt.figure()
+        for year_selected in [2018, 2019]:
+            ax = plt.subplot(1, 2, year_selected-2017)
+
+            irows = ((df.index.year == year_selected) & (df.index.month == month_selected) & (df.index.day == d))
+
+            ax.fill_between(
+                df.index[irows],
+                df_reg_req.loc[irows, 'RU_MIN_RTM'],
+                df_reg_req.loc[irows, 'RU_MAX_RTM'],
+                alpha=0.2,
+                color='k',
+            )
+            ax.fill_between(
+                df.index[irows],
+                -df_reg_req.loc[irows, 'RD_MIN_RTM'],
+                -df_reg_req.loc[irows, 'RD_MAX_RTM'],
+                alpha=0.2,
+                facecolor='k',
+            )
+            ax.plot(df.index[irows], df.loc[irows, 'RU_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
+            ax.plot(df.index[irows], -df.loc[irows, 'RD_TOT_AS_CAISO_EXP'], 'r', linewidth=1)
+
+            if year_selected == 2018:
+                ax.plot(
+                    df_ace.loc[(df_ace['T'].dt.month==5) & (df_ace['T'].dt.day==d), 'T'],
+                    df_ace.loc[(df_ace['T'].dt.month==5) & (df_ace['T'].dt.day==d), 'ACE'],
+                )
+
+            ax.set_title(str(year_selected) + '/' + str(month_selected) + '/' + str(d))
+
+        # fig.savefig('./figs/' +str(d)+'.png')
+
+        # Mucun's t-10 probabilistic prediction interval
+        # ax.plot(df_prob.index[df_prob.index.day==d], df_prob.loc[df_prob.index.day==d, 'Q97-D'], 'b', linewidth=1)
+        # ax.plot(df_prob.index[df_prob.index.day==d], -df_prob.loc[df_prob.index.day==d, 'D-Q3'], 'b', linewidth=1)
     plt.show()
 
-    # Load net load probabilistic forecast
-    df_prob = pd.read_csv(r'C:\Users\bxl180002\Downloads\RampSolar\Mucun\binghui_10min.csv')
-    df_prob.loc[:, 'timestamp'] = pd.to_datetime(df_prob[['Year', 'Month', 'Day', 'Hour', 'Minute']])
-    df_prob.set_index('timestamp', inplace=True)
+    # Compare prob requirements with posted requirements
+    for d in df.index[(df.index.year==year_selected) & (df.index.month==month_selected)].day.unique():
+        fig = plt.figure()
+        for year_selected in [2019]:
+            ax = plt.subplot(1, 1, 1)
+
+            irows = ((df.index.year == year_selected) & (df.index.month == month_selected) & (df.index.day == d))
+
+            # ax.fill_between(
+            #     df.index[irows],
+            #     df_reg_req.loc[irows, 'RU_MIN_RTM'],
+            #     df_reg_req.loc[irows, 'RU_MAX_RTM'],
+            #     alpha=0.2,
+            #     color='k',
+            # )
+            # ax.fill_between(
+            #     df.index[irows],
+            #     -df_reg_req.loc[irows, 'RD_MIN_RTM'],
+            #     -df_reg_req.loc[irows, 'RD_MAX_RTM'],
+            #     alpha=0.2,
+            #     facecolor='k',
+            # )
+            h1 = df.loc[irows, 'RU_TOT_AS_CAISO_EXP'].plot(ax=ax, color='r')
+            (-df.loc[irows, 'RD_TOT_AS_CAISO_EXP']).plot(ax=ax, color='r')
+
+            if year_selected == 2018:
+                ax.plot(
+                    df_ace.loc[(df_ace['T'].dt.month==5) & (df_ace['T'].dt.day==d), 'T'],
+                    df_ace.loc[(df_ace['T'].dt.month==5) & (df_ace['T'].dt.day==d), 'ACE'],
+                )
+
+            ax.set_title(str(year_selected) + '/' + str(month_selected) + '/' + str(d))
+
+
+        # Mucun's t-10 probabilistic prediction interval
+        df_prob.loc[df_prob.index.day==d, 'Q97-D'].plot(ax=ax, color='b')
+        (-df_prob.loc[df_prob.index.day==d, 'D-Q3']).plot(ax=ax, color='b')
+        # ax.plot(df_prob.index[df_prob.index.day==d], df_prob.loc[df_prob.index.day==d, 'Q97-D'], 'b', linewidth=1)
+        # ax.plot(df_prob.index[df_prob.index.day==d], -df_prob.loc[df_prob.index.day==d, 'D-Q3'], 'b', linewidth=1)
+        h2 = ax.set_xlabel('Time')
+        ax.set_ylabel('MW')
+        fig.savefig('./figs/reg_may' +str(d)+'.png')
+
+        # plt.legend([h1, h2], ['OASIS', 'Prob'])
+
+    plt.show()
 
     plt.figure()
     ax = plt.subplot(1, 1, 1)
@@ -2769,14 +2851,84 @@ def lab_reg():
     # ax.plot(df_prob.index, df_prob['Deterministic'], 'b', linewidth=1)
     # ax.plot(df_prob.index, df_prob['Actual'], 'k', linewidth=1)
 
-    df_prob.loc[:, 'Q97-D'] = df_prob['Q97'] - df_prob['Deterministic']
-    df_prob.loc[:, 'D-Q3']  = df_prob['Deterministic'] - df_prob['Q3']
+    # (df_prob['D-Q3']).plot(ax=ax) # Down uncertainty of net load, so we need reg-up
+    # (-df_prob['Q97-D']).plot(ax=ax) # Up uncertainty of net load, so we need reg-dn
+    # df.loc[df.index.month>=5, 'RU_TOT_AS_CAISO_EXP'].plot(ax=ax)
+    # (-df.loc[df.index.month>=5, 'RD_TOT_AS_CAISO_EXP']).plot(ax=ax)
+    # plt.show()
 
-    (df_prob['D-Q3']).plot(ax=ax) # Down uncertainty of net load, so we need reg-up
-    (-df_prob['Q97-D']).plot(ax=ax) # Up uncertainty of net load, so we need reg-dn
-    df.loc[df.index.month>=5, 'RU_TOT_AS_CAISO_EXP'].plot(ax=ax)
-    (-df.loc[df.index.month>=5, 'RD_TOT_AS_CAISO_EXP']).plot(ax=ax)
-    plt.show()
+    # # Synthetic required reg up/down terms (REG*)
+    # array_reg_up_syn = df.loc[df.index.year==2018, 'RU_TOT_AS_CAISO_EXP'].values.repeat(15, axis=0) - df_ace['ACE'].values
+    # array_reg_dn_syn = -df.loc[df.index.year==2018, 'RD_TOT_AS_CAISO_EXP'].values.repeat(15, axis=0) - df_ace['ACE'].values
+    # df_syn_reg_star = pd.DataFrame(
+    #     np.column_stack([array_reg_up_syn, array_reg_dn_syn]),
+    #     index=df_ace['T'],
+    #     columns=['RU_STAR_SYN', 'RD_STAR_SYN'],
+    # )
+
+    # MM = 5
+    # for selected_day in df.index[(df.index.year==2018) & (df.index.month==MM)].day.unique():
+
+    #     df_sample_u = pd.DataFrame(
+    #         {
+    #             'OPR_HR': [i for i in range(1, 25) for j in range(60)],
+    #             'OPR_INTERVAL': range(1, 61)*24,
+    #         }
+    #     )
+    #     df_sample_d = pd.DataFrame(
+    #         {
+    #             'OPR_HR': [i for i in range(1, 25) for j in range(60)],
+    #             'OPR_INTERVAL': range(1, 61)*24,
+    #         }
+    #     )
+    #     plt.figure()
+    #     ax = plt.subplot(1, 1, 1)
+    #     for d in df_syn_reg_star.index[df_syn_reg_star.index.month==MM].day.unique():
+    #         i_selected = (df_syn_reg_star.index.month==MM)&(df_syn_reg_star.index.day==d)
+    #         df_tmp = df_syn_reg_star[i_selected]
+    #         k = df_tmp.index.day.unique()[0]
+    #         df_sample_u[k] = df_tmp['RU_STAR_SYN'].values
+    #         df_sample_d[k] = df_tmp['RD_STAR_SYN'].values
+
+    #     # Find confidence intervals
+    #     dict_percentile_u = find_percentiles(df_sample_u, [0.05, 0.95])
+    #     dict_percentile_d = find_percentiles(df_sample_d, [0.05, 0.95])
+    #     reg_up = dict_percentile_u[0.95]
+    #     reg_dn = dict_percentile_d[0.95]
+    #     reg_up = np.array(reg_up).repeat(60)
+    #     reg_dn = np.array(reg_dn).repeat(60)
+
+    #     # df_reg_est = pd.DataFrame(
+    #     #     np.column_stack([reg_up, reg_dn]),
+    #     #     columns=['RU_EST', 'RD_EST'],
+    #     #     index=pd.date_range(start='5/1/2018', end='5/2/2018', freq='min')[0:-1],
+    #     # )
+
+    #     ax.plot(range(0, len(reg_up)), reg_up, 'k', linewidth=0.5, label='Baseline')
+    #     ax.plot(range(0, len(reg_dn)), reg_dn, 'k', linewidth=0.5)
+    #     ax.set_ylim([-1000, 1000])
+    #     ax.set_xticks([60*i for i in range(0, 24)])
+    #     ax.set_xticklabels(range(0, 24))
+
+    #     i_select = df_reg_req['OPR_DT'] == '{:4g}-{:02g}-{:02g}'.format(2019, MM, selected_day)
+    #     ax.fill_between(
+    #         range(0, i_selected.sum()), 
+    #         df_reg_req.loc[i_select, 'RU_MIN_RTM'].repeat(15), 
+    #         df_reg_req.loc[i_select, 'RU_MAX_RTM'].repeat(15), 
+    #         alpha=0.2, 
+    #         color='k',
+    #         label='OASIS',
+    #     )
+    #     ax.fill_between(
+    #         range(0, i_selected.sum()), 
+    #         -df_reg_req.loc[i_select, 'RD_MIN_RTM'].repeat(15), 
+    #         -df_reg_req.loc[i_select, 'RD_MAX_RTM'].repeat(15), 
+    #         alpha=0.2, 
+    #         facecolor='k',
+    #     )
+    
+    # plt.show()
+
     IP()
 
 
@@ -2793,11 +2945,11 @@ if __name__ == '__main__':
     ############################################################################
     # read_paris()
     # read_paris1()
-    # process_paris(write_flag=False)
+    # process_paris('./IBM/April', write_flag=False)
     # read_paris_April()
     # read_paris_May()
-    # process_paris_global_solar_irradiance(write_flag=False)
-    read_paris_5min()
+    # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
+    # read_paris_5min()
 
     # CAISO OASIS data collection and save
     ############################################################################
@@ -2824,7 +2976,7 @@ if __name__ == '__main__':
     # process_raw_reg_results()
     # process_raw_ace_error()
     # baseline_reg_for_day(2019, 2, 22, oasis='DA')
-    # lab_reg()
+    lab_reg()
 
     # Others
     ############################################################################
