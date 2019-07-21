@@ -1,8 +1,8 @@
 function lab_milestone()
 % test_logn_distribution();
 % test_discretize_lognormal();
-ramping_requirement_rtd_nl;
-% ramping_requirement_rtpd_nl()
+ramping_requirement_rtd_nl();
+% ramping_requirement_rtpd_nl();
 % cell_history = return_30_days(2019, 5, 31);
 end
 
@@ -162,17 +162,26 @@ for select_day = 27: 31
 %     legend([h1(1); h2(1); h3(1)], 'FRD prob', 'FRD determ', 'FRP OASIS');
 %     legend([h2(1); h3(1)], 'Baseline', 'OASIS');
     set(findall(gcf,'-property','FontSize'),'FontSize',14);
+    legend boxoff;
+    box on;
     
     figure();
     hold on;
-    h1 = plot(xtime, reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(frd_determ, 1, 12)', 288, 1));
-    h2 = plot(xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1)./reshape(repmat(fru_determ, 1, 12)', 288, 1));
+    frd_floor24 = min(max(reshape(frd_prob, 12, 24)), 0);
+    fru_floor24 = max(min(reshape(fru_prob, 12, 24)), 0);
+    h1 = plot(xtime, reshape(repmat(frd_floor24, 12, 1), 288, 1)./reshape(repmat(frd_determ, 1, 12)', 288, 1));
+    h2 = plot(xtime, reshape(repmat(fru_floor24, 12, 1), 288, 1)./reshape(repmat(fru_determ, 1, 12)', 288, 1));
     h3 = plot(xtime, 0.9.*ones(288, 1), 'r');
     set([h1,h2], 'linewidth', 2);
     set(gca, 'YScale', 'log')
-    legend([h1, h2], 'FRU', 'FRD');
+    legend([h1, h2], 'FRD', 'FRU');
     ylabel('Ratio of Prob/Baseline');
     set(findall(gcf,'-property','FontSize'),'FontSize',14);
+    legend boxoff;
+    box on;
+    
+%     ratio_up = min(max(reshape(frd_prob, 12, 24)), 0)./frd_determ';
+%     ratio_dn = max(min(reshape(fru_prob, 12, 24)), 0)./fru_determ';
     
     % Save results
     if write_flag
