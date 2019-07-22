@@ -861,7 +861,7 @@ def process_paris_5min(dir_work, write_flag=False):
 
     # Sadly we cannot use the load_dir function, bummer.
 
-    list_colname =  ['5p',   '25p',  '50p', '75p',  '95p',  'Mean']
+    list_colname =  ['p5',   'p25',  'p50', 'p75',  'p95',  'Mean']
     list_pstr =     ['0.05', '0.25', '0.5', '0.75', '0.95', '-1']
 
     ls_csv, ls_df = load_dir(dir_work)
@@ -2933,7 +2933,7 @@ if __name__ == '__main__':
     # read_paris()
     # read_paris1()
     # process_paris('./IBM/April', write_flag=False)
-    process_paris_5min('./IBM/May.5min', write_flag=False)
+    process_paris_5min('./IBM/April.5min', write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
