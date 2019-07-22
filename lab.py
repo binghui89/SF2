@@ -361,29 +361,9 @@ def read_paris1():
 
 def process_paris(dir_work, write_flag=False):
     '''
-    Use Sandia's PVlib to get solar power generation
+    Process IBM's raw data, extract all layers, fill missing data with NA
+    This is for the 15-min data
     '''
-
-    # get the module and inverter specifications from SAM
-    sandia_modules = pvlib.pvsystem.retrieve_sam('SandiaMod')
-    sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
-    module = sandia_modules['Canadian_Solar_CS5P_220M___2009_']
-    inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
-
-    # specify constant ambient air temp and wind for simplicity
-    temp_air = 20
-    wind_speed = 0
-
-    system = {
-        'module': module,
-        'inverter': inverter,
-        'surface_azimuth': 180,
-        'surface_tilt': 30, # Based on Rui's email
-    }
-
-    timezone = 'US/Pacific'
-    altitude = 200 # For simplicity
-
 
     # Sadly we cannot use the load_dir function, bummer.
 
@@ -462,82 +442,7 @@ def process_paris(dir_work, write_flag=False):
         if write_flag:
             df_results[col_to_write].to_csv(csvname, index=False)
 
-        # For Ben's memo
-        # df_results.loc[:, 'local_time'] = df_results['timestamp'].dt.tz_convert(timezone)
-        # df_results.loc[
-        #     (df_results['local_time'].dt.month==3)
-        #     &
-        #     (df_results['local_time'].dt.day==30)
-        #     ,
-        #     ['local_time']+col_to_write
-        # ].to_csv('_'.join(['sample', str(lat), str(lon)]) + '.csv', index=False)
-
     IP()
-
-        # solpos = pvlib.solarposition.get_solarposition(index_datetime, lat, lon)
-        # dni_extra = pvlib.irradiance.get_extra_radiation(index_datetime)
-        # airmass = pvlib.atmosphere.get_relative_airmass(solpos['apparent_zenith'])
-        # pressure = pvlib.atmosphere.alt2pres(altitude)
-        # am_abs = pvlib.atmosphere.get_absolute_airmass(airmass, pressure)
-
-        # # Calculate DHI, this function also returns DNI, but the value is 
-        # # abnormal out of some unknow reason
-        # ls_dict_cs = map(
-        #     pvlib.irradiance.erbs, 
-        #     df_results['global_solar_irradiance'], 
-        #     solpos['zenith'], 
-        #     index_datetime,
-        # )
-        # ls_cs = [
-        #     (dict_cs['dni'], dict_cs['dhi'])
-        #     for dict_cs in ls_dict_cs
-        # ]
-        # _, df_results.loc[:, 'dhi'] = zip(*ls_cs)
-
-        # # Calculate DNI
-        # ls_dict_cs = map(
-        #     pvlib.irradiance.disc, 
-        #     df_results['global_solar_irradiance'], 
-        #     solpos['zenith'], 
-        #     index_datetime,
-        # )
-        # ls_cs = [float(dict_cs['dni']) for dict_cs in ls_dict_cs]
-        # df_results.loc[:, 'dni'] = ls_cs
-
-        # # Calculate AC power output
-        # aoi = pvlib.irradiance.aoi(
-        #     system['surface_tilt'], 
-        #     system['surface_azimuth'],
-        #     solpos['apparent_zenith'].values, 
-        #     solpos['azimuth'].values,
-        # )
-        # total_irrad = pvlib.irradiance.get_total_irradiance(
-        #     system['surface_tilt'],
-        #     system['surface_azimuth'],
-        #     solpos['apparent_zenith'].values,
-        #     solpos['azimuth'].values,
-        #     df_results['dni'].values, 
-        #     df_results['global_solar_irradiance'].values, 
-        #     df_results['dhi'].values,
-        #     dni_extra=dni_extra.values,
-        #     model='haydavies',
-        # )
-        # temps = pvlib.pvsystem.sapm_celltemp(
-        #     total_irrad['poa_global'],
-        #     wind_speed, 
-        #     temp_air,
-        # )
-        # effective_irradiance = pvlib.pvsystem.sapm_effective_irradiance(
-        #     total_irrad['poa_direct'], 
-        #     total_irrad['poa_diffuse'],
-        #     am_abs.values, 
-        #     aoi, 
-        #     module
-        # )
-        # dc = pvlib.pvsystem.sapm(effective_irradiance, temps['temp_cell'].values, module)
-        # ac = pvlib.pvsystem.snlinverter(dc['v_mp'], dc['p_mp'], inverter)
-        # df_results.loc[:, 'Actual'] = ac
-        # IP()
 
 def process_paris_global_solar_irradiance(dir_work, write_flag=False):
     '''
@@ -947,6 +852,88 @@ def read_paris_5min():
 
         csvname = 'IBM_raw_' + s + '.csv'
         data.to_csv(csvname, index=False)
+
+def process_paris_5min(dir_work, write_flag=False):
+    '''
+    Process IBM's raw data, extract all layers, fill missing data with NA
+    This is for the 15-min data
+    '''
+
+    # Sadly we cannot use the load_dir function, bummer.
+
+    list_colname =  ['5p',   '25p',  '50p', '75p',  '95p',  'Mean']
+    list_pstr =     ['0.05', '0.25', '0.5', '0.75', '0.95', '-1']
+
+    ls_csv, ls_df = load_dir(dir_work)
+    os.chdir(dir_work)
+
+    df_all = pd.concat(ls_df, ignore_index=True)
+    df_all = df_all[['latitude', 'longitude', 'timestamp', 'layerName', 'value', 'property']].drop_duplicates().reset_index(drop=True)
+    df_all.dropna(how='any', subset=['latitude', 'longitude'], inplace=True)
+    # Stupid datatime only works for INDEX, and the 'dt' accessor must be used for Series
+    df_all.loc[:, 'timestamp'] = pd.to_datetime(df_all['timestamp']).dt.tz_localize('UTC') #.dt.tz_convert(timezone)
+    locations = df_all[['latitude', 'longitude']].drop_duplicates().values
+    df_all.loc[:, 'TIME_STR'] = df_all['timestamp'].dt.strftime('%Y-%m-%d %H:%M')
+    ls_df_results = list()
+    for lat, lon in locations:
+        df_site = df_all.loc[
+            (df_all['latitude'] == lat)
+            &
+            (df_all['longitude'] == lon)
+            ,
+            :
+        ] #.set_index('TIME_STR')
+
+        # Find the property name of each percentile in this site, it changes with site... This should be a one-to-one mapping.
+        property_all = df_site['property'].unique().tolist()
+        map_property2pstr = dict()
+        for pstr in list_pstr:
+            for p in property_all:
+                if pstr in p:
+                    map_property2pstr[p] = pstr
+
+        index_datetime = pd.date_range(
+            df_site['timestamp'].min(), 
+            df_site['timestamp'].max(), 
+            freq='5min',
+        ) # .tz_localize('UTC').tz_convert(timezone)
+        df_results = pd.DataFrame(
+            index=index_datetime.strftime('%Y-%m-%d %H:%M')
+        )
+        df_results.loc[:, 'timestamp'] = index_datetime
+        df_results.loc[:, 'Year']      = index_datetime.year
+        df_results.loc[:, 'Month']     = index_datetime.month
+        df_results.loc[:, 'Day']       = index_datetime.day
+        df_results.loc[:, 'Hour']      = index_datetime.hour
+        df_results.loc[:, 'Minute']    = index_datetime.minute
+        # for l in layers:
+        #     df_tmp = df_site.loc[df_site['layerName']==l, :].groupby(['TIME_STR']).mean()
+        #     df_results.loc[:, l] = df_tmp['value']
+        # IP()
+        for l in property_all:
+            pstr = map_property2pstr[l]
+            df_tmp = df_site.loc[df_site['property']==l, ['TIME_STR', 'value']].set_index('TIME_STR')
+            colname = list_colname[list_pstr.index(pstr)]
+            df_results.loc[:, colname] = df_tmp['value']
+        ls_df_results.append(df_results)
+
+        s = site_name(lat, lon)
+        csvname = '_'.join(['IBM_processed', s]) + '.csv'
+        col_to_write = [
+            'Year', 
+            'Month', 
+            'Day', 
+            'Hour', 
+            'Minute',
+            # 'dswr_mean', 
+            # 'dswr_95_upper_ci', 
+            # 'dswr_95_lower_ci', 
+            # 'global_solar_irradiance'
+        ] + list_colname
+        if write_flag:
+            df_results[col_to_write].to_csv(csvname, index=False)
+
+    IP()
 
 ###########################################################
 # This is a bit weird, but this function is to generate a time series for the 
@@ -2946,6 +2933,7 @@ if __name__ == '__main__':
     # read_paris()
     # read_paris1()
     # process_paris('./IBM/April', write_flag=False)
+    process_paris_5min('./IBM/May.5min', write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
@@ -2976,7 +2964,7 @@ if __name__ == '__main__':
     # process_raw_reg_results()
     # process_raw_ace_error()
     # baseline_reg_for_day(2019, 2, 22, oasis='DA')
-    lab_reg()
+    # lab_reg()
 
     # Others
     ############################################################################
