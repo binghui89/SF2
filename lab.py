@@ -2112,8 +2112,8 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
         NI = len(df_data)/NH # Number of intervals in a hour, RTD: 12, RTPD: 4
 
         # Superimposed bar plots
-        for strd in ls_strdays:
-            ax.bar(df_data.index, df_data[strd].tolist(), alpha=0.2, color='b')
+        # for strd in ls_strdays:
+        #     ax.bar(df_data.index, df_data[strd].tolist(), alpha=0.2, color='b')
 
         # Uncertainty components
         dict_percentiles = find_percentiles(df_data, [0.025, 0.975])
@@ -2195,7 +2195,7 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
     plt.figure()
     ax = plt.subplot(1, 1, 1)
     plot_ramp_stats(ax, df_rtd)
-    ax.set_title('(f) RTD, up and down, ' + D_TARGET.strftime('%m/%d/%y, %a'))
+    ax.set_title('RTD, up and down, ' + D_TARGET.strftime('%m/%d/%y, %a'))
     ax.set_ylabel('MW')
     ax.set_xlabel('Hour')
     df_actual = df.loc[
@@ -2205,19 +2205,19 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
     ax.plot(
         range(0, 288),
         df_actual['UP_RTD'].repeat(12), 
-        'k',
+        'b',
         linewidth=1
     )
     ax.plot(
         range(0, 288),
         -df_actual['DOWN_RTD'].repeat(12), 
-        'k',
+        'b',
         linewidth=1
     )
     ax.set_xticks(range(0, 288,12))
     ax.set_xticklabels([str(i/12) for i in (range(0, 288, 12))])
     h_b  = mlines.Line2D([], [], color='r', linestyle = '-') # Baseline
-    h_o = mlines.Line2D([], [], color='k', linestyle = '-') # Oasis
+    h_o = mlines.Line2D([], [], color='b', linestyle = '-') # Oasis
     ax.legend([h_b, h_o], ['Baseline', 'OASIS'])
 
     # Try to make a bar plot for RTPD market
@@ -2236,7 +2236,7 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
     # FRU
     ax = plt.subplot( gs[0, 0])
     plot_ramp_stats(ax, df_max, 'U') # FRU
-    ax.set_title('(b) RTPD, up, ' + D_TARGET.strftime('%m/%d/%y, %a'))
+    ax.set_title('RTPD, up, ' + D_TARGET.strftime('%m/%d/%y, %a'))
     # ax.set_title('2/22/19, Fri.')
     # ax.annotate(
     #     'RTPD, up',
@@ -2251,19 +2251,19 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
     ax.plot(
         range(0, 96),
         df_actual['UP_RTPD'].repeat(4), 
-        'k',
+        'b',
         linewidth=1
     )
     ax.set_xticks(range(0, 96,4))
     ax.set_xticklabels([str(i/4) for i in (range(0, 96,4))])
     h_b  = mlines.Line2D([], [], color='r', linestyle = '-') # Baseline
-    h_o = mlines.Line2D([], [], color='k', linestyle = '-') # Oasis
+    h_o = mlines.Line2D([], [], color='b', linestyle = '-') # Oasis
     ax.legend([h_b, h_o], ['Baseline', 'OASIS'])
 
     # FRD
     ax = plt.subplot( gs[1, 0])
     plot_ramp_stats(ax, df_min, 'D') # FRD
-    ax.set_title('(d) RTPD, down, ' + D_TARGET.strftime('%m/%d/%y, %a'))
+    ax.set_title('RTPD, down, ' + D_TARGET.strftime('%m/%d/%y, %a'))
     # ax.annotate(
     #     'RTPD, down',
     #     xy=(0.1, 0.9), 
@@ -2277,13 +2277,13 @@ def baseline_flexiramp_for_day(YYYY, MM, DD, use_persistence=False):
     ax.plot(
         range(0, 96),
         -df_actual['DOWN_RTPD'].repeat(4), 
-        'k',
+        'b',
         linewidth=1
     )
     ax.set_xticks(range(0, 96,4))
     ax.set_xticklabels([str(i/4) for i in (range(0, 96,4))])
     h_b  = mlines.Line2D([], [], color='r', linestyle = '-') # Baseline
-    h_o = mlines.Line2D([], [], color='k', linestyle = '-') # Oasis
+    h_o = mlines.Line2D([], [], color='b', linestyle = '-') # Oasis
     ax.legend([h_b, h_o], ['Baseline', 'OASIS'])
 
     # Load and net load of 30 days, use actual net load and forecasted RTD B load
@@ -2933,7 +2933,7 @@ if __name__ == '__main__':
     # read_paris()
     # read_paris1()
     # process_paris('./IBM/April', write_flag=False)
-    process_paris_5min('./IBM/April.5min', write_flag=False)
+    # process_paris_5min('./IBM/April.5min', write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
@@ -2954,7 +2954,7 @@ if __name__ == '__main__':
     ############################################################################
     # process_raw_for_flexiramp()
     # tmp_plot_forecast()
-    # baseline_flexiramp_for_day(2019, 2, 22, use_persistence=False)
+    baseline_flexiramp_for_day(2019, 5, 31, use_persistence=False)
     # baseline_flexiramp()
     # estimate_validation()
 
