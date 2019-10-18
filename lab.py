@@ -180,36 +180,6 @@ def read_nsrdb():
     IP()
 
 
-def read_paris():
-    # This query is for "Create query", but does not return anything, don't know why
-    server = 'https://ibmpairs-mvp2-api.mybluemix.net/queryjobs?spatialLimitsType=point'
-    query_json = {
-        "name":"UTD test GWF",
-        "description":"",
-        "isPublic":'false',
-        "space":{"latitude":32.98591523067006,"longitude":-96.74875429066053},
-        "layers":[
-            {
-                "dataLayerId":"16400",
-                "startingDateTime":"2018-10-01T00:00:00.000Z",
-                "endingDateTime":"2018-10-02T00:00:00.000Z",
-                "aggregationOperator":"None",
-                "dimensions":[]
-            }
-        ],
-        "filters":[]
-    }
-    headers = {
-        'Content-Type': 'application/json',
-        'X-Access-Token': 'ji5mt9iussxag70cmkk4fl1eogg7q1pn4bbttxmc',
-    }
-    response = requests.post(
-        url=server,
-        json=query_json,
-        auth=global_pairs_auth,
-        headers=headers,
-    )
-
 ###########################################################
 # IBM paris data starts here.
 
@@ -232,132 +202,6 @@ def site_name(lat, lon):
 
     site = df_caiso.loc[(df_caiso['lat']==lat) & (df_caiso['lon']==lon), :].index[0]
     return site
-
-def read_paris1():
-    os.chdir(r'C:\Users\bxl180002\Downloads\RampSolar\IBM')
-    df_results = pd.DataFrame()
-    # From Rui's code
-    server = 'https://pairs.res.ibm.com/v2/query'
-    global_pairs_auth = ('bxl180002@utdallas.edu', '?HOoper40$')
-
-    # query_json = {"layers": [{"type": "vector", "id": "P274C4230"}], 
-    #             "spatial": {"type": "point", "coordinates": [35.38, -120.18]}, 
-    #             "temporal": {"intervals": [{"start": "2018-09-17T00:00:00Z", "end": "2018-09-30T00:00:00Z"}]}}
-
-    coord = [
-        ["35.38", "-120.18"],
-        ["38.47", "-122.71"],
-        ["40.25", "-123.31"],
-        ["34.45", "-119.70"],
-        ["40.71", "-123.92"],
-        ["37.41", "-119.74"],
-        ["34.31", "-117.50"],
-        ["34.12", "-117.94"],
-        ["35.53", "-118.63"],
-        ["39.12", "-123.07"],
-    ]
-    interval = [
-        {"start": "2018-09-01T00:00:00Z", "end": "2018-10-01T00:00:00Z"},
-        {"start": "2018-10-01T00:00:00Z", "end": "2018-11-01T00:00:00Z"},
-        {"start": "2018-11-01T00:00:00Z", "end": "2018-12-01T00:00:00Z"},
-        {"start": "2018-12-01T00:00:00Z", "end": "2019-01-01T00:00:00Z"},
-        {"start": "2019-01-01T00:00:00Z", "end": "2019-02-01T00:00:00Z"},
-        {"start": "2019-02-01T00:00:00Z", "end": "2019-03-01T00:00:00Z"},
-        {"start": "2019-03-01T00:00:00Z", "end": "2019-04-01T00:00:00Z"},
-    ]
-
-    query_json = {
-        "layers": [
-            {"type": "vector", "id": "P274C4230"}, # GHI mean 
-            {"type": "vector", "id": "P275C4234"}, # GHI upper 95% CI
-            {"type": "vector", "id": "P276C4238"}, # GHI lower 95% CI
-            {"type": "vector", "id": "P280C4254"}, # DNI mean
-            {"type": "vector", "id": "P283C4266"}, # DNI lower 95% CI
-            {"type": "vector", "id": "P282C4262"}, # DNI upper 95% CI
-            {"type": "vector", "id": "P284C4270"}, # DHI mean
-            {"type": "vector", "id": "P286C4278"}, # DHI lower 95% CI
-            {"type": "vector", "id": "P285C4274"}, # DHI upper 95% CI
-            {"type": "vector", "id": "P277C4242"}, # Power, mean
-            {"type": "vector", "id": "P279C4250"}, # Power, 95% low
-            {"type": "vector", "id": "P278C4246"}, # Power, 95% high
-            {"type": "vector", "id": "P221C3743"}, # GHI, actual. Unfortunately they do not provide actual DNI and DHI.
-        ],
-        "spatial": {
-            "type": "point", 
-            # "coordinates": ["35.38", "-120.18"], # CAISO Station 1
-            "coordinates": ["38.47", "-122.71"], # CAISO Station 2
-            # "coordinates": ["40.25", "-123.31"], # CAISO Station 3
-            # "coordinates": ["34.45", "-119.70"], # CAISO Station 4
-            # "coordinates": ["40.71", "-123.92"], # CAISO Station 5
-            # "coordinates": ["37.41", "-119.74"], # CAISO Station 6
-            # "coordinates": ["34.31", "-117.50"], # CAISO Station 7
-            # "coordinates": ["34.12", "-117.94"], # CAISO Station 8
-            # "coordinates": ["35.53", "-118.63"], # CAISO Station 9
-            # "coordinates": ["39.12", "-123.07"], # CAISO Station 10
-        },
-        "temporal": {
-            # "intervals": [{"start": "2018-09-16T00:00:00Z", "end": "2018-09-30T00:00:00Z"}],
-            "intervals": interval,
-        }
-    }
-
-    dict_data = dict()
-    for c in coord:
-        query_json["spatial"]["coordinates"] = c
-
-        query_json[ "temporal"]["intervals"] = interval[0:3]
-        response = requests.post(
-            url=server,
-            json=query_json, 
-            auth=global_pairs_auth,
-        )
-        if response.status_code == 200:
-            if len(response.json()['data']) > 0:
-                data1 = pd.DataFrame(response.json()['data'])
-        else:
-            print "Error reading data."
-
-        query_json[ "temporal"]["intervals"] = interval[3:]
-        response = requests.post(
-            url=server,
-            json=query_json, 
-            auth=global_pairs_auth,
-        )
-        if response.status_code == 200:
-            if len(response.json()['data']) > 0:
-                data2 = pd.DataFrame(response.json()['data'])
-        else:
-            print "Error reading data."
-
-        data = pd.concat([data1, data2], axis=0)
-        data.loc[:, 'timestamp'] = pd.to_datetime(data['timestamp'], unit='ms')
-        dict_data[c[0], c[1]] = data
-
-        csvname = 'IBM_raw_' + '_'.join(c) + '.csv'
-        data.to_csv(csvname, index=False)
-
-    # For mucun
-    # columns_written = ['Year', 'Month', 'Day', 'Hour', 'value']
-    # for c in dict_data.iterkeys():
-    #     data = dict_data[c]
-    #     data.loc[:, 'Year']   = data['timestamp'].dt.year
-    #     data.loc[:, 'Month']  = data['timestamp'].dt.month
-    #     data.loc[:, 'Day']    = data['timestamp'].dt.day
-    #     data.loc[:, 'Hour']   = data['timestamp'].dt.hour
-    #     data.loc[:, 'Minute'] = data['timestamp'].dt.minute
-    #     for layer in data['layerName'].unique():
-    #         csvname = '_'.join(c) + '_' + layer +  '.csv'
-    #         df_tmp = data.loc[(data['layerName']==layer) & (data['Minute']==0), :].sort_values(by='timestamp')
-    #         df_tmp[columns_written].to_csv(csvname, index=False)
-
-    IP()
-    # for layer in data['layerName'].unique():
-    #     df_results.loc[:, layer] = data.loc[data['layerName']==layer, 'value'].astype('float').values
-    # df_results.loc[:, 'timestamp'] = data.loc[data['layerName']==layer, 'timestamp'].values
-    # df_results.plot(x='timestamp')
-    # plt.show()
-    
-    # IP()
 
 def process_paris(dir_work, write_flag=False):
     '''
@@ -506,6 +350,7 @@ def process_paris_global_solar_irradiance(dir_work, write_flag=False):
 
 def read_paris_April():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
+    # This is the one that I used to collect IBM data in June 2019
     os.chdir('./IBM/April')
     df_results = pd.DataFrame()
     # From Rui's code
@@ -630,6 +475,7 @@ def read_paris_April():
 
 def read_paris_May():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
+    # This is the one that I used to collect IBM data in June 2019
     os.chdir('./IBM/May')
     df_results = pd.DataFrame()
     # From Rui's code
@@ -750,6 +596,26 @@ def read_paris_May():
         csvname = 'IBM_raw_' + s + '.csv'
         data.to_csv(csvname, index=False)
 
+def query_paris(query_json):
+    '''
+    Query PAIRS based on query_json
+    '''
+    server = 'https://pairs.res.ibm.com/v2/query'
+    global_pairs_auth = ('bxl180002@utdallas.edu', '?HOoper40$') # Old from Nov. 2018
+    # global_pairs_auth = {"name": "binghui", "email": "binghui.li@utdallas.edu", "password": "5,T9Wk*!", "groupId":239} # New from Aug. 2019
+    # global_pairs_auth = ("binghui.li@utdallas.edu", "5,T9Wk*!") # New from Aug. 2019
+    response = requests.post(
+        url=server,
+        json=query_json, 
+        auth=global_pairs_auth,
+    )
+    return response
+    # if response.status_code == 200:
+    #     ls_df.append(pd.DataFrame(response.json()['data']))
+    #     print s, layer_name, 'Done!'
+    # else:
+    #     print s, layer_name, 'no'
+
 def read_paris_5min():
     # Somehow read_paris1 does not work... so I rewrite the whole thing.
     os.chdir('./IBM/May.5min')
@@ -853,10 +719,10 @@ def read_paris_5min():
         csvname = 'IBM_raw_' + s + '.csv'
         data.to_csv(csvname, index=False)
 
-def process_paris_5min(dir_work, write_flag=False):
+def process_paris_more_quantiles(dir_work, write_flag=False):
     '''
     Process IBM's raw data, extract all layers, fill missing data with NA
-    This is for the 15-min data
+    This is for the data with more quantiles
     '''
 
     # Sadly we cannot use the load_dir function, bummer.
@@ -933,7 +799,12 @@ def process_paris_5min(dir_work, write_flag=False):
         if write_flag:
             df_results[col_to_write].to_csv(csvname, index=False)
 
-    IP()
+        ls_vio = [0]*4
+        ls_vio[0] = df_results.loc[(df_results['p5']  >= df_results['p25'])&(df_results['p25']>0), :].shape[0]
+        ls_vio[1] = df_results.loc[(df_results['p25'] >= df_results['p50'])&(df_results['p50']>0), :].shape[0]
+        ls_vio[2] = df_results.loc[(df_results['p50'] >= df_results['p75'])&(df_results['p75']>0), :].shape[0]
+        ls_vio[3] = df_results.loc[(df_results['p75'] >= df_results['p95'])&(df_results['p95']>0), :].shape[0]
+        print "Violations:", s, ls_vio
 
 ###########################################################
 # This is a bit weird, but this function is to generate a time series for the 
@@ -2930,10 +2801,8 @@ if __name__ == '__main__':
 
     # IBM PARIS data processing
     ############################################################################
-    # read_paris()
-    # read_paris1()
     # process_paris('./IBM/April', write_flag=False)
-    # process_paris_5min('./IBM/April.5min', write_flag=False)
+    process_paris_more_quantiles('C:\\Users\\bxl180002\\git\\SF2\\IBM\\May.more_quantiles.5min', write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
@@ -2954,7 +2823,7 @@ if __name__ == '__main__':
     ############################################################################
     # process_raw_for_flexiramp()
     # tmp_plot_forecast()
-    baseline_flexiramp_for_day(2019, 5, 31, use_persistence=False)
+    # baseline_flexiramp_for_day(2019, 5, 31, use_persistence=False)
     # baseline_flexiramp()
     # estimate_validation()
 
