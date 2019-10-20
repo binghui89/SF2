@@ -1814,13 +1814,21 @@ def load_and_process_netload_data(use_persistence=False):
             # df[['timestamp', 'Solar_'+k+'_A_RTD', 'Solar_'+k+'_B_RTD']].plot(ax=ax, x='timestamp')
             # df[['timestamp', 'AB_diff_'+k]].plot(ax=ax1, x='timestamp', style='r-')
 
+            plt.figure()
+            ax1 = plt.subplot(111)
+            ax2 = ax1.twinx()
+            df[['timestamp', 'Solar_'+k+'_B_RTD', 'Solar_'+k+'_A_RTD']].plot(ax = ax1, x='timestamp')
+            dict_df_csghi[k]['ghi'].plot(ax=ax2,x='timestamp', color='green')
+            ax1.set_ylabel('Power (MW)')
+            ax2.set_ylabel('Clear-sky GHI (W/m^2)')
+
         # RTD wind
         ########################################################################
         df['Wind_NP15_A_RTD']  = np.concatenate([ [np.nan], df['Wind_NP15_RTD'].values[0:-1] ])
         df['Wind_SP15_A_RTD']  = np.concatenate([ [np.nan], df['Wind_SP15_RTD'].values[0:-1] ])
 
         # RTPD solar and wind, just use binding forecast as advisory forecat 
-        # because it was never used in flexiramp calculation
+        # because the binding RTPD forecasts was never used in flexiramp calculation
         ########################################################################
         df['Solar_NP15_A_RTPD'] = df['Solar_NP15_RTPD']
         df['Solar_SP15_A_RTPD'] = df['Solar_SP15_RTPD']
@@ -1894,6 +1902,7 @@ def load_and_process_netload_data(use_persistence=False):
 
     df['NET_LOAD_A_RTD'] = (
         df['LOAD_A_RTD'] - 
+        # df['LOAD_B_RTD'] - # To remove gross load ramp
         df['Wind_NP15_A_RTD'] -
         df['Wind_SP15_A_RTD'] - 
         df['Solar_NP15_A_RTD'] - 
@@ -2802,7 +2811,7 @@ if __name__ == '__main__':
     # IBM PARIS data processing
     ############################################################################
     # process_paris('./IBM/April', write_flag=False)
-    process_paris_more_quantiles('C:\\Users\\bxl180002\\git\\SF2\\IBM\\May.more_quantiles.5min', write_flag=False)
+    # process_paris_more_quantiles('C:\\Users\\bxl180002\\git\\SF2\\IBM\\May.more_quantiles.5min', write_flag=False)
     # read_paris_April()
     # read_paris_May()
     # process_paris_global_solar_irradiance('./IBM/April', write_flag=False)
@@ -2823,7 +2832,7 @@ if __name__ == '__main__':
     ############################################################################
     # process_raw_for_flexiramp()
     # tmp_plot_forecast()
-    # baseline_flexiramp_for_day(2019, 5, 31, use_persistence=False)
+    baseline_flexiramp_for_day(2019, 5, 31, use_persistence=True)
     # baseline_flexiramp()
     # estimate_validation()
 
