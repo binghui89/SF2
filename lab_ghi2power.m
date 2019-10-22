@@ -1,7 +1,7 @@
 function lab_ghi2power()
 add_pvlib();
 
-ghi2power_frcst_5min(4, 0);
+ghi2power_frcst_morequantiles(4, 0);
 end
 
 function add_pvlib()
@@ -11,7 +11,7 @@ addpath('C:\Users\bxl180002\git\MATLAB_PV_LIB\Example Data');
 addpath('C:\Users\bxl180002\git\MATLAB_PV_LIB\Required Data');
 end
 
-function ghi2power_frcst_5min(m, write_flag)
+function ghi2power_frcst_morequantiles(m, write_flag)
 % Convert GHI into power using Elina's script: 5-min forecast
 if nargin==1
     write_flag = 0;
@@ -91,8 +91,8 @@ for k = 1:numel(sitenames)
     tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
     tarray.TimeZone = 'America/Los_Angeles';
     tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
-    array_power = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, power_percentiles];
-    Tpower = array2table(array_power, 'VariableNames', T.Properties.VariableNames);
+    array_power = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second, power_percentiles];
+    Tpower = array2table(array_power, 'VariableNames', [T.Properties.VariableNames(1:5), {'Second'}, T.Properties.VariableNames(6:end)]);
     
     compare_ghi_equal(k, 1) = sum((T.p5==T.p25)&(T.p5~=0)&(T.p25~=0));
     compare_ghi_equal(k, 2) = sum((T.p25==T.p50)&(T.p25~=0)&(T.p50~=0));
