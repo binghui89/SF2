@@ -80,8 +80,8 @@ if Site_tilt(k)==0
 else
     AOI = pvl_getaoi(Array.Tilt, Array.Azimuth, 90-AppSunEl, SunAz);
 end
-Wspd=repmat(WIND,size(ReGHI,1));
-Drybulb=repmat(dryT,size(ReGHI,1));
+Wspd=repmat(WIND,size(ReGHI,1), 1);
+Drybulb=repmat(dryT,size(ReGHI,1), 1);
 AMa = pvl_absoluteairmass(pvl_relativeairmass(90-AppSunEl),PresPa);
 F1 = max(0,polyval(ModuleParameters.a,AMa)); %Spectral loss function
 F2 = max(0,polyval(ModuleParameters.b,AOI)); % Angle of incidence loss function
