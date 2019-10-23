@@ -1,7 +1,8 @@
 function lab_ghi2power()
 add_pvlib();
 
-ghi2power_frcst_morequantiles(4, 0);
+% ghi2power_frcst_morequantiles(4, 0);
+ghi2power_actual_hourly(4);
 end
 
 function add_pvlib()
@@ -246,93 +247,115 @@ end
 
 end
 
-function ghi2power_actual_15min()
-% Convert GHI into power using Elina's script: actual
-clear;
-sitenames     = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
-IBMsitenames  = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
-SiteLatitude  = [34.31,   34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31, 34.31,    35.53];
-SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
-
-% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
-dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
-
-dir_home = pwd;
-
-for k = 1:length(sitenames)
-    gen = sitenames{k};
-    ibm_site = IBMsitenames{k};
-    csvname_read  = strcat('IBM_processed_', ibm_site, '.hourly.csv');
-    csvname_write = strcat('power_',         gen,      '.hourly.csv');
-    
-    cd(dir_work);
-    M = csvread(csvname_read, 1, 0);
-    cd(dir_home);
-    
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     % Fix 1: Time shift
-%     toff=1;
-%     Mp = [M(1:size(M, 1)-toff, 1: 5), M(toff+1: end, 6:end)];
-%     M = Mp;
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    
-    ac_actual = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 6));
-        
-    % Calculate clear-sky GHI
-    utc_year   = M(:, 1);
-    utc_month  = M(:, 2);
-    utc_day    = M(:, 3);
-    utc_hour   = M(:, 4);
-    utc_minute = M(:, 5);
-    utc_second = zeros(size(M, 1), 1);    
-    Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
-    Time.year(1:size(M,1),1)   = utc_year;
-    Time.month(1:size(M,1),1)  = utc_month;
-    Time.day(1:size(M,1),1)    = utc_day;
-    Time.hour(1:size(M,1),1)   = utc_hour;
-    Time.minute(1:size(M,1),1) = utc_minute;
-    Time.second(1:size(M,1),1) = utc_second;
-    Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
-    dayofyear = pvl_date2doy(Time.year, Time.month, Time.day);
-    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
-    ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
-
-    % Plot them out
-    tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
-    tarray.TimeZone = 'America/Los_Angeles';
-    tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
-
-    figure();
-    subplot(2, 1, 1);
-    h1 = plot(tarray_local, M(:, 6), '-s');
-%     h1 = plot(1: size(M, 1), ac_actual(:, end));
-    set(h1, {'color'}, {'k'});
-    hold on;
-    h2 = plot(tarray_local, ghi_clearsky,  '-s');
-    title(strcat(gen, ',', ibm_site));
-    legend([h1, h2], 'Actual' ,'Clear-sky');
-    ylabel('W/m^2');
-    
-    subplot(2, 1, 2);
-    kcs_actual = M(:, 6)./ghi_clearsky;
-    kcs_actual(ghi_clearsky==0) = nan;
-    hist(kcs_actual, 50);
-    
-%     cd(dir_work);
-%     cHeader = {'Year' 'Month' 'Day' 'Hour' 'Actual'}; %dummy header
-%     commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
-%     commaHeader = commaHeader(:)';
-%     textHeader = cell2mat(commaHeader); %cHeader in text with commas
-%     %write header to file
-%     fid = fopen(csvname_write,'w'); 
-%     fprintf(fid,'%s\n',textHeader);
-%     fclose(fid);
-%     dlmwrite(csvname_write,[M(:, 1:4), ac_actual],'-append');
-%     cd(dir_home);
-
-    
+function ghi2power_actual_hourly(m, dirwrite)
+if nargin == 1
+    write_flag = false;
+else
+    write_flag = true;
 end
+if m == 4
+%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst'; % IBM's updated forecast
+elseif m == 5
+%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst'; % IBM's updated forecast
+end
+dirhome = pwd;
+
+allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+allsite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+alllat=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
+alllon=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+
+siteforconv = unique(allsite); % We only interested in these sites because the other sites are not equipped with PV gens
+
+cell_actual = cell(length(allgen), 1); % Measured GHI data
+dirrealghi = fullfile(fileparts(dirwork), 'ghi_actual');
+
+for i = 1: length(allgen)
+    g = allgen{i};
+    s = allsite{i};
+    csvname = strcat('IBM_processed_', s, '.hourly.csv');
+    cd(dirrealghi);
+    T = readtable(csvname);
+    cd(dirhome);
+    T.Properties.VariableNames(end) = {'GHI'};
+    T = [T array2table(zeros(size(T, 1), 3), 'VariableNames', {'GHI_CS', 'Power', 'Power_CS'})];
+
+    tarray = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, zeros(size(T, 1), 1), 'TimeZone', 'UTC');
+    Time.UTCOffset = zeros(size(tarray, 1), 1); % Because we use UTC time, so utc offset is zero
+    Time.year   = tarray.Year;
+    Time.month  = tarray.Month;
+    Time.day    = tarray.Day;
+    Time.hour   = tarray.Hour;
+    Time.minute = tarray.Minute;
+    Time.second = tarray.Second;
+    Location = pvl_makelocationstruct(alllat(strcmp(allgen, g)),alllon(strcmp(allgen, g)));
+
+    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+%     T.GHI_CS = pvl_clearsky_haurwitz(90-AppSunEl); % This is instantaneous clear-sky GHI value
+
+    T.GHI(isnan(T.GHI)) = 0;
+
+    tarray_formean = repmat(tarray(:)', 60, 1) - datenum(repmat([60:-1:1]'./24/60, 1, numel(tarray))); % All minutes during the past hour
+    tarray_formean = tarray_formean(:);
+    Time_formean.UTCOffset = zeros(size(tarray_formean, 1), 1);
+    Time_formean.year   = tarray_formean.Year;
+    Time_formean.month  = tarray_formean.Month;
+    Time_formean.day    = tarray_formean.Day;
+    Time_formean.hour   = tarray_formean.Hour;
+    Time_formean.minute = tarray_formean.Minute;
+    Time_formean.second = tarray_formean.Second;
+    [~, ~, AppSunEl_formean, ~] = pvl_ephemeris(Time_formean,Location);
+    ghi_cs_formean = pvl_clearsky_haurwitz(90-AppSunEl_formean);
+    ghi_cs_mean = mean(reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray)), 1)';
+    T.GHI_CS = ghi_cs_mean;
+
+    % We assume the clear-sky index for the previous hour is the same.
+    k_cs = T.GHI./T.GHI_CS; % Use average clear-sky index, nan means GHI_CS_mean is zero
+    ghi_formean = reshape( reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray))*diag(k_cs), numel(ghi_cs_formean), 1);
+    ghi_formean(isnan(ghi_formean)) = 0; % nan means GHI_CS_mean is zero
+
+    power_formean = ghi_to_ac_power(g, Time_formean.year, Time_formean.month, Time_formean.day, Time_formean.hour, Time_formean.minute, Time_formean.second, ghi_formean);
+    power_mean = mean(reshape(power_formean(:, end), numel(power_formean(:, end))/numel(tarray), numel(tarray)), 1)';
+    power_cs_formean = ghi_to_ac_power(g, Time_formean.year, Time_formean.month, Time_formean.day, Time_formean.hour, Time_formean.minute, Time_formean.second, ghi_cs_formean);
+    power_cs_mean = mean(reshape(power_cs_formean(:, end), numel(power_cs_formean(:, end))/numel(tarray), numel(tarray)), 1)';
+    T.Power = power_mean;
+    T.Power_CS = power_cs_mean;
+%     T.Power = T.Power + power_mean;
+%     T.Power_CS = T.Power_CS + power_cs_mean;
+
+%     x = (tarray(1)-duration(1, 0, 0)): datenum(1/24/60): (tarray(end)+datenum(1/24));
+%     xtime.UTCOffset = zeros(size(x, 1), 1);
+%     xtime.year = x.Year;
+%     xtime.month = x.Month;
+%     xtime.day = x.Day;
+%     xtime.hour = x.Hour;
+%     xtime.minute =x.Minute;
+%     xtime.second = x.Second;
+%     Location = pvl_makelocationstruct(alllat(strcmp(allgen, g)),alllon(strcmp(allgen, g)));
+%     [~, ~, xAppSunEl, ~] = pvl_ephemeris(xtime,Location);
+%     xghi_cs = pvl_clearsky_haurwitz(90-xAppSunEl);
+%     figure();
+%     plot(x, xghi_cs, tarray_formean, ghi_formean, '-.', tarray, T.GHI, '+');
+
+    cell_actual{i} = T; % Note this is UTC time
+    figure();
+    plot(tarray, T.Power, '-b.', tarray, T.Power_CS, '-ro')
+
+end
+
+if write_flag
+    cd(dirwrite);
+    for i = 1: length(cell_actual)
+        g = allgen{i};
+        csvname_write = strcat('actual_',         g,      '.csv');
+        writetable(cell_actual{i}, csvname_write);
+        fprintf('File %s write to %s!\n', csvname_write, dirwrite);
+    end
+    cd(dirhome);
+end
+
 end
 
 function explore_solar_irradiance()
