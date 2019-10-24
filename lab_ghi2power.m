@@ -1,8 +1,10 @@
 function lab_ghi2power()
 add_pvlib();
 
+[allgen, cell_frcst] = ghi2power_frcst_15min(4, 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst');
+identify_violations(allgen, cell_frcst);
 % ghi2power_frcst_morequantiles(4, 0);
-ghi2power_actual_hourly(4);
+% ghi2power_actual_hourly(4);
 end
 
 function add_pvlib()
@@ -147,107 +149,149 @@ fprintf('Power comparison');
 [table(sitenames', IBMsitenames', 'VariableNames', {'sitename', 'ibmname'}) array2table(compare_power_greater+compare_power_equal, 'VariableNames', {'p5_ge_p25', 'p25_ge_p50', 'p50_ge_p75', 'p75_ge_p95'})]
 end
 
-function ghi2power_frcst_15min()
-% Convert GHI into power using Elina's script: 15-min forecast
-clear;
-sitenames     = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
-IBMsitenames  = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
-SiteLatitude  = [34.31,   34.12,   34.12,   34.12,   37.41,   35.53,   35.38,  34.31, 34.31,    35.53];
-SiteLongitude = [-117.5,-117.94, -117.94, -117.94, -119.74, -118.63, -120.18, -117.5, -117.5, -118.63];
-% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\ghi_frcst';
-% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_frcst';
-% dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_frcst';
-% dir_work = 'C:\Users\bxl180002\git\SF2\IBM\May\ghi_frcst'; % Updated May data
-dir_work = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst'; % Updated April data
+function [allgen, cell_frcst] = ghi2power_frcst_15min(m, dirwrite)
+if nargin == 1
+    write_flag = false;
+else
+    write_flag = true;
+end
 
-dir_home = pwd;
-fprintf('%6s %8s %6s %6s %6s %6s\n', 'gen', 'site', 'L>M(I)', 'M>U(I)', 'L>M(P)', 'M>U(P)');
+if m == 4
+%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst'; % IBM's updated forecast
+elseif m == 5
+%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst'; % IBM's updated forecast
+end
+dirhome = pwd;
 
-for k = 1:length(sitenames)
-    gen = sitenames{k};
-    ibm_site = IBMsitenames{k};
-    csvname_read  = strcat('IBM_processed_', ibm_site, '.csv');
-    csvname_write = strcat('power_',         gen,      '.csv');
+allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+allsite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+alllat=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
+alllon=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+
+siteforconv = unique(allsite); % We only interested in these sites because the other sites are not equipped with PV gens
+% capacity_gen =  [232.44, 107.58, 116.05, 140.4, 151.32, ];
+% capacity_site = [372.84, 134.88, 116.05, 338.52, 151.32];
+% cap_scaler = capacity_site./capacity_gen;
+
+allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
+strghi = cell(size(allp));
+strpwr = cell(size(allp));
+for ip = 1: length(allp)
+    p = allp{ip};
+    strghi{ip} = strcat('ghi', '_', p);
+    strpwr{ip} = strcat('pwr', '_', p);
+end
+
+cell_frcst = cell(length(allgen), 1);
+for i = 1: length(allgen)
+    g = allgen{i};
+    s = allsite{i};
     
-    cd(dir_work);
-    M = csvread(csvname_read, 1, 0);
-    cd(dir_home);
+    dirghi = fullfile(fileparts(dirwork), 'ghi_frcst');
+    cd(dirghi);
+    csvname = strcat('IBM_processed_', s, '.csv');
+    T = readtable(csvname);
+    cd(dirhome);
+    T.Properties.VariableNames(end-length(allp)+1: end) = strghi; % We know the last length(allp) columns are the GHI data
     
-%     M = fix_ibm(M, SiteLatitude(k),SiteLongitude(k));
+    tarray = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, zeros(size(T, 1), 1), 'TimeZone', 'UTC');
+    Location = pvl_makelocationstruct(alllat(strcmp(allgen, g)),alllon(strcmp(allgen, g)));
         
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     % Fix 1, time shift back by 30 min (2 x 15 min interval)
-%     toff = 2;
-%     Mp = [M(1:size(M, 1) - toff, 1: 5), M(toff + 1: end, 6:8)];
-%     M = Mp;
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    clear Time;
-    Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
-    Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
-    Time.year(1:size(M,1),1)   = M(:, 1);
-    Time.month(1:size(M,1),1)  = M(:, 2);
-    Time.day(1:size(M,1),1)    = M(:, 3);
-    Time.hour(1:size(M,1),1)   = M(:, 4);
-    Time.minute(1:size(M,1),1) = M(:, 5);
-    Time.second(1:size(M,1),1) = zeros(size(M,1), 1);
-    
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     % Fix 2, capped by clear-sky GHI
-%     % Prepare for ac power calculation.
-%     [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
-%     ghi_clearsky = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
-%     fixrow = find(any(M(:, 6:8) > repmat(ghi_clearsky, 1, 3), 2));
-%     for i = 1:length(fixrow)
-%         ifixrow = fixrow(i);
-%         ghi_max = max(M(ifixrow, 6:8));
-%         M(ifixrow, 6:8) = M(ifixrow, 6:8).*ghi_clearsky(ifixrow)/ghi_max;
-%     end
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    tarray_formean = repmat(tarray(:)', 15, 1) - datenum(repmat([15:-1:1]'./24/60, 1, numel(tarray))); % All minutes during the past period, can be 15 or 5 min
+    tarray_formean = tarray_formean(:);
+    Time_formean.UTCOffset = zeros(size(tarray_formean, 1), 1); % Because IBM uses UTC time, so utc offset is zero
+    Time_formean.year   = tarray_formean.Year;
+    Time_formean.month  = tarray_formean.Month;
+    Time_formean.day    = tarray_formean.Day;
+    Time_formean.hour   = tarray_formean.Hour;
+    Time_formean.minute = tarray_formean.Minute;
+    Time_formean.second = tarray_formean.Second;
+    [~, ~, AppSunEl_formean, ~] = pvl_ephemeris(Time_formean,Location);
+    ghi_cs_formean = pvl_clearsky_haurwitz(90-AppSunEl_formean);
+    ghi_cs_mean = mean(reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray)), 1)';
+    power_cs_formean = ghi_to_ac_power(g, Time_formean.year, Time_formean.month, Time_formean.day, Time_formean.hour, Time_formean.minute, Time_formean.second, ghi_cs_formean);
+    power_cs_mean = mean(reshape(power_cs_formean(:, end), numel(power_cs_formean(:, end))/numel(tarray), numel(tarray)), 1)';
 
-    
-    ac_lb   = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 6));
-    ac_mean = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 7));
-    ac_ub   = ghi_to_ac_power(gen, M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), zeros(size(M, 1), 1), M(:, 8));
-    
-    compare_result = zeros(1, 4);
-    compare_result(1) = sum(M(:, 6)>M(:, 7));
-    compare_result(2) = sum(M(:, 7)>M(:, 8));
-    compare_result(3) = sum(ac_lb(:, end) > ac_mean(:, end));
-    compare_result(4) = sum(ac_mean(:, end) > ac_ub(:, end));
-    
-    tarray = datetime(Time.year, Time.month, Time.day, Time.hour, Time.minute, Time.second, 'TimeZone', 'UTC');
-    tarray.TimeZone = 'America/Los_Angeles';
-    tarray_local = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
+    power_mean_allp = zeros(size(tarray, 1), length(allp));
+    for ip = 1: length(allp)
+        p = allp{ip};
+        col = strghi{ip};
+        ghi = T.(col);
+        k_cs = ghi./ghi_cs_mean; % Clear-sky index
+        ghi_formean = reshape( reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray))*diag(k_cs), numel(ghi_cs_formean), 1);
+        ghi_formean(isnan(ghi_formean)) = 0; % nan means GHI_CS_mean is zero
+        power_formean = ghi_to_ac_power(g, Time_formean.year, Time_formean.month, Time_formean.day, Time_formean.hour, Time_formean.minute, Time_formean.second, ghi_formean);
+        power_mean = mean(reshape(power_formean(:, end), numel(power_formean(:, end))/numel(tarray), numel(tarray)), 1)';
+        power_mean_allp(:, ip) = power_mean;
+    end
+    Tnew = [T array2table([ghi_cs_mean, power_mean_allp, power_cs_mean], 'VariableNames', [{'ghi_cs'} strpwr {'pwr_cs'}])];
+    cell_frcst{i} = Tnew;
+
+    x = (tarray(1)-duration(1, 0, 0)): datenum(1/24/60): (tarray(end)+datenum(1/24));
+    xtime.UTCOffset = zeros(size(x, 1), 1);
+    xtime.year   = x.Year;
+    xtime.month  = x.Month;
+    xtime.day    = x.Day;
+    xtime.hour   = x.Hour;
+    xtime.minute = x.Minute;
+    xtime.second = x.Second;
+    [~, ~, xAppSunEl, ~] = pvl_ephemeris(xtime, Location);
+    xghi_cs = pvl_clearsky_haurwitz(90-xAppSunEl);
+    xpwr_cs = ghi_to_ac_power(g, xtime.year(:), xtime.month(:), xtime.day(:), xtime.hour(:), xtime.minute(:), xtime.second(:), xghi_cs);
 
     figure();
-    h = plot(tarray_local, [ac_lb(:, end), ac_mean(:, end), ac_ub(:, end)]);
-    set(h, {'color'}, {'b'; 'k'; 'r'});
-    title(strcat(gen, ',', ibm_site));
-    ylabel('kW');
-    fprintf('%6s %8s %6g %6g %6g %6g\n', gen, ibm_site, compare_result(1), compare_result(2), compare_result(3), compare_result(4));
-    
-    ac_lb(:, 1:6)   = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second];
-    ac_mean(:, 1:6) = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second];
-    ac_ub(:, 1:6)   = [tarray_local.Year, tarray_local.Month, tarray_local.Day, tarray_local.Hour, tarray_local.Minute, tarray_local.Second];
+    ax1 = subplot(2, 1, 1);
+    plot(x, xghi_cs, '-k');
+    hold on; 
+    stairs(tarray-duration(0, 15, 0), Tnew{:, strghi});
+    stairs(tarray-duration(0, 15, 0), Tnew{:, 'ghi_cs'}, 'k');
+    hold off;
+    ylabel('GHI');
 
-    cd(dir_work);
-    cHeader = {'Year' 'Month' 'Day' 'Hour' 'Minute' 'Second' 'Low' 'Mean' 'High'}; %dummy header
-    commaHeader = [cHeader;repmat({','},1,numel(cHeader))]; %insert commaas
-    commaHeader = commaHeader(:)';
-    textHeader = cell2mat(commaHeader); % cHeader in text with commas
-    fid = fopen(csvname_write,'w'); 
-    fprintf(fid,'%s\n',textHeader); % write header to file
-    fclose(fid);
-    dlmwrite(csvname_write,[ac_lb(:, 1:6), ac_lb(:, end), ac_mean(:, end), ac_ub(:, end)],'-append');
-    cd(dir_home);
+    subplot(2, 1, 2);
+    ax2 = plot(x, xpwr_cs(:, end), '-k');
+    hold on; 
+    stairs(tarray-duration(0, 15, 0), Tnew{:, strpwr});
+    stairs(tarray-duration(0, 15, 0), Tnew{:, 'pwr_cs'}, 'k');
+    hold off;
+    ylabel('Power');
 
-    
+    suptitle(strcat(g, '-', s));
+    linkaxes([ax1, ax2],'x');
+
+
+    figure();
+    ax1 = subplot(2, 1, 1);
+    plot(tarray, Tnew{:, strghi}./Tnew{:, 'ghi_cs'});
+    ylim([0, 2]);
+    ylabel('Clear-sky index');
+
+    ax2 = subplot(2, 1, 2);
+    plot(tarray, Tnew{:, strpwr}./Tnew{:, 'pwr_cs'});
+    ylim([0, 2]);
+    ylabel('Normalized power');
+
+    suptitle(strcat(g, '-', s));
+    linkaxes([ax1, ax2],'x');
+
+end
+
+if write_flag
+    cd(dirwrite);
+    for i = 1: length(cell_frcst)
+        g = allgen{i};
+        csvname_write = strcat('frcst_',         g,      '.csv');
+        writetable(cell_frcst{i}, csvname_write);
+        fprintf('File %s write to %s!\n', csvname_write, dirwrite);
+    end
+    cd(dirhome);
 end
 
 end
 
-function ghi2power_actual_hourly(m, dirwrite)
+function [allgen, cell_actual] = ghi2power_actual_hourly(m, dirwrite)
 if nargin == 1
     write_flag = false;
 else
@@ -355,6 +399,33 @@ if write_flag
     end
     cd(dirhome);
 end
+
+end
+
+function identify_violations(selected_gen, cell_frcst)
+% allgen is a cell of gen names, cell_frcst is a cell of tables, two
+% variables should be the same length
+allp = {'ghi_p005', 'ghi_p095'};
+allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+allsite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+
+compare_ghi_greater   = zeros(numel(selected_gen), length(allp) - 1);
+% compare_power_greater = zeros(numel(allgen), length(allp) - 1);
+compare_ghi_equal     = zeros(numel(selected_gen), length(allp) - 1);
+% compare_power_equal   = zeros(numel(allgen), length(allp) - 1);
+
+
+for i = 1: length(selected_gen)
+    Tnew = cell_frcst{i};
+    for j = 1: length(allp) - 1
+        lp = allp{j};
+        rp = allp{j+1};
+        compare_ghi_equal(i, j)   = sum((Tnew.(lp)==Tnew.(rp))&(Tnew.(lp)~=0)&(Tnew.(rp)~=0));
+        compare_ghi_greater(i, j) = sum((Tnew.(lp)>Tnew.(rp))&(Tnew.(lp)~=0)&(Tnew.(rp)~=0));
+    end
+end
+fprintf('GHI comparison');
+[table(selected_gen(:), 'VariableNames', {'sitename'}) array2table(compare_ghi_greater+compare_ghi_equal, 'VariableNames', {'ghi_p005_ge_ghi_p095'})]
 
 end
 
