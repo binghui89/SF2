@@ -1,8 +1,20 @@
 function lab_ghi2power()
 add_pvlib();
 
-[allgen, cell_frcst] = ghi2power_frcst_15min(4, 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst');
-identify_violations(allgen, cell_frcst);
+% dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst';
+% dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst';
+% deltat = 15; % min
+% allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
+% [allgen, cell_frcst] = ghi2power_frcst_15min(dirwork, deltat, allp, dirwrite);
+% identify_violations(allgen, cell_frcst, allp);
+
+dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\ghi_frcst';
+dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\ghi_frcst';
+deltat = 5; % min
+allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
+[allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
+identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
+
 % ghi2power_frcst_morequantiles(4, 0);
 % ghi2power_actual_hourly(4);
 end
@@ -149,20 +161,20 @@ fprintf('Power comparison');
 [table(sitenames', IBMsitenames', 'VariableNames', {'sitename', 'ibmname'}) array2table(compare_power_greater+compare_power_equal, 'VariableNames', {'p5_ge_p25', 'p25_ge_p50', 'p50_ge_p75', 'p75_ge_p95'})]
 end
 
-function [allgen, cell_frcst] = ghi2power_frcst_15min(m, dirwrite)
-if nargin == 1
+function [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite)
+if nargin == 3
     write_flag = false;
-else
+elseif nargin == 4
     write_flag = true;
 end
 
-if m == 4
-%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
-    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst'; % IBM's updated forecast
-elseif m == 5
-%     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\power_frcst';
-    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst'; % IBM's updated forecast
-end
+% if m == 4
+% %     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
+%     dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst'; % IBM's updated forecast
+% elseif m == 5
+% %     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\power_frcst';
+%     dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst'; % IBM's updated forecast
+% end
 dirhome = pwd;
 
 allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
@@ -175,7 +187,7 @@ siteforconv = unique(allsite); % We only interested in these sites because the o
 % capacity_site = [372.84, 134.88, 116.05, 338.52, 151.32];
 % cap_scaler = capacity_site./capacity_gen;
 
-allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
+% allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
 strghi = cell(size(allp));
 strpwr = cell(size(allp));
 for ip = 1: length(allp)
@@ -199,7 +211,7 @@ for i = 1: length(allgen)
     tarray = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, zeros(size(T, 1), 1), 'TimeZone', 'UTC');
     Location = pvl_makelocationstruct(alllat(strcmp(allgen, g)),alllon(strcmp(allgen, g)));
         
-    tarray_formean = repmat(tarray(:)', 15, 1) - datenum(repmat([15:-1:1]'./24/60, 1, numel(tarray))); % All minutes during the past period, can be 15 or 5 min
+    tarray_formean = repmat(tarray(:)', deltat, 1) - datenum(repmat([deltat:-1:1]'./24/60, 1, numel(tarray))); % All minutes during the past period, can be 15 or 5 min
     tarray_formean = tarray_formean(:);
     Time_formean.UTCOffset = zeros(size(tarray_formean, 1), 1); % Because IBM uses UTC time, so utc offset is zero
     Time_formean.year   = tarray_formean.Year;
@@ -245,16 +257,16 @@ for i = 1: length(allgen)
     ax1 = subplot(2, 1, 1);
     plot(x, xghi_cs, '-k');
     hold on; 
-    stairs(tarray-duration(0, 15, 0), Tnew{:, strghi});
-    stairs(tarray-duration(0, 15, 0), Tnew{:, 'ghi_cs'}, 'k');
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, strghi});
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, 'ghi_cs'}, 'k');
     hold off;
     ylabel('GHI');
 
-    subplot(2, 1, 2);
-    ax2 = plot(x, xpwr_cs(:, end), '-k');
+    ax2 = subplot(2, 1, 2);
+    plot(x, xpwr_cs(:, end), '-k');
     hold on; 
-    stairs(tarray-duration(0, 15, 0), Tnew{:, strpwr});
-    stairs(tarray-duration(0, 15, 0), Tnew{:, 'pwr_cs'}, 'k');
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, strpwr});
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, 'pwr_cs'}, 'k');
     hold off;
     ylabel('Power');
 
@@ -402,10 +414,10 @@ end
 
 end
 
-function identify_violations(selected_gen, cell_frcst)
+function identify_violations(selected_gen, cell_frcst, allp)
 % allgen is a cell of gen names, cell_frcst is a cell of tables, two
 % variables should be the same length
-allp = {'ghi_p005', 'ghi_p095'};
+% allp = {'ghi_p005', 'ghi_p095'};
 allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
 allsite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
 
@@ -414,6 +426,12 @@ compare_ghi_greater   = zeros(numel(selected_gen), length(allp) - 1);
 compare_ghi_equal     = zeros(numel(selected_gen), length(allp) - 1);
 % compare_power_equal   = zeros(numel(allgen), length(allp) - 1);
 
+title_compare = cell(1, length(allp)-1);
+for j = 1: length(allp) - 1
+    lp = allp{j};
+    rp = allp{j+1};
+    title_compare{j} = strcat(lp, '_ge_', rp);
+end
 
 for i = 1: length(selected_gen)
     Tnew = cell_frcst{i};
@@ -425,7 +443,7 @@ for i = 1: length(selected_gen)
     end
 end
 fprintf('GHI comparison');
-[table(selected_gen(:), 'VariableNames', {'sitename'}) array2table(compare_ghi_greater+compare_ghi_equal, 'VariableNames', {'ghi_p005_ge_ghi_p095'})]
+[table(selected_gen(:), 'VariableNames', {'sitename'}) array2table(compare_ghi_greater+compare_ghi_equal, 'VariableNames', title_compare)]
 
 end
 
