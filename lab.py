@@ -1722,6 +1722,100 @@ def find_percentiles(df_data, ls_p):
             dict_percentiles[p].append(np.interp(p, ecdf.y, ecdf.x))
     return dict_percentiles
 
+def clear_sky_mean_pv(index_datetime, lat, lon, deltat):
+    '''
+    Calculate clear-sky mean PV output, index_datetime must be a pd.DatetimeIndex
+    object, deltat is the number of minutes between two adjacent timestamp in 
+    index_datetime
+    '''
+
+    # Expand the time sequence for mean
+    deltatime = [np.timedelta64(-i, 'm') for i in range(deltat, 0, -1)]
+    index_datetime_formean2d = np.repeat(np.expand_dims(index_datetime.values, axis=1), deltat, axis=1)
+    deltatime_formean2d      = np.repeat(np.expand_dims(deltatime, axis = 0), index_datetime.shape[0], axis=0)
+    index_datetime_formean = (index_datetime_formean2d - deltatime_formean2d).flatten()
+    index_datetime_formean = pd.DatetimeIndex(index_datetime_formean)
+
+    # get the module and inverter specifications from SAM
+    sandia_modules = pvlib.pvsystem.retrieve_sam('SandiaMod')
+    sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
+    module = sandia_modules['Canadian_Solar_CS5P_220M___2009_']
+    inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
+
+    # specify constant ambient air temp and wind for simplicity
+    temp_air = 20
+    wind_speed = 0
+
+    system = {
+        'module': module,
+        'inverter': inverter,
+        'surface_azimuth': 180,
+        'surface_tilt': 0, # Rui's using 30, we use 0 follow Elina's matlab script
+    }
+
+    timezone = 'US/Pacific'
+    altitude = 200 # For simplicity
+    solpos = pvlib.solarposition.get_solarposition(index_datetime_formean, lat, lon)
+    dni_extra = pvlib.irradiance.get_extra_radiation(index_datetime_formean)
+    airmass = pvlib.atmosphere.get_relative_airmass(solpos['apparent_zenith'])
+    pressure = pvlib.atmosphere.alt2pres(altitude)
+    am_abs = pvlib.atmosphere.get_absolute_airmass(airmass, pressure)
+
+    # Use clear-sky GHI for clear-sky power calculation
+    loc = pvlib.location.Location(lat, lon, 'US/Pacific', altitude)
+    ghi_cs = loc.get_clearsky(index_datetime_formean, model='ineichen')
+
+    # Calculate AC power output
+    tracker_data = pvlib.tracking.singleaxis(
+        solpos['apparent_zenith'],
+        solpos['azimuth'],
+        axis_tilt=0, 
+        axis_azimuth=180, 
+        max_angle=90,
+        backtrack=True, 
+        gcr=2.0/7.0,
+    )
+    aoi = tracker_data['aoi']
+    # aoi = pvlib.irradiance.aoi(
+    #     system['surface_tilt'], 
+    #     system['surface_azimuth'],
+    #     solpos['apparent_zenith'].values, 
+    #     solpos['azimuth'].values,
+    # )
+    total_irrad = pvlib.irradiance.get_total_irradiance(
+        # system['surface_tilt'],
+        # system['surface_azimuth'],
+        tracker_data['surface_tilt'],
+        tracker_data['surface_azimuth'],
+        solpos['apparent_zenith'].values,
+        solpos['azimuth'].values,
+        ghi_cs['dni'].values, 
+        ghi_cs['ghi'].values, 
+        ghi_cs['dhi'].values,
+        dni_extra=dni_extra.values,
+        model='haydavies',
+    )
+    temps = pvlib.pvsystem.sapm_celltemp(
+        total_irrad['poa_global'],
+        wind_speed, 
+        temp_air,
+    )
+    effective_irradiance = pvlib.pvsystem.sapm_effective_irradiance(
+        total_irrad['poa_direct'], 
+        total_irrad['poa_diffuse'],
+        am_abs.values, 
+        aoi, 
+        module
+    )
+    dc = pvlib.pvsystem.sapm(effective_irradiance, temps['temp_cell'].values, module)
+    ac = pvlib.pvsystem.snlinverter(dc['v_mp'], dc['p_mp'], inverter)
+
+    ac[np.isnan(ac)] = 0
+    power_cs_formean = ac
+    power_cs = power_cs_formean.reshape(index_datetime.shape[0], deltat).mean(axis=1)
+    power_cs[power_cs<=0] = 0
+    return power_cs
+
 def load_and_process_netload_data(use_persistence=False):
     '''
     This function load for_flexiramp_summary.csv and calculates net load and net load 
@@ -1778,33 +1872,50 @@ def load_and_process_netload_data(use_persistence=False):
         loc['ZP26'] = pvlib.location.Location(35.853, -120.212, 'US/Pacific',446)
         loc['SP15'] = pvlib.location.Location(33.907, -116.257, 'US/Pacific',753)
 
-        dict_df_csghi = dict()
-        for k in loc.keys():
-            df_csghi = loc[k].get_clearsky(pd.DatetimeIndex(df['timestamp']), model='ineichen')
-            # Due to daylight saving time conversion, we'll get NaT at the 
-            # transitioning time, however, we know for sure GHI = 0 at that time
-            df_csghi.loc['NaT', :] = 0
-            dict_df_csghi[k] = df_csghi
+        # # Use clear-sky GHI as full output
+        # dict_df_csghi = dict()
+        # for k in loc.keys():
+        #     df_csghi = loc[k].get_clearsky(pd.DatetimeIndex(df['timestamp']), model='ineichen')
+        #     # Due to daylight saving time conversion, we'll get NaT at the 
+        #     # transitioning time, however, we know for sure GHI = 0 at that time
+        #     df_csghi.loc['NaT', :] = 0
+        #     dict_df_csghi[k] = df_csghi
 
+        # # Use persistence clear-sky index to get advisory solar power forecast
+        # for k in loc.keys():
+        #     cs_ghi = dict_df_csghi[k]['ghi'].values
+        #     power  = df['Solar_'+k+'_B_RTD'].values
+        #     csindex = np.zeros(power.shape)
+        #     csindex[~(cs_ghi==0)] = power[~(cs_ghi==0)]/cs_ghi[~(cs_ghi==0)]
+        #     csindex[np.isnan(csindex)] = 0
+        #     csindex[np.isinf(csindex)] = 0
+        #     frcst_adv = np.concatenate(
+        #         [[np.nan], dict_df_csghi[k]['ghi'].values[1:]*csindex[0:-1]]
+        #     )
+        #     df.loc[:, 'Solar_'+k+'_A_RTD'] = frcst_adv
+
+        #     df.loc[:, 'AB_diff_'+k] = np.abs(df['Solar_'+k+'_A_RTD'] - df['Solar_'+k+'_B_RTD'])/df['Solar_'+k+'_B_RTD']
+
+        # Use clear-sky power as full output
         # Use persistence clear-sky index to get advisory solar power forecast
+        index_datetime = pd.DatetimeIndex(df['timestamp'])
         for k in loc.keys():
-            cs_ghi = dict_df_csghi[k]['ghi'].values
+            power_cs = clear_sky_mean_pv(index_datetime, loc[k].latitude, loc[k].longitude, 5)
             power  = df['Solar_'+k+'_B_RTD'].values
             csindex = np.zeros(power.shape)
-            csindex[~(cs_ghi==0)] = power[~(cs_ghi==0)]/cs_ghi[~(cs_ghi==0)]
+            csindex[~(power_cs==0)] = power[~(power_cs==0)]/power_cs[~(power_cs==0)]
             csindex[np.isnan(csindex)] = 0
             csindex[np.isinf(csindex)] = 0
             frcst_adv = np.concatenate(
-                [[np.nan], dict_df_csghi[k]['ghi'].values[1:]*csindex[0:-1]]
+                [[np.nan], power_cs[1:]*csindex[0:-1]]
             )
             df.loc[:, 'Solar_'+k+'_A_RTD'] = frcst_adv
 
             df.loc[:, 'AB_diff_'+k] = np.abs(df['Solar_'+k+'_A_RTD'] - df['Solar_'+k+'_B_RTD'])/df['Solar_'+k+'_B_RTD']
 
-        # Fix numeric error when CS GHI is small and adv forecast is too large.
-        # Basically, whenever B-A forecast percentage error > 100%, use binding 
-        # forecast.
-        for k in loc.keys():
+            # Fix numeric error when CS GHI is small and adv forecast is too large.
+            # Basically, whenever B-A forecast percentage error > 100%, use binding 
+            # forecast.
             df.loc[df['AB_diff_'+k]>1, 'Solar_'+k+'_A_RTD'] = df.loc[df['AB_diff_'+k]>1, 'Solar_'+k+'_B_RTD']
 
             # # Uncomment the following part to visualize
@@ -1818,7 +1929,8 @@ def load_and_process_netload_data(use_persistence=False):
             ax1 = plt.subplot(111)
             ax2 = ax1.twinx()
             df[['timestamp', 'Solar_'+k+'_B_RTD', 'Solar_'+k+'_A_RTD']].plot(ax = ax1, x='timestamp')
-            dict_df_csghi[k]['ghi'].plot(ax=ax2,x='timestamp', color='green')
+            # dict_df_csghi[k]['ghi'].plot(ax=ax2,x='timestamp', color='green')
+            ax2.plot(df['timestamp'], power_cs, color='green')
             ax1.set_ylabel('Power (MW)')
             ax2.set_ylabel('Clear-sky GHI (W/m^2)')
 
@@ -1901,8 +2013,8 @@ def load_and_process_netload_data(use_persistence=False):
     )
 
     df['NET_LOAD_A_RTD'] = (
-        df['LOAD_A_RTD'] - 
-        # df['LOAD_B_RTD'] - # To remove gross load ramp
+        # df['LOAD_A_RTD'] - 
+        df['LOAD_B_RTD'] - # To remove gross load ramp
         df['Wind_NP15_A_RTD'] -
         df['Wind_SP15_A_RTD'] - 
         df['Solar_NP15_A_RTD'] - 
