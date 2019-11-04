@@ -1739,8 +1739,17 @@ def clear_sky_mean_pv(index_datetime, lat, lon, deltat):
     # get the module and inverter specifications from SAM
     sandia_modules = pvlib.pvsystem.retrieve_sam('SandiaMod')
     sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
-    module = sandia_modules['Canadian_Solar_CS5P_220M___2009_']
-    inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
+
+    # module = sandia_modules['Canadian_Solar_CS5P_220M___2009_']
+    # inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
+    # array_ns = 1 # 1 serial units
+    # array_np = 1 # 1 parallel strings
+
+    # The following is Elina's module parameters
+    module = sandia_modules['First_Solar_FS_272___2009_']
+    inverter = sapm_inverters['Power_One__ULTRA_1500_TL_OUTD_1_US_690_x_y_z_690V__CEC_2013_']
+    array_ns = 11 # 11 serial units
+    array_np = 2360 # 2360 parallel strings
 
     # specify constant ambient air temp and wind for simplicity
     temp_air = 20
@@ -1808,7 +1817,7 @@ def clear_sky_mean_pv(index_datetime, lat, lon, deltat):
         module
     )
     dc = pvlib.pvsystem.sapm(effective_irradiance, temps['temp_cell'].values, module)
-    ac = pvlib.pvsystem.snlinverter(dc['v_mp'], dc['p_mp'], inverter)
+    ac = pvlib.pvsystem.snlinverter(dc['v_mp']*array_ns, dc['p_mp']*array_ns*array_np, inverter)
 
     ac[np.isnan(ac)] = 0
     power_cs_formean = ac
