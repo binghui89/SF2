@@ -1,14 +1,17 @@
 function lab_IBM()
-ibm_april(5);
+% baseline_ibm(2019, 4, 30);
+convolve_ibm_new(2019, 4, 30);
+
+% convolve_ibm_old(4);
 % CAISO_10_sites();
 % explore_correlation(4);
 end
 
 function explore_correlation(m)
 if m == 4
-    dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\ghi_actual';
+    dir_work = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_actual';
 elseif m == 5
-    dir_work = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\ghi_actual';
+    dir_work = 'C:\Users\bxl180002\git\SF2\IBM\May\ghi_actual';
 end
 dir_home = pwd;
 
@@ -100,14 +103,346 @@ ylabel('Linear correlation coefficient');
 
 end
 
-function ibm_april(m, write_flag)
+function baseline_ibm(YYYY, MM, DD)
+% Follow CAISO's implementation using IBM data
+
+TARGETDAY = datetime(YYYY, MM, DD);
+nhistory = 29;
+
+siteforconv = {'gen55', 'gen56', 'gen59', 'gen60', 'gen61', 'gen58', 'gen62', 'gen64'}; % These 8 gens have non-zero capacities
+capacity = nan(length(siteforconv), 2);
+cell_data5 = cell(length(siteforconv), 1);
+cell_data15 = cell(length(siteforconv), 1);
+dirhome = pwd;
+dirwork5 ='C:\Users\bxl180002\git\SF2\IBM\April.more_quantiles.5min\power_frcst';
+dirwork15 = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst';
+
+for i = 1: length(siteforconv)
+    % Read 5-min data
+    cd(dirwork5);
+    csvname = strcat('frcst_', siteforconv{i}, '.csv');
+    T = readtable(csvname);
+    capacity(i, 1) = max(T.pwr_p095);
+    cell_data5{i} = T;
+    
+    % Read 15-min data
+    cd(dirwork15);
+    csvname = strcat('frcst_', siteforconv{i}, '.csv');
+    T = readtable(csvname);
+    capacity(i, 2) = max(T.pwr_p095);
+    cell_data15{i} = T;
+end
+cd(dirhome);
+capacity = max(capacity, 2);
+
+T5 = cell_data5{1};
+tarray5_utc = datetime(T5.Year, T5.Month, T5.Day, T5.Hour, T5.Minute, zeros(size(T5, 1), 1), 'TimeZone', 'utc');
+tarray5_local = tarray5_utc;
+tarray5_local.TimeZone = 'America/Los_Angeles';
+
+T15 = cell_data15{1};
+tarray15_utc = datetime(T15.Year, T15.Month, T15.Day, T15.Hour, T15.Minute, zeros(size(T15, 1), 1), 'TimeZone', 'utc');
+tarray15_local = tarray15_utc;
+tarray15_local.TimeZone = 'America/Los_Angeles';
+
+pmean_15 = zeros(length(tarray15_local), 1);
+for i = 1: length(cell_data15)
+    T = cell_data15{i};
+    pmean_15 = pmean_15 + T{:, 'pwr_mean'};
+end
+
+pmean_5 = zeros(length(tarray5_local), 1);
+for i = 1: length(cell_data5)
+    T = cell_data5{i};
+    pmean_5 = pmean_5 + T{:, 'pwr_mean'};
+end
+
+% Collect history information
+pmean_history_5  = nan(12*24, nhistory);
+pmean_history_15 = nan(4*24, nhistory);
+for i = 1:nhistory
+    thisday = TARGETDAY - days(i);
+    tarray15_select = tarray15_local((tarray15_local.Year==thisday.Year)&(tarray15_local.Month==thisday.Month)&(tarray15_local.Day==thisday.Day));
+%     iend_15 = find(tarray15_local==tarray15_select(end))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+%     istart_15 = find(tarray15_local==tarray15_select(1))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+    iend_15 = find(tarray15_local==tarray15_select(end)); 
+    istart_15 = find(tarray15_local==tarray15_select(1));
+    tarray5_select = tarray5_local((tarray5_local.Year==thisday.Year)&(tarray5_local.Month==thisday.Month)&(tarray5_local.Day==thisday.Day));
+%     iend_5 = find(tarray5_local==tarray5_select(end))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+%     istart_5 = find(tarray5_local==tarray5_select(1))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+    iend_5 = find(tarray5_local==tarray5_select(end));
+    istart_5 = find(tarray5_local==tarray5_select(1));
+
+    pmean_history_5(:, nhistory+1-i) = pmean_5(istart_5: iend_5);
+    pmean_history_15(:, nhistory+1-i) = pmean_15(istart_15: iend_15); 
+end
+
+pmean_delta5 = pmean_history_5 - reshape(repmat(pmean_history_15(:), 1, 3)', numel(pmean_history_15)*3/nhistory, nhistory);
+pmean_delta15_max = reshape(max(reshape(pmean_delta5(:), 3, numel(pmean_delta5)/3), [], 1), 4*24, nhistory);
+pmean_delta15_min = reshape(min(reshape(pmean_delta5(:), 3, numel(pmean_delta5)/3), [], 1), 4*24, nhistory);
+
+fru_determ = nan(24, 1);
+frd_determ = nan(24, 1);
+for i = 1: 24
+    rtpd_col = (i-1)*4+1: i*4;
+    samples_fru = pmean_delta15_max(rtpd_col, :);
+    [f,x] = ecdf(samples_fru(:));
+    fru_determ(i) = interp1(f, x, 0.95);
+
+    samples_frd = pmean_delta15_min(rtpd_col, :);
+    [f,x] = ecdf(samples_frd(:));
+    frd_determ(i) = interp1(f, x, 0.05);
+end
+
+end
+
+function convolve_ibm_new(YYYY, MM, DD)
+% We use MATLAB's conv function, not my version to complete the workflow,
+% so no correlation is considered, but let's just start from the easy one.
+siteforconv = {'gen55', 'gen56', 'gen59', 'gen60', 'gen61', 'gen58', 'gen62', 'gen64'}; % These 8 gens have non-zero capacities
+capacity = nan(length(siteforconv), 2);
+cell_data5 = cell(length(siteforconv), 1);
+cell_data15 = cell(length(siteforconv), 1);
+dirhome = pwd;
+dirwork5 ='C:\Users\bxl180002\git\SF2\IBM\April.more_quantiles.5min\power_frcst';
+dirwork15 = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst';
+
+for i = 1: length(siteforconv)
+    % Read 5-min data
+    cd(dirwork5);
+    csvname = strcat('frcst_', siteforconv{i}, '.csv');
+    T = readtable(csvname);
+    capacity(i, 1) = max(T.pwr_p095);
+    cell_data5{i} = T;
+    
+    % Read 15-min data
+    cd(dirwork15);
+    csvname = strcat('frcst_', siteforconv{i}, '.csv');
+    T = readtable(csvname);
+    capacity(i, 2) = max(T.pwr_p095);
+    cell_data15{i} = T;
+end
+cd(dirhome);
+capacity = max(capacity, [], 2);
+
+T5 = cell_data5{1};
+tarray5_utc = datetime(T5.Year, T5.Month, T5.Day, T5.Hour, T5.Minute, zeros(size(T5, 1), 1), 'TimeZone', 'utc');
+tarray5_local = tarray5_utc;
+tarray5_local.TimeZone = 'America/Los_Angeles';
+
+T15 = cell_data15{1};
+tarray15_utc = datetime(T15.Year, T15.Month, T15.Day, T15.Hour, T15.Minute, zeros(size(T15, 1), 1), 'TimeZone', 'utc');
+tarray15_local = tarray15_utc;
+tarray15_local.TimeZone = 'America/Los_Angeles';
+
+actual_binwidth = 10; % MW
+
+% Since IBM's timestamp indicates the 5/15 min period overwhich the GHI is
+% averaged, the last timestamp of the three 5-min periods should equal to
+% the timestamp of the corresponding 15-min period. Therefore, the
+% timestamp of the last period of both resolution should be 00:00 of the
+% next day.
+tarray15_select = tarray15_local((tarray15_local.Year==YYYY)&(tarray15_local.Month==MM)&(tarray15_local.Day==DD));
+% iend_15 = find(tarray15_local==tarray15_select(end))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+% istart_15 = find(tarray15_local==tarray15_select(1))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+iend_15 = find(tarray15_local==tarray15_select(end));
+istart_15 = find(tarray15_local==tarray15_select(1));
+
+tarray5_select = tarray5_local((tarray5_local.Year==YYYY)&(tarray5_local.Month==MM)&(tarray5_local.Day==DD));
+% iend_5 = find(tarray5_local==tarray5_select(end))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+% istart_5 = find(tarray5_local==tarray5_select(1))+1; % This is assume each 15-min interval ended at 15 includes the 5-min intervals ending at 0, 5, and 15
+iend_5 = find(tarray5_local==tarray5_select(end)); 
+istart_5 = find(tarray5_local==tarray5_select(1)); 
+
+rowindex15 = istart_15: iend_15;
+rowindex5  = istart_5: iend_5;
+
+% rowindex15 = 33:74; % April 1
+% rowindex5  = 95:220; % April 1
+% rowindex15 = 2907:2960; % May 31
+% rowindex5  = 8717:8878; % May 31
+% rowindex15 = 2814:2855; % April 30
+% rowindex5  = 8438:8563; % April 30
+
+
+% Result container for convoltuion
+cell_conv_bincenter_15 = cell(length(rowindex15), 1);
+cell_conv_binheight_15 = cell(length(rowindex15), 1);
+cell_conv_bincenter_5 = cell(length(rowindex5), 1);
+cell_conv_binheight_5 = cell(length(rowindex5), 1);
+cell_conv_bincenter_5m15 = cell(length(rowindex5), 1);
+cell_conv_binheight_5m15 = cell(length(rowindex5), 1);
+cell_conv_binedge_5m15 = cell(length(rowindex5), 1);
+cell_conv_edgecdf_5m15 = cell(length(rowindex5), 1);
+
+% Result container for FRP requirements
+fru_p95 = nan(length(rowindex5), 1);
+frd_p05 = nan(length(rowindex5), 1);
+
+for ik = 1:length(rowindex15)
+    
+    % Convolve 15-min data, step 1: Discretization
+    k = rowindex15(ik);
+    cell_bincenter15 = cell(length(cell_data15), 1);
+    cell_binheight15 = cell(length(cell_data15), 1);
+    for j = 1: length(cell_data15)
+        T = cell_data15{j};
+        cap = capacity(j);
+        normalized_binwidth = 0.02;
+        p = [0.05; 0.95;];
+        xp = [T{k,'pwr_p005'}; T{k,'pwr_p095'}]./cap;
+        x_bar = T{k,'pwr_mean'}./cap;
+        [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(p, xp, x_bar, normalized_binwidth);
+        if flag_success
+            binedges = [0: floor(cap/actual_binwidth)].*actual_binwidth;
+            cdf_edges = cdf_logit_normal(binedges./binedges(end), MU, SIGMA);
+            bincenter = (binedges(1: end-1) + binedges(2: end))/2;
+            binheight = (cdf_edges(2: end) - cdf_edges(1: end-1))./actual_binwidth;
+            cell_bincenter15{j} = bincenter;
+            cell_binheight15{j} = binheight;
+        else
+            cell_bincenter15{j} = [];
+            cell_binheight15{j} = [];
+        end
+    end
+    
+    % Convolve 15-min data, step 2: Aggregation
+    bincenter_conv15 = [];
+    binheight_conv15 = [];
+    for j = 1: length(cell_binheight15)
+        if isempty(cell_binheight15{j})
+            continue;
+        end
+        if isempty(binheight_conv15)
+            bincenter_conv15 = cell_bincenter15{j};
+            binheight_conv15 = cell_binheight15{j};
+        else
+            % Note we are doing discrete convolution so each element should
+            % be the frequency of that discrete number (bin center), so we
+            % should multiply the height (pdf) with the width to get the
+            % area (frequency) in the bin.
+            binheight_conv15 = conv(binheight_conv15.*actual_binwidth, cell_binheight15{j}.*actual_binwidth)./actual_binwidth;
+            bincenter_conv15 = (bincenter_conv15(1) + cell_bincenter15{j}(1)):actual_binwidth:(bincenter_conv15(end) + cell_bincenter15{j}(end));
+        end
+    end
+    cell_conv_bincenter_15{ik} = bincenter_conv15;
+    cell_conv_binheight_15{ik} = binheight_conv15;
+
+    % Now convolve 5-min data, step 1: Discretization
+    for r = 1: 3 % Residual of mod(5-min index, 15-min index)
+        i = rowindex5(3*(ik-1)+r);
+        cell_bincenter5 = cell(length(cell_data5), 1);
+        cell_binheight5 = cell(length(cell_data5), 1);
+        for j = 1: length(cell_data5)
+            T = cell_data5{j};
+            cap = capacity(j);
+            normalized_binwidth = 0.02;
+            p = [0.05;0.25;0.50;0.75;0.95;];
+            xp = [T{i,'pwr_p005'}; T{i,'pwr_p025'}; T{i,'pwr_p050'}; T{i,'pwr_p075'}; T{i,'pwr_p095'}]./cap;
+            x_bar = T{i,'pwr_mean'}./cap;
+            [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(p, xp, x_bar, normalized_binwidth);
+            if flag_success
+                binedges = [0: floor(cap/actual_binwidth)].*actual_binwidth;
+                cdf_edges = cdf_logit_normal(binedges./binedges(end), MU, SIGMA);
+                bincenter = (binedges(1: end-1) + binedges(2: end))/2;
+                binheight = (cdf_edges(2: end) - cdf_edges(1: end-1))./actual_binwidth;
+                cell_bincenter5{j} = bincenter;
+                cell_binheight5{j} = binheight;
+            else
+                cell_bincenter5{j} = [];
+                cell_binheight5{j} = [];
+            end
+        end
+        
+        % Convolve 5-min data, step 2: Aggregation
+        bincenter_conv5 = [];
+        binheight_conv5 = [];
+        for j = 1: length(cell_binheight5)
+            if isempty(cell_binheight5{j})
+                continue;
+            end
+            if isempty(binheight_conv5)
+                bincenter_conv5 = cell_bincenter5{j};
+                binheight_conv5 = cell_binheight5{j};
+            else
+                % Note we are doing discrete convolution so each element should
+                % be the frequency of that discrete number (bin center), so we
+                % should multiply the height (pdf) with the width to get the
+                % area (frequency) in the bin.
+                binheight_conv5 = conv(binheight_conv5.*actual_binwidth, cell_binheight5{j}.*actual_binwidth)./actual_binwidth;
+                bincenter_conv5 = (bincenter_conv5(1) + cell_bincenter5{j}(1)):actual_binwidth:(bincenter_conv5(end) + cell_bincenter5{j}(end));
+            end
+        end
+        cell_conv_bincenter_5{3*(ik-1)+r} = bincenter_conv5;
+        cell_conv_binheight_5{3*(ik-1)+r} = binheight_conv5;
+    end
+    
+    % Now, convolution of (5-min PDF) - (15-min PDF)
+    for r = 1:3
+        f5_center = cell_conv_bincenter_5{3*(ik-1)+r}; % Forecast 5-min center
+        f5_height = cell_conv_binheight_5{3*(ik-1)+r}; % Forecast 5-min pdf
+        f15_center = -fliplr(cell_conv_bincenter_15{ik}); % Forecast 15-min center
+        f15_height = fliplr(cell_conv_binheight_15{ik}); % Forecast 15-min pdf
+        if isempty(f5_height) || isempty(f15_height)
+            % Any one of the 5-min or the 15-min distribution is empty,
+            % let's just assume the forecast error is zero?
+            fru_p95(3*(ik-1)+r) = 0;
+            frd_p05(3*(ik-1)+r) = 0;
+            continue;
+        end
+        cell_conv_binheight_5m15{3*(ik-1)+r} = conv(f5_height.*actual_binwidth, f15_height.*actual_binwidth)./actual_binwidth;
+        cell_conv_bincenter_5m15{3*(ik-1)+r} = (f5_center(1) + f15_center(1)):actual_binwidth:(f5_center(end) + f15_center(end));
+        
+        % Calculate 95th and 5th percentiles
+        cell_conv_binedge_5m15{3*(ik-1)+r} = [cell_conv_bincenter_5m15{3*(ik-1)+r}(:) - actual_binwidth/2;cell_conv_bincenter_5m15{3*(ik-1)+r}(end) + actual_binwidth/2];
+        cell_conv_edgecdf_5m15{3*(ik-1)+r} = [0; cumsum(cell_conv_binheight_5m15{3*(ik-1)+r}(:)).*actual_binwidth];
+        [~, imin] = min(abs(cell_conv_edgecdf_5m15{3*(ik-1)+r} -0.95));
+        fru_p95(3*(ik-1)+r) = cell_conv_binedge_5m15{3*(ik-1)+r}(imin);
+        [~, imin] = min(abs(cell_conv_edgecdf_5m15{3*(ik-1)+r} -0.05));
+        frd_p05(3*(ik-1)+r) = cell_conv_binedge_5m15{3*(ik-1)+r}(imin);
+    end
+end
+
+% Uncomment this block if you want to see individual distributions.
+% for ik = 1:length(rowindex15)
+%     figure();
+%     subplot(2, 1, 1);
+%     k = rowindex15(ik);
+%     plot(cell_conv_bincenter_15{ik}, cell_conv_binheight_15{ik}, 'k');
+%     hold on;
+%     for r = 1: 3
+%         plot(cell_conv_bincenter_5{3*(ik-1)+r}, cell_conv_binheight_5{3*(ik-1)+r}, 'r');
+%     end
+%     xlabel('MW');
+%     
+%     subplot(2, 1, 2);
+%     hold on;
+%     for r = 1: 3
+%         yyaxis left;
+%         plot(cell_conv_bincenter_5m15{3*(ik-1)+r}, cell_conv_binheight_5m15{3*(ik-1)+r}, 'r');
+%         yyaxis right;
+%         plot(cell_conv_binedge_5m15{3*(ik-1)+r}, cell_conv_edgecdf_5m15{3*(ik-1)+r});
+%     end
+%     yyaxis left;
+%     ylabel('PDF');
+%     yyaxis right;
+%     ylabel('CDF');
+%     ylim([0, 1]);
+%     xlabel('MW');
+% end
+
+end
+
+function convolve_ibm_old(m, write_flag)
+% Note this is used to produce convolution using my own conv_poly function
+% back in June, 2019. 
 if nargin == 1
     write_flag = false;
 end
 if m == 4
-    dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_April\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst.bak'; % IBM's updated forecast
 elseif m == 5
-    dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_May\power_frcst';
+    dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst.bak'; % IBM's updated forecast
 end
 dirhome = pwd;
 % siteforconv = {'gen55', 'gen56', 'gen59', 'gen60', 'gen61'}; % This 5 sites correspond to 5 unique IBM sites
@@ -196,9 +531,7 @@ for d = 1: 29 % Day 1 to 29
             x_agg_050_sum = x_agg_050_sum + M(t, 7);
             x_agg_bar_sum = x_agg_bar_sum + M(t, 8);
             x_agg_950_sum = x_agg_950_sum + M(t, 9);
-%             [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
-%             [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
-            [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1(x050_normalized, x500_normalized, x950_normalized, normalized_binwidth);
+            [normalized_h_bin, normalized_binedge, flag_success] = discretize_dist_logitnormal1([0.05;0.95], [x050_normalized; x950_normalized], x500_normalized, normalized_binwidth);
 
 
 %             % Visualize the approximation, plot out the given percentiles
@@ -338,7 +671,7 @@ for d = 1: 29
     h4 = plot(tarray_d, M_agg(M(:, 3)==d, :));
     set(h4, {'linestyle'}, {'--'; '--'; '--'});
     set(h4, {'color'}, {'b'; 'k'; 'r'});
-    legend([h1; h2; h3; h4], {'CI 5%'; 'CI 95%'; 'CI MEAN'; 'SUM 5%'; 'SUM MEAN'; 'SUM 95%'});
+    legend([h4; h1; h2; h3], {'SUM 5%'; 'SUM MEAN'; 'SUM 95%'; 'CI 5%'; 'CI 95%'; 'CI MEAN'});
     ylabel('kW');
     title(d);
 
@@ -369,12 +702,8 @@ end
 
 end
 
-function debug_convolution()
-
-end
-
 function CAISO_10_sites()
-%% Test IBM's data
+% Test IBM's data
 dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM_old\sample';
 dirhome = pwd;
 listcsv = {...
@@ -392,7 +721,7 @@ listcsv = {...
 
 cap = 250; % kW
 
-%% Show fitted distributions
+% Show fitted distributions
 row = 36;
 for i = 1:length(listcsv)
     fig = figure();
@@ -453,7 +782,7 @@ for i = 1:length(listcsv)
     box on;
 end
 
-%% See the distribution of aggretated solar power output
+% See the distribution of aggretated solar power output
 rows_selected = 30:76;
 % rows_selected = 36;
 
@@ -590,19 +919,23 @@ end
 
 end
 
-function [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(x050, x500, x950, normalized_binwidth)
+% function [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(x050, x500, x950, normalized_binwidth)
+function [normalized_h_bin, normalized_binedge, flag_success, MU, SIGMA] = discretize_dist_logitnormal1(p, xp, x_bar, normalized_binwidth)
 % Fit IBM's forecasted percentiles to distributions
 % All inputs should be normalized, i.e., between 0 and 1
+% p is the percentiles in ascending order, i.e., 0.05, 0.50, 0.95
+% xp is the values associated with the percentiles in p
+% x_bar is the mean
 flag_lack_data = false;
-if (x050~=0) && (x950~=0)
-    if x950==1
-        x950=x950-eps;
-    end
-elseif (x500~=0) && (x950~=0)
-    if x050==0
-        x050=x050-eps;
-    end
-else
+% if (x050~=0) && (x950~=0)
+%     if x950==1
+%         x950=x950-eps;
+%     end
+% elseif (x500~=0) && (x950~=0)
+%     if x050==0
+%         x050=x050-eps;
+%     end
+if sum(xp~=0) < 2
     flag_lack_data = true; % We need at least two non-zero points, otherwise we consider it as zero
 end
 
@@ -616,12 +949,12 @@ if ~flag_lack_data
         for j = 1: length(MU_all)
             MU = MU_all(j);
             SIGMA = SIGMA_all(i);
-            p = percentile_logit([0.05;0.95], MU, SIGMA);
+            xp_fitted = percentile_logit(p, MU, SIGMA);
             deltax = 0.01;
             x_mc = 0.01:deltax:0.99;
             p_mc = pdf_logit_normal(x_mc, MU, SIGMA);
-            x_bar = deltax*sum(x_mc(:).*p_mc(:));
-            absdiff(i, j) = sum(abs([x050; x950; x500] - [p; x_bar]));
+            x_bar_fitted = deltax*sum(x_mc(:).*p_mc(:));
+            absdiff(i, j) = sum(abs([xp_fitted(:); x_bar_fitted] - [xp; x_bar]));
         end
     end
     [~, imin] = min(absdiff(:));
@@ -641,6 +974,8 @@ else
     normalized_binedge = nan;
     normalized_h_bin = nan;
     flag_success = false;
+    SIGMA = nan;
+    MU    = nan;
 end
 
 
