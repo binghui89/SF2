@@ -179,6 +179,94 @@ def read_nsrdb():
 
     IP()
 
+def process_nsrdb():
+    # Prepare for cong
+    from pytz import timezone
+
+    ls_csv = [
+        r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\CA_Topaz\96633_35.37_-120.18_2018.csv',
+        # r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\COWC1\138221_39.13_-123.06_2018.csv',
+        r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\DEMC1\98317_35.53_-118.62_2018.csv',
+        # r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\KNNC1\157537_40.73_-123.94_2018.csv',
+        r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MIAC1\118489_37.41_-119.74_2018.csv',
+        r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MNCC1\85923_34.29_-117.5_2018.csv',
+        # r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RLKC1\151675_40.25_-123.3_2018.csv',
+        # r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RSAC1\130670_38.49_-122.7_2018.csv',
+        # r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\SBVC1\87449_34.45_-119.7_2018.csv',
+        r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\STFC1\84346_34.13_-117.94_2018.csv',
+    ]
+    dirsave = r'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\forCong'
+
+    for csvname in ls_csv:
+        df = pd.read_csv(csvname, header=2)
+        df['target'] = np.concatenate([df['GHI'].values[2:], [np.nan]*2])
+        df['Cl_GHI'] = df['GHI']/df['Clearsky GHI']
+        df['timestamp'] = pd.to_datetime(
+            df['Year'].map('{:4g}'.format) 
+            + 
+            '-' 
+            + 
+            df['Month'].map('{:02g}'.format) 
+            + 
+            '-' 
+            + 
+            df['Day'].map('{:02g}'.format) 
+            + 
+            '-' 
+            + 
+            df['Hour'].map('{:02g}'.format) 
+            + 
+            '-' 
+            + 
+            df['Minute'].map('{:02g}'.format), 
+            format='%Y-%m-%d-%H-%M'
+        ).dt.tz_localize('UTC')
+        df['timestamp_local'] = df['timestamp'].dt.tz_convert('US/Pacific')
+        ts_sampl = datetime.datetime(2018, 6, 23, 0, 0, tzinfo=timezone('US/Pacific')) 
+        ts_frcst = datetime.datetime(2018, 12, 23, 0, 0, tzinfo=timezone('US/Pacific')) 
+        te_frcst = datetime.datetime(2018, 12, 30, 0, 0, tzinfo=timezone('US/Pacific')) 
+
+        save_columns = [
+            'Month',
+            'Hour',
+            'DHI',
+            'DNI',
+            'GHI',
+            'Clearsky DHI',
+            'Clearsky DNI',
+            'Clearsky GHI',
+            'Dew Point',
+            'Solar Zenith Angle',
+            'Wind Speed',
+            'Relative Humidity',
+            'Temperature',
+            'Pressure',
+            'Cl_GHI',
+        ]
+
+        csvdir = os.path.dirname(csvname)
+
+        csv_sampl = os.path.sep.join(
+            [
+                dirsave,
+                os.path.basename(csvdir)+'_train.csv',
+            ]
+        )
+        df.loc[
+            (df['timestamp_local']>=ts_sampl)&(df['timestamp_local']<ts_frcst),
+            save_columns+['target'],
+        ].to_csv(csv_sampl, index=False)
+
+        csv_frcst = os.path.sep.join(
+            [
+                dirsave,
+                os.path.basename(csvdir)+'_frcst.csv',
+            ]
+        )
+        df.loc[
+            (df['timestamp_local']>=ts_frcst)&(df['timestamp_local']<te_frcst),
+            save_columns,
+        ].to_csv(csv_frcst, index=False)
 
 ###########################################################
 # IBM paris data starts here.
@@ -2924,6 +3012,7 @@ if __name__ == '__main__':
 
     # dist_tx2kb_spdis()
     # read_nsrdb()
+    process_nsrdb()
 
     # Wind ramp AGC data generator
     ############################################################################
@@ -2953,7 +3042,7 @@ if __name__ == '__main__':
     ############################################################################
     # process_raw_for_flexiramp()
     # tmp_plot_forecast()
-    baseline_flexiramp_for_day(2019, 5, 31, use_persistence=True)
+    # baseline_flexiramp_for_day(2019, 5, 31, use_persistence=True)
     # baseline_flexiramp()
     # estimate_validation()
 
