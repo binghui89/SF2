@@ -8,17 +8,17 @@ function caiso_flex_assess()
 % convolution_2component_no_corr_new();
 
 % copula_type = {'t', 'Clayton', 'Frank', 'Gumbel'};
+copula_type = {'empirical'};
+for i = 1: length(copula_type)
+    display(copula_type{i});
+    convolution_2component_corr(copula_type{i});
+end
+
 % copula_type = {'Gaussian'};
 % for i = 1: length(copula_type)
 %     display(copula_type{i});
-%     convolution_2component_corr(copula_type{i});
+%     convolution_netload_corr(copula_type{i});
 % end
-
-copula_type = {'Gaussian'};
-for i = 1: length(copula_type)
-    display(copula_type{i});
-    convolution_netload_corr(copula_type{i});
-end
 end
 
 
@@ -412,6 +412,9 @@ for i = 1:4
                 [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_1, gr_cdf_2);
                 copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
                 copula_cdf = reshape(copula_cdf, Iy, Ix);
+            case 'empirical' % Empirical copula
+                cdfcounts = histcounts2(ts_cdf_1, ts_cdf_2, gr_cdf_1, gr_cdf_2);
+                cdfcounts = cdfcounts'; % Matlab uses different x and y directions
 %             case 't'
 %                 [rhohat, nu] = copulafit('t', [ts_cdf_2(i_valid) ts_cdf_1(i_valid)]);
 %                 [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_1, gr_cdf_2);
@@ -423,14 +426,23 @@ for i = 1:4
                 copula_cdf = copulacdf(copula_type, [copula_x_grid(:) copula_y_grid(:)], rhohat, param2);
                 copula_cdf = reshape(copula_cdf, Iy, Ix);
         end
-
-
+        
         mean_copula_pdf = nan(Iy-1, Ix-1);
-        for ii = 1: Iy-1
-            for jj = 1: Ix-1
-                grid_area = (gr_cdf_2(ii+1) - gr_cdf_2(ii))*(gr_cdf_1(jj+1) - gr_cdf_1(jj)); % Note grid area is not homogeneous!
-                mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
-            end
+        switch copula_type
+            case 'empirical'
+                for ii = 1: Iy-1
+                    for jj = 1: Ix-1
+                        grid_area = (gr_cdf_2(ii+1) - gr_cdf_2(ii))*(gr_cdf_1(jj+1) - gr_cdf_1(jj)); % Note grid area is not homogeneous!
+                        mean_copula_pdf(ii,jj) = cdfcounts(ii,jj)/(grid_area*sum(cdfcounts(:)));
+                    end
+                end
+            otherwise
+                for ii = 1: Iy-1
+                    for jj = 1: Ix-1
+                        grid_area = (gr_cdf_2(ii+1) - gr_cdf_2(ii))*(gr_cdf_1(jj+1) - gr_cdf_1(jj)); % Note grid area is not homogeneous!
+                        mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
+                    end
+                end
         end
 
         [a_convcorr, t_convcorr] = conv_poly_corr([gr_pdf_1(:); 0], gr_edges_1(:), [gr_pdf_2(:); 0], gr_edges_2(:), mean_copula_pdf, bin_width);
