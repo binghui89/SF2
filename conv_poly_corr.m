@@ -54,15 +54,19 @@ a_convcorr(end, :) = 0;
 
 for k = 1: K
     [cx, cy] = copula_decompose(copula_discrete, k);
-    ax = repmat([cx; 0], 1, size(a1, 2)).*a1;
-    ay = repmat([cy; 0], 1, size(a2, 2)).*a2;
-    [a_tmp, t_tmp] = conv_poly(ax, t1, ay, t2, delta_t);
-    try
-        a_convcorr(k, :) = a_tmp(t_tmp==t_convcorr(k), :);
-    catch
-        disp('error\n');
+    a_sumtmp = zeros(1, size(a_convcorr, 2));
+    for j = 1: size(cx, 2)
+        ax = repmat([cx(:, j); 0], 1, size(a1, 2)).*a1;
+        ay = repmat([cy(:, j); 0], 1, size(a2, 2)).*a2;
+        [a_tmp, t_tmp] = conv_poly(ax, t1, ay, t2, delta_t);
+        try
+            a_sumtmp = a_sumtmp + a_tmp(t_tmp==t_convcorr(k), :);
+        catch
+            disp('error\n');
+        end
     end
 %     a_convcorr(k, :) = a_tmp(abs(t_tmp-t_convcorr(k))<tol*deltat, :);
+    a_convcorr(k, :) = a_sumtmp;
     t_convcorr(k+1) = tc_1+k*deltat;
 end
 

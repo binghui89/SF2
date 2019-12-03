@@ -9,6 +9,7 @@ function caiso_flex_assess()
 
 % copula_type = {'t', 'Clayton', 'Frank', 'Gumbel'};
 copula_type = {'empirical'};
+% copula_type = {'Gaussian'};
 for i = 1: length(copula_type)
     display(copula_type{i});
     convolution_2component_corr(copula_type{i});
