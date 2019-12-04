@@ -8,18 +8,19 @@ function caiso_flex_assess()
 % convolution_2component_no_corr_new();
 
 % copula_type = {'t', 'Clayton', 'Frank', 'Gumbel'};
-copula_type = {'empirical'};
-% copula_type = {'Gaussian'};
-for i = 1: length(copula_type)
-    display(copula_type{i});
-    convolution_2component_corr(copula_type{i});
-end
-
+% copula_type = {'empirical'};
 % copula_type = {'Gaussian'};
 % for i = 1: length(copula_type)
 %     display(copula_type{i});
-%     convolution_netload_corr(copula_type{i});
+%     convolution_2component_corr(copula_type{i});
 % end
+
+% copula_type = {'Gaussian'};
+copula_type = {'empirical'};
+for i = 1: length(copula_type)
+    display(copula_type{i});
+    convolution_netload_corr(copula_type{i});
+end
 end
 
 
@@ -499,7 +500,7 @@ for i = 1:4
         f_observe = (gr_cdf_3(2:end) - gr_cdf_3(1:end-1)).*numel(ts_3);
         f_observe_complete = [zeros(i_conv_start-1, 1); f_observe(:); zeros(numel(f_conv) - i_conv_end + 1 ,1)]; % Frequency, including missing points
         chi2_conv = sum((f_conv - f_observe_complete).^2./f_conv);
-        chi2_convcorr = sum((f_convcorr - f_observe_complete).^2./f_convcorr);
+        chi2_convcorr = nansum((f_convcorr - f_observe_complete).^2./f_convcorr); % Ignore nan due to 0 in the denominator
         chi2_critical = chi2inv(0.95, ndegree);
         fprintf('Component: (%g, %g), chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2   No correlation: %f\n', i,  all_years(year_index), chi2_conv, ndegree, chi2_critical, mdl_conv.Rsquared.Adjusted);
         fprintf('Component: (%g, %g), chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2 With correlation: %f\n', i,  all_years(year_index), chi2_convcorr, ndegree, chi2_critical, mdl_convcorr.Rsquared.Adjusted);
@@ -547,6 +548,8 @@ for year_index = 1:1 % Change to 4 if want to run all four years
             ts = [loads{year_index}, -wind{year_index}, -btm{year_index}, -stpv2019];
     end
     
+    time_convcorr = 0;
+    time_conv = 0; 
     for i = 2: size(ts, 2)
         ts_1 = sum(ts(:, 1:i-1), 2);
         ts_2 = ts(:, i);
@@ -569,7 +572,7 @@ for year_index = 1:1 % Change to 4 if want to run all four years
 
         i_valid = (ts_cdf_2<1) & (ts_cdf_2>0) & (ts_cdf_1<1) & (ts_cdf_1>0);
         
-        % Determine convoluted functions
+        % Determine convolved functions
         if i == 2
             a_prev = [gr_pdf_1(:); 0];
             t_prev = gr_edges_1(:);
@@ -604,6 +607,9 @@ for year_index = 1:1 % Change to 4 if want to run all four years
                 [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_forconv_1, gr_cdf_forconv_2);
                 copula_cdf = copulacdf('Gaussian', [copula_x_grid(:) copula_y_grid(:)], rhohat);
                 copula_cdf = reshape(copula_cdf, Iy, Ix);
+            case 'empirical' % Empirical copula
+                cdfcounts = histcounts2(ts_cdf_1, ts_cdf_2, gr_cdf_forconv_1, gr_cdf_forconv_2);
+                cdfcounts = cdfcounts'; % Matlab uses different x and y directions
             otherwise % Archimedean copulas and t copula, param2 is the 2nd parameter
                 [rhohat, param2] = copulafit(copula_type, [ts_cdf_2(i_valid) ts_cdf_1(i_valid)]);
                 [copula_x_grid, copula_y_grid] = meshgrid(gr_cdf_forconv_1, gr_cdf_forconv_2);
@@ -611,17 +617,32 @@ for year_index = 1:1 % Change to 4 if want to run all four years
                 copula_cdf = reshape(copula_cdf, Iy, Ix);
         end
 
-
         mean_copula_pdf = nan(Iy-1, Ix-1);
-        for ii = 1: Iy-1
-            for jj = 1: Ix-1
-                grid_area = (gr_cdf_forconv_2(ii+1) - gr_cdf_forconv_2(ii))*(gr_cdf_forconv_1(jj+1) - gr_cdf_forconv_1(jj)); % Note grid area is not homogeneous!
-                mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
-            end
-        end 
+        switch copula_type
+            case 'empirical'
+                for ii = 1: Iy-1
+                    for jj = 1: Ix-1
+%                         grid_area = (gr_cdf_2(ii+1) - gr_cdf_2(ii))*(gr_cdf_1(jj+1) - gr_cdf_1(jj)); % Note grid area is not homogeneous!
+                        grid_area = (gr_cdf_forconv_2(ii+1) - gr_cdf_forconv_2(ii))*(gr_cdf_forconv_1(jj+1) - gr_cdf_forconv_1(jj)); % Note grid area is not homogeneous!
+                        mean_copula_pdf(ii,jj) = cdfcounts(ii,jj)/(grid_area*sum(cdfcounts(:)));
+                    end
+                end
+            otherwise
+            for ii = 1: Iy-1
+                for jj = 1: Ix-1
+                    grid_area = (gr_cdf_forconv_2(ii+1) - gr_cdf_forconv_2(ii))*(gr_cdf_forconv_1(jj+1) - gr_cdf_forconv_1(jj)); % Note grid area is not homogeneous!
+                    mean_copula_pdf(ii,jj) = (copula_cdf(ii+1, jj+1) + copula_cdf(ii, jj) - copula_cdf(ii+1, jj) - copula_cdf(ii, jj+1))/grid_area;
+                end
+            end 
+        end
         
+        tic; 
         [a_convcorr, t_convcorr] = conv_poly_corr(a_prev_corr, t_prev_corr, [gr_pdf_2(:); 0], gr_edges_2(:), mean_copula_pdf, bin_width);
+        [a_convcorr, t_convcorr] = cleanup_poly(a_convcorr, t_convcorr); % Clean up leading (0) and trailing (1) constant terms
+        time_convcorr = time_convcorr + toc; 
+        tic;
         [a_conv, t_conv] = conv_poly(a_prev, t_prev, [gr_pdf_2(:); 0], gr_edges_2(:), bin_width);
+        time_conv = time_conv + toc; 
     end
 %     h3 = plot(gr_bincenter_3, gr_pdf_3, 'color', 'r', 'linewidth', 1);
     h3 = bar(gr_bincenter_3, gr_pdf_3, 'FaceColor', [.8, .8, .8], 'EdgeColor', [.8, .8, .8], 'FaceAlpha', .5);
@@ -655,8 +676,10 @@ for year_index = 1:1 % Change to 4 if want to run all four years
 %     i_conv_end   = find(t_conv(:) == gr_edges_3(end) );
     i_conv_start = find(abs(t_conv(:) - gr_edges_3(1)) < bin_width/10 );
     i_conv_end   = find(abs(t_conv(:) - gr_edges_3(end)) < bin_width/10 );
+    i_convcorr_start = find(abs(t_convcorr(:) - gr_edges_3(1)) < bin_width/10 );
+    i_convcorr_end   = find(abs(t_convcorr(:) - gr_edges_3(end)) < bin_width/10 );
 
-    h12 = plot(gr_cdf_3, cdf_conv(i_conv_start:i_conv_end), '-b.', gr_cdf_3, cdf_convcorr(i_conv_start:i_conv_end), '-k.');
+    h12 = plot(gr_cdf_3, cdf_conv(i_conv_start:i_conv_end), '-b.', gr_cdf_3, cdf_convcorr(i_convcorr_start:i_convcorr_end), '-k.');
     hold on;
     h3 = plot([0, 1], [0, 1], '-r', 'LineWidth', 1);
     legend([h12; h3], 'No correlation', 'With correlation', 'Diagonal');
@@ -668,7 +691,7 @@ for year_index = 1:1 % Change to 4 if want to run all four years
     
     % Coefficients of determination
     mdl_conv = fitlm(gr_cdf_3, cdf_conv(i_conv_start:i_conv_end));
-    mdl_convcorr = fitlm(gr_cdf_3, cdf_convcorr(i_conv_start:i_conv_end));
+    mdl_convcorr = fitlm(gr_cdf_3, cdf_convcorr(i_convcorr_start:i_convcorr_end));
 %     fprintf('R^2   No correlation: %f\n', mdl_conv.Rsquared.Adjusted);
 %     fprintf('R^2 With correlation: %f\n', mdl_convcorr.Rsquared.Adjusted);
     
@@ -679,9 +702,10 @@ for year_index = 1:1 % Change to 4 if want to run all four years
     f_observe = (gr_cdf_3(2:end) - gr_cdf_3(1:end-1)).*numel(ts_3);
     f_observe_complete = [zeros(i_conv_start-1, 1); f_observe(:); zeros(numel(f_conv) - i_conv_end + 1 ,1)]; % Frequency, including missing points
     chi2_conv = sum((f_conv - f_observe_complete).^2./f_conv, 'omitnan');
-    chi2_convcorr = sum((f_convcorr - f_observe_complete).^2./f_convcorr, 'omitnan');
+    f_observe_complete_corr = [zeros(i_convcorr_start-1, 1); f_observe(:); zeros(numel(f_convcorr) - i_convcorr_end + 1 ,1)]; % Frequency, including missing points
+    chi2_convcorr = sum((f_convcorr - f_observe_complete_corr).^2./f_convcorr, 'omitnan');
     chi2_critical = chi2inv(0.95, ndegree);
-    fprintf('Component: (%g, %g), chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2   No correlation: %f\n', i,  all_years(year_index), chi2_conv, ndegree, chi2_critical, mdl_conv.Rsquared.Adjusted);
-    fprintf('Component: (%g, %g), chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2 With correlation: %f\n', i,  all_years(year_index), chi2_convcorr, ndegree, chi2_critical, mdl_convcorr.Rsquared.Adjusted);
+    fprintf('Component: (%g, %g), time: %5.1f, chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2   No correlation: %f\n', i,  all_years(year_index), time_conv, chi2_conv, ndegree, chi2_critical, mdl_conv.Rsquared.Adjusted);
+    fprintf('Component: (%g, %g), time: %5.1f, chi2: %.1f (n-1: %g, 0.05 reject: %.1f), R^2 With correlation: %f\n', i,  all_years(year_index), time_convcorr, chi2_convcorr, ndegree, chi2_critical, mdl_convcorr.Rsquared.Adjusted);
 end
 end
