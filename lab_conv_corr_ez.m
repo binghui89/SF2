@@ -11,7 +11,6 @@ addpath('ndhist\histcn'); % Add the path to the N-Dimensional histcount function
 load caiso;
 all_years = [2016; 2017; 2018; 2019];
 bin_width = 100; % MW
-year_index = 1;
 
 % Let's use GW for better visual effects
 bin_width = bin_width./1E3;
@@ -59,42 +58,19 @@ for i = 1:N
     ts_cdf(:, i) = interp1(gr_edges{i}, gr_cdf{i}, ts(:, i));
 end
 
+% Obtain the mean copula pdf (empirical copula)
 ts_cdf(ts_cdf==1) = 1-eps; % 1 is the upper limit of the last bin, and if any data point falls on that boundary, histcn will add one more bin.
 count = histcn(ts_cdf, gr_cdf{1}, gr_cdf{2}, gr_cdf{3}, gr_cdf{4}, gr_cdf{5});
 [X1, X2, X3, X4, X5] = ndgrid(gr_pdf{1}.*bin_width, gr_pdf{2}.*bin_width, gr_pdf{3}.*bin_width, gr_pdf{4}.*bin_width, gr_pdf{5}.*bin_width); % Grid size along each dimension
 grid_vol = X1.*X2.*X3.*X4.*X5; % Grid volume
 clear X1 X2 X3 X4 X5; % Save some memory
-
 copula_pdf_nd = count./(sum(count(:)).*grid_vol); % This is the n-dim empirical copula
 clear count grid_vol;
 
-ind = zeros(numel(copula_pdf_nd), N);
+[x_conv, p_conv] = conv_ez_corr(gr_bincenter, gr_p, bin_width, copula_pdf_nd);
 
-[ind(:, 1), ind(:, 2), ind(:, 3), ind(:, 4), ind(:, 5)] = ind2sub(size(copula_pdf_nd), [1: numel(copula_pdf_nd)]');
-sumind = sum(ind, 2);
-
-flat_p_alldim = zeros(numel(copula_pdf_nd), N);
-for i = 1: N
-    flat_p_alldim(:, i) = gr_p{i}(ind(:, i));
-end
-flat_copulapdf_p = [copula_pdf_nd(:), flat_p_alldim];
-clear ind copula_pdf_nd flat_p_alldim;
-
-ar_delta = [N: max(sumind)]';
-x_conv0 = 0;
-for i = 1:N
-    x_conv0 = x_conv0 + gr_bincenter{i}(1) - bin_width;
-end
-x_conv = x_conv0 + ar_delta.*bin_width; % Bin center of convolved results
-p_conv = zeros(numel(ar_delta), 1); % Probability of each bin in the results
-for k = 1: numel(ar_delta)
-    disp(k);
-    thissum = ar_delta(k);
-    p_conv(k) = sum(prod(flat_copulapdf_p(sumind==thissum, :), 2), 1);
-end
 e_conv = [x_conv(1) - bin_width/2; x_conv + bin_width/2]; % Bin edges of convolved results
 count_actual = histcounts(sum(ts, 2), e_conv); % Actual counts
-clear flat_p_alldim;
 
 figure();
 bar(x_conv ,count_actual./sum(count_actual));
