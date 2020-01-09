@@ -73,17 +73,72 @@ switch N
 end
 
 copula_pdf_nd = count./(sum(count(:)).*grid_vol); % This is the n-dim empirical copula
-copula_pdf_nd(grid_vol==0) = 0; % Sometimes the grid volumn is 0 (when the pdf in a grid is 0).
-clear count grid_vol;
+copula_pdf_nd(grid_vol==0) = 0; % Sometimes the grid volumn is 0 (when the pdf along any of the grid is 0).
 
-[x_conv, p_conv] = conv_ez_corr(gr_bincenter, gr_p, bin_width, copula_pdf_nd);
+rhohat_gaussian = copulafit('Gaussian', ts_cdf);
+u = copularnd('Gaussian',rhohat_gaussian, 1E7); % Monte Carlo simulation
+count_gaussian = histcn(u, gr_cdf{1}, gr_cdf{2}, gr_cdf{3}, gr_cdf{4}, gr_cdf{5});
+copula_pdf_nd_gaussian = count_gaussian./(sum(count_gaussian(:)).*grid_vol);
 
-e_conv = [x_conv(1) - bin_width/2; x_conv + bin_width/2]; % Bin edges of convolved results
+% [rhohat_t, param2] = copulafit('t', ts_cdf);
+% u = copularnd('t',rhohat_t, param2, 1E7);
+% count_t = histcn(u, gr_cdf{1}, gr_cdf{2}, gr_cdf{3}, gr_cdf{4}, gr_cdf{5});
+% copula_pdf_nd_t = count_t./(sum(count_t(:)).*grid_vol);
+
+clear count count_gaussian grid_vol u;
+
+[x_conv_corr, p_conv_corr] = conv_ez_corr(gr_bincenter, gr_p, bin_width, copula_pdf_nd);
+[x_conv_corr_gaussian, p_conv_corr_gaussian] = conv_ez_corr(gr_bincenter, gr_p, bin_width, copula_pdf_nd_gaussian);
+% [x_conv_corr_t, p_conv_corr_t] = conv_ez_corr(gr_bincenter, gr_p, bin_width, copula_pdf_nd_t);
+
+% Actual distribution
+e_conv = [x_conv_corr(1) - bin_width/2; x_conv_corr + bin_width/2]; % Bin edges of convolved results
 count_actual = histcounts(sum(ts, 2), e_conv); % Actual counts
 
+% Convolution, no correlation
+for i = 2: N
+    if i == 2
+        p_conv = conv(gr_p{1}, gr_p{2});
+    else
+        p_conv = conv(p_conv, gr_p{i});
+    end
+end
+
+% Chi^2
+chi2_conv = sum((count_actual(:)-p_conv(:).*sum(count_actual(:))).^2./(p_conv(:).*sum(count_actual(:))), 'omitnan');
+chi2_conv_corr = sum((count_actual(:)-p_conv_corr(:).*sum(count_actual(:))).^2./(p_conv_corr(:).*sum(count_actual(:))), 'omitnan');
+chi2_conv_gaussian = sum((count_actual(:)-p_conv_corr_gaussian(:).*sum(count_actual(:))).^2./(p_conv_corr_gaussian(:).*sum(count_actual(:))), 'omitnan');
+
+% PDF plot
 figure();
-bar(x_conv ,count_actual./sum(count_actual));
+bar(x_conv_corr ,count_actual./sum(count_actual));
 hold on;
-plot(x_conv, p_conv, 'k');
+plot(x_conv_corr, p_conv_corr, 'k');
+plot(x_conv_corr_gaussian, p_conv_corr_gaussian, 'r');
+% plot(x_conv_corr_t, p_conv_corr_t, 'b');
+plot(x_conv_corr, p_conv, 'b');
+legend('Actual', 'Non-parametric', 'Parametric', 'No correlation');
+
+% Calculate CDF
+cdf_actual = cumsum(count_actual./sum(count_actual));
+cdf_corr = cumsum(p_conv_corr);
+cdf_gaussian = cumsum(p_conv_corr_gaussian);
+cdf_nocorr = cumsum(p_conv);
+
+% PP plot
+figure()
+plot(cdf_actual, cdf_corr, '-k.');
+hold on;
+plot(cdf_actual, cdf_gaussian, '-r.')
+plot(cdf_actual, cdf_nocorr, '-b.');
+plot([0, 1], [0, 1], 'g');
+legend('Non-parametric', 'Parametric', 'No correlation', 'Diagonal');
+
+% CoD
+mdl_corr = fitlm(cdf_actual, cdf_corr);
+mdl_gaussian = fitlm(cdf_actual, cdf_gaussian);
+mdl_nocorr = fitlm(cdf_actual, cdf_nocorr);
+
+
 end
 
