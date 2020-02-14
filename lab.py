@@ -689,9 +689,9 @@ def query_paris(query_json):
     Query PAIRS based on query_json
     '''
     server = 'https://pairs.res.ibm.com/v2/query'
-    global_pairs_auth = ('bxl180002@utdallas.edu', '?HOoper40$') # Old from Nov. 2018
+    # global_pairs_auth = ('bxl180002@utdallas.edu', '?HOoper40$') # Old from Nov. 2018
     # global_pairs_auth = {"name": "binghui", "email": "binghui.li@utdallas.edu", "password": "5,T9Wk*!", "groupId":239} # New from Aug. 2019
-    # global_pairs_auth = ("binghui.li@utdallas.edu", "5,T9Wk*!") # New from Aug. 2019
+    global_pairs_auth = ("binghui.li@utdallas.edu", "5,T9Wk*!") # New from Aug. 2019
     response = requests.post(
         url=server,
         json=query_json, 
@@ -1285,38 +1285,144 @@ def load_dir(dir_work):
                     ls_df.append(df_csv)
         return ls_csv, ls_df
 
-def process_raw_for_flexiramp(write_flag=False):
+def process_raw_for_flexiramp():
     '''
     This function reads the raw data from CAISO's OASIS, extracts load 
-    forecasts (binding (?) and advisory), renewalbe forecasts, flexible ramp 
-    reserve requirements, and actual net load forecasts and save them into a 
-    csv file (default name: for_flexiramp_summary.csv).
+    forecasts (binding and advisory), renewalbe forecasts (B), flexible ramp 
+    reserve requirements and return two pandas dataframes: RTD and RTPD.
     '''
-    # Load OASIS data, renewable forecast, data availability: 20150101 to 20190531
+    # Load OASIS data, renewable forecast
     _, ls_df = load_dir('./CAISO_OASIS/SLD_REN_FCST_rtd.zip')
     df_ren_f = pd.concat(ls_df, ignore_index=True)
     _, ls_df = load_dir('./CAISO_OASIS/SLD_REN_FCST_rtpd.zip')
     ls_df.append(df_ren_f)
     df_ren_f = pd.concat(ls_df, ignore_index=True)
 
-    # Load OASIS data, binding (?) load forecast, data availability: 
-    # RTD: 20140101 to 20190228, RTPD: 20150101 to 20190531
+    # Load OASIS data, binding load forecast
     _, ls_df = load_dir('./CAISO_OASIS/SLD_FCST_rtd.zip')
     df_load_bf = pd.concat(ls_df, ignore_index=True)
     _, ls_df = load_dir('./CAISO_OASIS/SLD_FCST_rtpd.zip')
     ls_df.append(df_load_bf)
     df_load_bf = pd.concat(ls_df, ignore_index=True)
 
-    # Load OASIS data, advisory load forecast, data availability: 20170101 to 20190531
+    # Load OASIS data, advisory load forecast
     _, ls_df = load_dir('./CAISO_OASIS/SLD_ADV_FCST.zip')
     df_load_af = pd.concat(ls_df, ignore_index=True)
     df_load_af = df_load_af.rename(columns={'VALUE': 'MW'})
 
-    # Load OASIS data, flexible ramp reserve requirements, data availability: 20170101 to 20190531
+    # Load OASIS data, flexible ramp reserve requirements
     _, ls_df = load_dir('./CAISO_OASIS/ENE_FLEX_RAMP_REQT.zip')
     df_frrq = pd.concat(ls_df, ignore_index=True)
 
-    # Load actual net load data, data availability: 20180410 to 20190531
+    print('Data loaded!')
+
+    # Infer timestamp for all data, note CAISO's original data is in UTC time
+    df_ren_f.loc[:, 'TIMESTAMP'] = pd.to_datetime(df_ren_f['INTERVALENDTIME_GMT'], infer_datetime_format=True)
+    df_load_bf.loc[:, 'TIMESTAMP'] = pd.to_datetime(df_load_bf['INTERVALENDTIME_GMT'], infer_datetime_format=True)
+    df_load_af.loc[:, 'TIMESTAMP'] = pd.to_datetime(df_load_af['INTERVAL_END_GMT'], infer_datetime_format=True)
+    df_frrq.loc[:, 'TIMESTAMP'] = pd.to_datetime(df_frrq['INTERVALENDTIME_GMT'], infer_datetime_format=True)
+
+    # Now, processing RTPD data
+    ############################################################################
+    t_start_rtpd = min([
+        df_frrq.loc[df_frrq['MARKET_RUN_ID']=='RTPD', 'TIMESTAMP'].min(),
+        df_load_af.loc[df_load_af['MKT_TYPE']=='RTPD', 'TIMESTAMP'].min(),
+        df_load_bf.loc[df_load_bf['EXECUTION_TYPE']=='RTPD', 'TIMESTAMP'].min(),
+        df_ren_f.loc[df_ren_f['MARKET_RUN_ID']=='RTPD', 'TIMESTAMP'].min(),
+    ])
+    t_end_rtpd = max([
+        df_frrq.loc[df_frrq['MARKET_RUN_ID']=='RTPD', 'TIMESTAMP'].max(),
+        df_load_af.loc[df_load_af['MKT_TYPE']=='RTPD', 'TIMESTAMP'].max(),
+        df_load_bf.loc[df_load_bf['EXECUTION_TYPE']=='RTPD', 'TIMESTAMP'].max(),
+        df_ren_f.loc[df_ren_f['MARKET_RUN_ID']=='RTPD', 'TIMESTAMP'].max(),
+    ])
+    df_results_rtpd = pd.DataFrame(
+        index=pd.date_range(start=t_start_rtpd, end=t_end_rtpd, freq='15min')
+    )
+
+    df_tmp = df_load_bf.loc[
+        (df_load_bf['TAC_AREA_NAME']=='CA ISO-TAC')&(df_load_bf['EXECUTION_TYPE']=='RTPD'), 
+        ['MW', 'TIMESTAMP']
+    ].set_index('TIMESTAMP')
+    df_results_rtpd.loc[:, 'LOAD_B_RTPD'] = df_tmp['MW']
+
+    df_tmp = df_load_af.loc[
+        (df_load_af['BAA_GRP_ID']=='CA ISO-TAC')&(df_load_af['MKT_TYPE']=='RTPD'), 
+        ['MW', 'TIMESTAMP']
+    ].set_index('TIMESTAMP')
+    df_results_rtpd.loc[:, 'LOAD_A_RTPD'] = df_tmp['MW']
+
+    df_ren_f.loc[:, 'R_H'] = df_ren_f['RENEWABLE_TYPE'].astype('str') + '_' + df_ren_f['TRADING_HUB'].astype('str')
+    for rh in df_ren_f['R_H'].unique():
+        c = '_'.join([rh, 'RTPD'])
+        df_tmp = df_ren_f.loc[
+            (df_ren_f['R_H']==rh)&(df_ren_f['MARKET_RUN_ID']=='RTPD'),
+            ['TIMESTAMP', 'MW']
+        ].set_index('TIMESTAMP')
+        df_results_rtpd.loc[:, c] = df_tmp['MW']
+
+    for ud in df_frrq['RAMP_TYPE'].unique():
+        c = '_'.join([ud, 'RTPD'])
+        df_tmp = df_frrq.loc[
+            (df_frrq['RAMP_TYPE']==ud)&(df_frrq['MARKET_RUN_ID']=='RTPD')&(df_frrq['BAA_GRP_ID']=='CISO'),
+            ['TIMESTAMP', 'UNCERTAINITY']
+        ].set_index('TIMESTAMP')
+        df_results_rtpd.loc[:, c] = df_tmp['UNCERTAINITY']
+
+    # Now, processing RTD data
+    ############################################################################
+    t_start_rtd = min([
+        df_frrq.loc[df_frrq['MARKET_RUN_ID']=='RTD', 'TIMESTAMP'].min(),
+        df_load_af.loc[df_load_af['MKT_TYPE']=='RTD', 'TIMESTAMP'].min(),
+        df_load_bf.loc[df_load_bf['EXECUTION_TYPE']=='RTD', 'TIMESTAMP'].min(),
+        df_ren_f.loc[df_ren_f['MARKET_RUN_ID']=='RTD', 'TIMESTAMP'].min(),
+    ])
+    t_end_rtd = max([
+        df_frrq.loc[df_frrq['MARKET_RUN_ID']=='RTD', 'TIMESTAMP'].max(),
+        df_load_af.loc[df_load_af['MKT_TYPE']=='RTD', 'TIMESTAMP'].max(),
+        df_load_bf.loc[df_load_bf['EXECUTION_TYPE']=='RTD', 'TIMESTAMP'].max(),
+        df_ren_f.loc[df_ren_f['MARKET_RUN_ID']=='RTD', 'TIMESTAMP'].max(),
+    ])
+    df_results_rtd = pd.DataFrame(index=pd.date_range(start=t_start_rtd, end=t_end_rtd, freq='5min'))
+
+    df_tmp = df_load_bf.loc[
+        (df_load_bf['TAC_AREA_NAME']=='CA ISO-TAC')&(df_load_bf['EXECUTION_TYPE']=='RTD'), 
+        ['MW', 'TIMESTAMP']
+    ].set_index('TIMESTAMP')
+    df_results_rtd.loc[:, 'LOAD_B_RTD'] = df_tmp['MW']
+
+    df_tmp = df_load_af.loc[
+        (df_load_af['BAA_GRP_ID']=='CA ISO-TAC')&(df_load_af['MKT_TYPE']=='RTD'), 
+        ['MW', 'TIMESTAMP']
+    ].set_index('TIMESTAMP')
+    df_results_rtd.loc[:, 'LOAD_A_RTD'] = df_tmp['MW']
+
+    for rh in df_ren_f['R_H'].unique():
+        c = '_'.join([rh, 'RTD'])
+        df_tmp = df_ren_f.loc[
+            (df_ren_f['R_H']==rh)&(df_ren_f['MARKET_RUN_ID']=='RTD'),
+            ['TIMESTAMP', 'MW']
+        ].set_index('TIMESTAMP')
+        df_results_rtd.loc[:, c] = df_tmp['MW']
+
+    for ud in df_frrq['RAMP_TYPE'].unique():
+        c = '_'.join([ud, 'RTD'])
+        df_tmp = df_frrq.loc[
+            (df_frrq['RAMP_TYPE']==ud)&(df_frrq['MARKET_RUN_ID']=='RTD')&(df_frrq['BAA_GRP_ID']=='CISO'),
+            ['TIMESTAMP', 'UNCERTAINITY']
+        ].set_index('TIMESTAMP')
+        df_results_rtd.loc[:, c] = df_tmp['UNCERTAINITY']
+
+    return df_results_rtd, df_results_rtpd
+
+def process_actual(write_flag=False):
+    '''
+    This function is from previous process_raw_for_flexiramp function and only 
+    keeps the part that deals with actual data, which is NOT from OASIS, but from
+    CAISO's Today's Outlook. Not that I found some inconsistency with the OASIS
+    data so this data is only for reference. This function is kept just for backup.
+    '''
+    # Load actual net load data
     ls_csv, ls_df = load_dir('./CAISO_OASIS/NetDemand.zip')
     for i in range(0, len(ls_csv)):
         fname = ls_csv[i]
@@ -1350,42 +1456,9 @@ def process_raw_for_flexiramp(write_flag=False):
         ls_df[i] = df
     df_actualver = pd.concat(ls_df, ignore_index=True)
 
-    print('Data loaded!')
-
     # Determine the starting time and ending time
-    ls_dates = df_load_af['OPR_DT'].unique()
+    ls_dates = df_netload['OPR_DT'].unique()
     ls_dates.sort()
-
-    # Extract RTD load forecast based on the market and TAC region
-    dict_df_load = dict()
-    dict_df_load['LOAD_B_RTD'] = df_load_bf[
-        (df_load_bf['TAC_AREA_NAME']=='CA ISO-TAC')&
-        (df_load_bf['EXECUTION_TYPE']=='RTD')
-    ]
-    dict_df_load['LOAD_B_RTPD'] = df_load_bf[
-        (df_load_bf['TAC_AREA_NAME']=='CA ISO-TAC')&
-        (df_load_bf['EXECUTION_TYPE']=='RTPD')
-    ]
-    dict_df_load['LOAD_A_RTD'] = df_load_af[
-        (df_load_af['BAA_GRP_ID']=='CA ISO-TAC')&
-        (df_load_af['MKT_TYPE']=='RTD')
-    ]
-    dict_df_load['LOAD_A_RTPD'] = df_load_af[
-        (df_load_af['BAA_GRP_ID']=='CA ISO-TAC')&
-        (df_load_af['MKT_TYPE']=='RTPD')
-    ]
-
-    # Extract renewable forecast based on the market and TAC region
-    df_ren_f['TYPE_HUB'] = df_ren_f['RENEWABLE_TYPE'] + '_' + df_ren_f['TRADING_HUB']
-    ls_typehub  = df_ren_f['TYPE_HUB'].unique()
-    dict_df_ren = dict()
-    for typehub in ls_typehub:
-        for mkt in ['RTD', 'RTPD']:
-            k = '_'.join([typehub, mkt])
-            dict_df_ren[k] = df_ren_f[
-                (df_ren_f['TYPE_HUB']==typehub)&
-                (df_ren_f['MARKET_RUN_ID']==mkt)
-            ]
 
     # Prepare results container
     interval_perday = range(1, 13)*24
@@ -1398,62 +1471,6 @@ def process_raw_for_flexiramp(write_flag=False):
     df_results = pd.DataFrame(dict_results)
     df_results['TIME_STR'] = df_results['OPR_DT'] + '-' + df_results['OPR_HR'].astype('str') + '-' + df_results['OPR_INTERVAL'].astype('str')
     df_results = df_results.set_index('TIME_STR')
-
-    # Assign load forecast, both binding and advisory
-    for k in dict_df_load.iterkeys():
-        if k.endswith('RTD'):
-            df_tmp = dict_df_load[k].copy()
-            df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ df_tmp['OPR_INTERVAL'].astype('str')
-            df_tmp = df_tmp.set_index('TIME_STR')
-        else:
-            ls_tmp = list()
-            df_tmp = dict_df_load[k].copy()
-            for i in range(0, 3):
-                df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ (3*df_tmp['OPR_INTERVAL']-i).astype('str')
-                df_tmp = df_tmp.set_index('TIME_STR')
-                ls_tmp.append(df_tmp)
-            df_tmp = pd.concat(ls_tmp)
-        df_results[k] = df_tmp['MW']
-
-    # Assign renewable forecast
-    for k in dict_df_ren.iterkeys():
-        if k.endswith('RTD'):
-            df_tmp = dict_df_ren[k]
-            df_tmp['TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ df_tmp['OPR_INTERVAL'].astype('str')
-            df_tmp = df_tmp.set_index('TIME_STR')
-        else:
-            ls_tmp = list()
-            df_tmp = dict_df_ren[k].copy()
-            for i in range(0, 3):
-                df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ (3*df_tmp['OPR_INTERVAL']-i).astype('str')
-                df_tmp = df_tmp.set_index('TIME_STR')
-                ls_tmp.append(df_tmp)
-            df_tmp = pd.concat(ls_tmp)
-        df_results[k] = df_tmp['MW']
-
-    # Assign flexible ramp reserve requirements
-    for direction in ['UP', 'DOWN']:
-        df_tmp = df_frrq.loc[
-            (df_frrq['RAMP_TYPE']==direction)&
-            (df_frrq['MARKET_RUN_ID']=='RTD')&
-            (df_frrq['BAA_GRP_ID']=='CISO')
-        ]
-        df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ df_tmp['OPR_INTERVAL'].astype('str')
-        df_tmp = df_tmp.set_index('TIME_STR')
-        df_results[direction+'_RTD'] = df_tmp['UNCERTAINITY']
-
-        df_tmp = df_frrq.loc[
-            (df_frrq['RAMP_TYPE']==direction)&
-            (df_frrq['MARKET_RUN_ID']=='RTPD')&
-            (df_frrq['BAA_GRP_ID']=='CISO')
-        ]
-        ls_tmp = list()
-        for i in range(0, 3):
-            df_tmp.loc[:, 'TIME_STR'] = df_tmp['OPR_DT'] +'-'+ df_tmp['OPR_HR'].astype('str') +'-'+ (3*df_tmp['OPR_INTERVAL']-i).astype('str')
-            df_tmp = df_tmp.set_index('TIME_STR')
-            ls_tmp.append(df_tmp)
-        df_tmp = pd.concat(ls_tmp)
-        df_results[direction+'_RTPD'] = df_tmp['UNCERTAINITY']
 
     # Add actual net load
     df_netload['TIME_STR'] = df_netload['OPR_DT'] + '-' +  df_netload['HOUR'].astype('str') + '-' + df_netload['INTERVAL'].astype(str)
@@ -3012,7 +3029,7 @@ if __name__ == '__main__':
 
     # dist_tx2kb_spdis()
     # read_nsrdb()
-    process_nsrdb()
+    # process_nsrdb()
 
     # Wind ramp AGC data generator
     ############################################################################
@@ -3040,7 +3057,8 @@ if __name__ == '__main__':
 
     # CAISO flexiramp reserve analysis
     ############################################################################
-    # process_raw_for_flexiramp()
+    df = process_raw_for_flexiramp()
+    # process_actual()
     # tmp_plot_forecast()
     # baseline_flexiramp_for_day(2019, 5, 31, use_persistence=True)
     # baseline_flexiramp()
