@@ -1,4 +1,4 @@
-function [x_conv, p_conv] = conv_ez_corr(cell_bincenter, cell_p, bin_width, copula_pdf_nd)
+function [x_conv, p_conv] = conv_ez_corr(cell_bincenter, cell_p, bin_width, copula_pdf_nd, cell_lu)
 % Copula enhanced multidimensional discrete convolution up to 5-dim
 % USE: [x_conv, p_conv] = CONV_EZ_CORR(cell_bincenter, cell_p, bin_width, copula_pdf_nd)
 %
@@ -30,6 +30,32 @@ for i = 1: N
     flat_p_alldim(:, i) = cell_p{i}(ind(:, i));
 end
 flat_copulapdf_and_p = [copula_pdf_nd(:), flat_p_alldim];
+
+%%%%%%%%%%%%%%%%%%%%
+% Find the index of the cap and floor
+if nargin == 4
+    cell_lu = cell(N, 1);
+end
+
+for i = 1: N
+    if isempty(cell_lu{i})
+        continue;
+    else
+        lb = cell_lu{i}(1);
+        ub = cell_lu{i}(2);
+        i_lb = max(find(cell_bincenter{i}<lb))+1;
+        i_ub = min(find(cell_bincenter{i}>ub))-1;
+        if ~isempty(i_lb)
+            ind(ind(:, i)<i_lb, i) = i_lb;
+        end
+        if ~isempty(i_ub)
+            ind(ind(:, i)>i_ub, i) = i_ub;
+        end
+    end
+end
+% ind(ind>2) = 2;
+sumind = sum(ind, 2);
+%%%%%%%%%%%%%%%%%%%%
 clear ind copula_pdf_nd flat_p_alldim;
 
 ar_delta = [N: max(sumind)]'; % Array of number of deltas in the convolved variable

@@ -1,6 +1,8 @@
 function lab_conv_corr_ez()
 
-conv_corr_ez_nd()
+conv_corr_ez_nd();
+
+test_cap_and_floor();
 
 end
 
@@ -142,3 +144,18 @@ mdl_nocorr = fitlm(cdf_actual, cdf_nocorr);
 
 end
 
+function test_cap_and_floor()
+cell_bincenter = cell(2, 1);
+cell_bincenter{1} = [0; 1; 2;];
+cell_bincenter{2} = [0; 1; 2;];
+cell_p = cell(2, 1);
+cell_p{1} = [1/3; 1/3; 1/3;];
+cell_p{2} = [1/6; 1/2; 1/3;];
+bin_width = 1;
+copula_pdf_nd = [3 2/3 1/2; 1 1 1; 2 1/3 3/2;];
+cell_lu = cell(2, 1);
+cell_lu{1} = [0, 1];
+cell_lu{2} = [0, 1];
+
+[x_conv, p_conv] = conv_ez_corr(cell_bincenter, cell_p, bin_width, copula_pdf_nd, cell_lu);
+end
