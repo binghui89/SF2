@@ -1,8 +1,214 @@
 function lab_conv_corr_ez()
 
-conv_corr_ez_nd();
+% prepare_data_uscrn();
+prepare_data_nsrdb();
+% prepare_ibm_measurement(4);
 
-test_cap_and_floor();
+% conv_corr_ez_nd();
+% 
+% test_cap_and_floor();
+
+end
+
+function prepare_data_uscrn()
+% Load USCRN data, compare with IBM's nearest site
+add_pvlib;
+dt_rtd = 5;
+
+cell_txt = cell(7, 1);
+cell_txt{1} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Bodega_6_WSW.txt';
+cell_txt{2} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Fallbrook_5_NE.txt';
+cell_txt{3} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Merced_23_WSW.txt';
+cell_txt{4} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Redding_12_WNW.txt';
+cell_txt{5} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Santa_Barbara_11_W.txt';
+cell_txt{6} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Stovepipe_Wells_1_SW.txt';
+cell_txt{7} = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Yosemite_Village_12_W.txt';
+
+cell_uscrn = cell(7, 1);
+
+for i = 1: numel(cell_txt)
+    txtfile = cell_txt{i};
+    T_uscrn = readtable(txtfile, 'Delimiter', ' ', 'MultipleDelimsAsOne', true);
+    T_uscrn.Properties.VariableNames = {'WBANNO', 'UTC_DATE', 'UTC_TIME', 'LST_DATE', 'LST_TIME', 'CRX_VN', 'LONGITUDE', 'LATITUDE', 'AIR_TEMPERATURE', 'PRECIPITATION', 'SOLAR_RADIATION', 'SR_FLAG', 'SURFACE_TEMPERATURE', 'ST_TYPE', 'ST_FLAG', 'RELATIVE_HUMIDITY', 'RH_FLAG', 'SOIL_MOISTURE_5', 'SOIL_TEMPERATURE_5', 'WETNESS', 'WET_FLAG', 'WIND_1_5', 'WIND_FLAG'};
+    T_uscrn.TIME = datetime(T_uscrn.UTC_DATE, 'ConvertFrom', 'yyyymmdd') + timeofday(datetime(num2str(T_uscrn.UTC_TIME, '%04d'), 'Format', 'HHmm'));
+    T_uscrn.TIME.TimeZone = 'UTC';
+    lat = unique(T_uscrn.LATITUDE);
+    lon = unique(T_uscrn.LONGITUDE);
+    T_uscrn.GHI_CS = mean_clearsky_ghi(lat, lon, T_uscrn.TIME, dt_rtd);
+    T_uscrn.k = T_uscrn.SOLAR_RADIATION./T_uscrn.GHI_CS;
+    cell_uscrn{i} = T_uscrn;
+end
+
+
+% s_uscrn = 'Santa Barbara';
+% s_uscrn = 'Yosemite';
+% s_uscrn = 'Bodega';
+% switch s_uscrn
+%     case 'Santa Barbara'
+%         ibm_site = 'SBVC1';
+%         txtfile = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Santa_Barbara_11_W.txt';
+%     case 'Yosemite'
+%         ibm_site = 'MIAC1';
+%         txtfile = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Yosemite_Village_12_W.txt';
+%     case 'Bodega'
+%         ibm_site = 'RSAC1';
+%         txtfile = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\USCRN_2019\CRNS0101-05-2019-CA_Bodega_6_WSW.txt';
+% end
+% 
+% T_uscrn = readtable(txtfile, 'Delimiter', ' ', 'MultipleDelimsAsOne', true);
+% T_uscrn.Properties.VariableNames = {'WBANNO', 'UTC_DATE', 'UTC_TIME', 'LST_DATE', 'LST_TIME', 'CRX_VN', 'LONGITUDE', 'LATITUDE', 'AIR_TEMPERATURE', 'PRECIPITATION', 'SOLAR_RADIATION', 'SR_FLAG', 'SURFACE_TEMPERATURE', 'ST_TYPE', 'ST_FLAG', 'RELATIVE_HUMIDITY', 'RH_FLAG', 'SOIL_MOISTURE_5', 'SOIL_TEMPERATURE_5', 'WETNESS', 'WET_FLAG', 'WIND_1_5', 'WIND_FLAG'};
+% T_uscrn.TIME = datetime(T_uscrn.UTC_DATE, 'ConvertFrom', 'yyyymmdd') + timeofday(datetime(num2str(T_uscrn.UTC_TIME, '%04d'), 'Format', 'HHmm'));
+% T_uscrn.TIME.TimeZone = 'UTC';
+
+tmp = [];
+for i = 1: numel(cell_txt)
+    T_uscrn = cell_uscrn{i};
+    tmp = [tmp T_uscrn.k(T_uscrn.UTC_DATE>20190101)];
+end
+
+stairs(T_uscrn.TIME-duration(0, dt_rtd, 0), T_uscrn.SOLAR_RADIATION, 'b');
+title(strcat('RAWS-', ibm_site, ' vs USCRN-', s_uscrn));
+ylim([0, 1300]);
+
+end
+
+function prepare_data_nsrdb()
+cell_csv = cell(10, 1);
+dt = 1; % 1 min, used in mean CS GHI calculation, NSRDB seems to be instantaneous value, not average value
+
+lat_all = [35.37	39.13	35.53	40.73	37.41	34.29	40.25	38.49	34.45	34.13];
+lon_all = [-120.18	-123.06	-118.62	-123.94	-119.74	-117.5	-123.3	-122.7	-119.7	-117.94];
+
+cell_csv{1}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\CA_Topaz\96633_35.37_-120.18_2018.csv';
+cell_csv{2}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\COWC1\138221_39.13_-123.06_2018.csv';
+cell_csv{3}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\DEMC1\98317_35.53_-118.62_2018.csv';
+cell_csv{4}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\KNNC1\157537_40.73_-123.94_2018.csv';
+cell_csv{5}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MIAC1\118489_37.41_-119.74_2018.csv';
+cell_csv{6}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MNCC1\85923_34.29_-117.5_2018.csv';
+cell_csv{7}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RLKC1\151675_40.25_-123.3_2018.csv';
+cell_csv{8}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RSAC1\130670_38.49_-122.7_2018.csv';
+cell_csv{9}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\SBVC1\87449_34.45_-119.7_2018.csv';
+cell_csv{10} = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\STFC1\84346_34.13_-117.94_2018.csv';
+
+cell_T = cell(numel(cell_csv), 1);
+
+for i = 1:numel(cell_csv)
+    T = readtable(cell_csv{i}, 'HeaderLines', 2);
+    T.TIME = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, 0, 'TimeZone', 'UTC');    
+    lat = lat_all(i);
+    lon = lon_all(i);
+    T.GHI_CS = mean_clearsky_ghi(lat, lon, T.TIME, dt);
+    T.k = T.GHI./T.GHI_CS;
+%     T.k = T.GHI./T.ClearskyGHI; % Clear-sky index
+
+    cell_T{i} = T;
+end
+
+tmp = [];
+
+for i = 1: numel(cell_T)
+    tmp = [tmp cell_T{i}.k];
+end
+i_selected = ~any((tmp<=0)|(tmp>=5)|isnan(tmp), 2); % Only use 0 < k < 5
+corrcoef(tmp(i_selected, :))
+% tmp(any(isnan(tmp), 2), :) = [];
+% tmp(any(tmp==1, 2), :) = [];
+% corrcoef(tmp)
+end
+
+function prepare_ibm_measurement(m)
+if m == 4
+    dir_work = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_actual';
+elseif m == 5
+    dir_work = 'C:\Users\bxl180002\git\SF2\IBM\May\ghi_actual';
+end
+dir_home = pwd;
+
+% IBMsitenames   = {'MNCC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'};
+% SiteLatitude  = [34.31,   34.12,    37.41,   35.53,   35.38];
+% SiteLongitude = [-117.5,-117.94,  -119.74, -118.63, -120.18];
+
+IBMsitenames  = {'CA_Topaz','RSAC1', 'RLKC1', 'SBVC1', 'KNNC1', 'MIAC1', 'MNCC1', 'STFC1', 'DEMC1',  'COWC1'};
+SiteLatitude  = [35.38,       38.47,   40.25,   34.45,   40.71,   37.41,   34.31,   34.12,   35.53,   39.12];
+SiteLongitude = [-120.18,   -122.71, -123.31, -119.70, -123.92, -119.74, -117.50, -117.94, -118.63, -123.07];
+
+dir_home = pwd;
+ghi_actual = [];
+ghi_clearsky = [];
+
+for k = 1:length(IBMsitenames)
+    ibm_site = IBMsitenames{k};
+    csvname_read  = strcat('IBM_processed_', ibm_site, '.hourly.csv');
+    
+    cd(dir_work);
+    M = csvread(csvname_read, 1, 0);
+    cd(dir_home);
+    
+    Location = pvl_makelocationstruct(SiteLatitude(k),SiteLongitude(k)); %Altitude is optional
+    Time.UTCOffset(1:size(M,1),1) = zeros(size(M,1), 1); % Because we use UTC time, so utc offset is zero
+    Time.year(1:size(M,1),1)   = M(:, 1);
+    Time.month(1:size(M,1),1)  = M(:, 2);
+    Time.day(1:size(M,1),1)    = M(:, 3);
+    Time.hour(1:size(M,1),1)   = M(:, 4);
+    Time.minute(1:size(M,1),1) = M(:, 5);
+    Time.second(1:size(M,1),1) = zeros(size(M,1), 1);
+    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    
+    ghi_clearsky(:, k) = pvl_clearsky_haurwitz(90-AppSunEl); % Clear-sky GHI
+    ghi_actual(:, k) = M(:, end);
+end
+
+tarray = datetime(M(:, 1), M(:, 2), M(:, 3), M(:, 4), M(:, 5), M(:, 6), 'TimeZone', 'UTC');
+tarray.TimeZone = '-08:00'; % Let's just use PST, so that 12:00 is noon
+tarray_pst = datetime(tarray.Year, tarray.Month, tarray.Day, tarray.Hour, tarray.Minute, tarray.Second);
+
+kcs = ghi_actual./ghi_clearsky;
+kcs_midday = kcs((tarray_pst.Hour>=7) & (tarray_pst.Hour<17), :);
+kcs_other  = kcs((tarray_pst.Hour<7) | (tarray_pst.Hour>=17), :);
+
+figure();
+subplot(2, 1, 1);
+hist(kcs_midday(:), 50);
+title('7am to 5pm (PST)');
+xlabel('Clear-sky index');
+subplot(2, 1, 2);
+hist(kcs_other(:), 50);
+title('Other time');
+xlabel('Clear-sky index');
+
+dist_gc = nan(numel(IBMsitenames), numel(IBMsitenames));
+for i = 1: size(kcs_midday, 2) - 1
+    lat1 = SiteLatitude(i);
+    lon1 = SiteLongitude(i);
+    dist_gc(i, i) = 0;
+    for j = i+1: size(kcs_midday, 2)
+        lat2 = SiteLatitude(j);
+        lon2 = SiteLongitude(j);
+        d = DISTANCE(lat1/180*pi, lon1/180*pi, lat2/180*pi, lon2/180*pi);
+        dist_gc(i, j) = d;
+        dist_gc(j, i) = d;
+    end
+end
+dist_gc(end) = 0;
+
+corr_site = corrcoef(kcs_midday);
+figure();
+scatter(dist_gc(:), corr_site(:));
+xlabel('Distance (km)');
+ylabel('Linear correlation coefficient');
+
+% Plot out scatter+histograms between any two pairs of sites
+% for i = 1: size(kcs_midday, 2) - 1
+%     lat1 = SiteLatitude(i);
+%     lon1 = SiteLongitude(i);
+%     for j = i+1: size(kcs_midday, 2)
+%         figure();
+%         lat2 = SiteLatitude(i);
+%         lon2 = SiteLongitude(i);
+%         scatterhist(kcs_midday(:, i), kcs_midday(:, j));
+%         d = distance('gc', lat1, lon1, lat2, lon2);
+%     end
+% end
 
 end
 
