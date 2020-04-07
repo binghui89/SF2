@@ -1,12 +1,203 @@
 function lab_conv_corr_ez()
 
 % prepare_data_uscrn();
-prepare_data_nsrdb();
+% prepare_data_nsrdb();
 % prepare_ibm_measurement(4);
+
+paper_twosites();
 
 % conv_corr_ez_nd();
 % 
 % test_cap_and_floor();
+
+end
+
+function paper_twosites()
+addpath('ndhist\histcn'); % Add the path to the N-Dimensional histcount function
+
+lat_all = [35.37	39.13	35.53	40.73	37.41	34.29	40.25	38.49	34.45	34.13];
+lon_all = [-120.18	-123.06	-118.62	-123.94	-119.74	-117.5	-123.3	-122.7	-119.7	-117.94];
+cell_sites = {'CA_Topaz', 'COWC1', 'DEMC1', 'KNNC1', 'MIAC1', 'MNCC1', 'RLKC1', 'RSAC1', 'SBVC1', 'STFC1'};
+
+% Probabilistic forecast
+cell_csvparam{1}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\CA_Topaz.param.Laplace.csv';
+cell_csvparam{2}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\COWC1.param.Laplace.csv';
+cell_csvparam{3}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\DEMC1.param.Laplace.csv';
+cell_csvparam{4}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\KNNC1.param.Laplace.csv';
+cell_csvparam{5}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\MIAC1.param.Laplace.csv';
+cell_csvparam{6}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\MNCC1.param.Laplace.csv';
+cell_csvparam{7}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\RLKC1.param.Laplace.csv';
+cell_csvparam{8}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\RSAC1.param.Laplace.csv';
+cell_csvparam{9}  = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\SBVC1.param.Laplace.csv';
+cell_csvparam{10} = 'C:\Users\bxl180002\Downloads\RampSolar\Cong\Results_1HA\STFC1.param.Laplace.csv';
+
+% Original NSRDB data
+cell_csvnsrdb{1}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\CA_Topaz\96633_35.37_-120.18_2018.csv';
+cell_csvnsrdb{2}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\COWC1\138221_39.13_-123.06_2018.csv';
+cell_csvnsrdb{3}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\DEMC1\98317_35.53_-118.62_2018.csv';
+cell_csvnsrdb{4}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\KNNC1\157537_40.73_-123.94_2018.csv';
+cell_csvnsrdb{5}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MIAC1\118489_37.41_-119.74_2018.csv';
+cell_csvnsrdb{6}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MNCC1\85923_34.29_-117.5_2018.csv';
+cell_csvnsrdb{7}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RLKC1\151675_40.25_-123.3_2018.csv';
+cell_csvnsrdb{8}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RSAC1\130670_38.49_-122.7_2018.csv';
+cell_csvnsrdb{9}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\SBVC1\87449_34.45_-119.7_2018.csv';
+cell_csvnsrdb{10} = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\STFC1\84346_34.13_-117.94_2018.csv';
+
+
+% For testing purpose, we start by two sites only
+% i_selected = [1, 3, 5, 6, 10];
+i_selected = [1, 5];
+
+lat_all = lat_all(i_selected);
+lon_all = lon_all(i_selected);
+cell_sites = cell_sites(i_selected);
+cell_csvparam   = cell_csvparam(i_selected);
+cell_csvnsrdb   = cell_csvnsrdb(i_selected);
+N = numel(cell_csvparam);
+
+% Load data, parameters of probabilistic forecasts
+cell_Tparam = cell(N, 1);
+for i = 1:N
+    T = readtable(cell_csvparam{i});
+    T.TIME = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, 0, 'TimeZone', 'UTC');
+    lat = lat_all(i);
+    lon = lon_all(i);
+    Location = pvl_makelocationstruct(lat, lon);
+    Location.altitude = 0;
+    Time.UTCOffset = zeros(size(T.TIME, 1), 1); % tarray must be UTC time
+    Time.year   = T.TIME.Year;
+    Time.month  = T.TIME.Month;
+    Time.day    = T.TIME.Day;
+    Time.hour   = T.TIME.Hour;
+    Time.minute = T.TIME.Minute;
+    Time.second = T.TIME.Second;
+    [SunAz, SunEl, ApparentSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    T.SunAz = SunAz;
+    T.SunEl = SunEl;
+    T.ApparentSunEl = ApparentSunEl;
+    T.GHI_CS = pvl_clearsky_haurwitz(90-ApparentSunEl);
+    T.k = T.GHI./T.GHI_CS;
+    cell_Tparam{i} = T;
+end
+
+% Load data, original NSRDB data
+cell_Tnsrdb = cell(N, 1);
+for i = 1:numel(cell_csvnsrdb)
+    T = readtable(cell_csvnsrdb{i}, 'HeaderLines', 2);
+    T.TIME = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, 0, 'TimeZone', 'UTC');
+    lat = lat_all(i);
+    lon = lon_all(i);
+    Location = pvl_makelocationstruct(lat, lon);
+    Location.altitude = 0;
+    Time.UTCOffset = zeros(size(T.TIME, 1), 1); % tarray must be UTC time
+    Time.year   = T.TIME.Year;
+    Time.month  = T.TIME.Month;
+    Time.day    = T.TIME.Day;
+    Time.hour   = T.TIME.Hour;
+    Time.minute = T.TIME.Minute;
+    Time.second = T.TIME.Second;
+    [SunAz, SunEl, ApparentSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    T.SunAz = SunAz;
+    T.SunEl = SunEl;
+    T.ApparentSunEl = ApparentSunEl;
+    T.GHI_CS = pvl_clearsky_haurwitz(90-ApparentSunEl);
+    T.k = T.GHI./T.GHI_CS;
+    cell_Tnsrdb{i} = T;
+end
+
+% Only use 0 < k < 5
+tmp = nan(size(cell_Tnsrdb{i}, 1), N);
+for i = 1: N
+    tmp(:, i) = cell_Tnsrdb{i}.k;
+end
+i_selected = ~any((tmp<=0)|(tmp>=5)|isnan(tmp), 2);
+
+% Marginal distributions of k
+cell_gmmodel = cell(N, 1);
+for i = 1: N
+    T = cell_Tnsrdb{i};
+    k_selected = T.k(T.SunEl>5);
+    pd_gmmodel = fitgmdist(k_selected, 2); % Use two components
+    cell_gmmodel{i} = pd_gmmodel;
+end
+
+% Fit Gaussian copuola function and generate random copula samples
+ts_cdf = nan(sum(i_selected), N);
+for i = 1:N
+    ts_cdf(:, i) = cdf(cell_gmmodel{i}, cell_Tnsrdb{i}.k(i_selected));
+end
+ts_cdf(ts_cdf==1) = 1-eps;
+
+% copula_type = 'Gaussian';
+% copula_type = 'Frank';
+% copula_type = 'Gumbel';
+copula_type = 'Clayton';
+paramhat = copulafit(copula_type, ts_cdf);
+u_rnd = copularnd(copula_type, paramhat, 1E7); % Monte Carlo simulation
+
+
+% Convolution start here
+T = size(cell_Tparam{1}, 1);
+crps_conv = nan(T, 1);
+crps_conv_corr = nan(T, 1);
+for t = 1:T
+    disp(t);
+    if cell_Tparam{i}.SunEl(t)<5 % We only look at sun elevation > 5 degree
+        continue
+    end
+    cell_bincenter = cell(N, 1);
+    cell_p = cell(N, 1);
+    cell_edge_cdf = cell(N, 1); % Cumulative probability at the edges of grids
+    power_observe = nan(N, 1);
+    for i = 1:N
+        T = cell_Tparam{i};
+        power_observe(i) = T.GHI(t);
+        G = 10:10:1300;
+        % Laplace CDF
+        MU = T.rf2(t);
+        B  = T.Param(t);
+        CDF = nan(numel(G), 1);
+        CDF(G<=MU) = 1/2.*exp((G(G<=MU)-MU)./B);
+        CDF(G>MU) = 1 - 1/2.*exp(-(G(G>MU)-MU)./B);
+
+        % Discretization
+        i_start = max(find(CDF<=0.001));
+        i_end = min(find(CDF>=0.999));
+        if isempty(i_start)
+            i_start = 1;
+        end
+        p = diff(CDF(i_start:i_end));
+        bincenter = (G(i_start:i_end-1) + G(i_start+1:i_end))/2;
+
+        cell_bincenter{i} = bincenter; % Bin center locations
+        cell_p{i} = p; % Probability in each bin
+        cell_edge_cdf{i} = CDF(i_start:i_end);
+    end
+    power_observe(power_observe>=1000) = 1000; % Capped at 1000
+    sumpower = sum(power_observe);
+
+    % Calculate mean copula density over each hypercube
+    switch N
+        case 2
+            [X1, X2] = ndgrid(cell_p{1}, cell_p{2}); % Grid size along each dimension
+            grid_vol = X1.*X2; % Grid volume
+            clear X1 X2; % Save some memory
+            count_gaussian = histcn(u_rnd, cell_edge_cdf{1}, cell_edge_cdf{2});
+            copula_pdf_nd_nocorr = ones(numel(cell_bincenter{1}), numel(cell_bincenter{2}));
+        case 5
+            [X1, X2, X3, X4, X5] = ndgrid(cell_p{1}, cell_p{2}, cell_p{3}, cell_p{4}, cell_p{5}); % Grid size along each dimension
+            grid_vol = X1.*X2.*X3.*X4.*X5; % Grid volume
+            clear X1 X2 X3 X4 X5; % Save some memory
+            count_gaussian = histcn(u_rnd, cell_edge_cdf{1}, cell_edge_cdf{2}, cell_edge_cdf{3}, cell_edge_cdf{4}, cell_edge_cdf{5});
+            copula_pdf_nd_nocorr = ones(numel(cell_bincenter{1}), numel(cell_bincenter{2}), numel(cell_bincenter{3}), numel(cell_bincenter{4}), numel(cell_bincenter{5}));
+    end
+
+    copula_pdf_nd_gaussian = count_gaussian./(sum(count_gaussian(:)).*grid_vol);
+    [x_conv,      p_conv]  = conv_ez_corr(cell_bincenter, cell_p, 10, copula_pdf_nd_nocorr);
+    [x_conv_corr, p_conv_corr] = conv_ez_corr(cell_bincenter, cell_p, 10, copula_pdf_nd_gaussian);
+    crps_conv(t) = crps(x_conv, cumsum(p_conv), sumpower, 10);
+    crps_conv_corr(t) = crps(x_conv_corr, cumsum(p_conv_corr), sumpower, 10);
+end
 
 end
 
@@ -73,50 +264,99 @@ ylim([0, 1300]);
 end
 
 function prepare_data_nsrdb()
-cell_csv = cell(10, 1);
-dt = 1; % 1 min, used in mean CS GHI calculation, NSRDB seems to be instantaneous value, not average value
+% Preliminary study on the NSRDB data, IBM sites
+cell_nsrdb = cell(10, 1);
 
 lat_all = [35.37	39.13	35.53	40.73	37.41	34.29	40.25	38.49	34.45	34.13];
 lon_all = [-120.18	-123.06	-118.62	-123.94	-119.74	-117.5	-123.3	-122.7	-119.7	-117.94];
 
-cell_csv{1}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\CA_Topaz\96633_35.37_-120.18_2018.csv';
-cell_csv{2}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\COWC1\138221_39.13_-123.06_2018.csv';
-cell_csv{3}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\DEMC1\98317_35.53_-118.62_2018.csv';
-cell_csv{4}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\KNNC1\157537_40.73_-123.94_2018.csv';
-cell_csv{5}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MIAC1\118489_37.41_-119.74_2018.csv';
-cell_csv{6}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MNCC1\85923_34.29_-117.5_2018.csv';
-cell_csv{7}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RLKC1\151675_40.25_-123.3_2018.csv';
-cell_csv{8}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RSAC1\130670_38.49_-122.7_2018.csv';
-cell_csv{9}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\SBVC1\87449_34.45_-119.7_2018.csv';
-cell_csv{10} = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\STFC1\84346_34.13_-117.94_2018.csv';
+cell_names = {'CA_Topaz', 'COWC1', 'DEMC1', 'KNNC1', 'MIAC1', 'MNCC1', 'RLKC1', 'RSAC1', 'SBVC1', 'STFC1'};
 
-cell_T = cell(numel(cell_csv), 1);
+cell_nsrdb{1}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\CA_Topaz\96633_35.37_-120.18_2018.csv';
+cell_nsrdb{2}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\COWC1\138221_39.13_-123.06_2018.csv';
+cell_nsrdb{3}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\DEMC1\98317_35.53_-118.62_2018.csv';
+cell_nsrdb{4}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\KNNC1\157537_40.73_-123.94_2018.csv';
+cell_nsrdb{5}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MIAC1\118489_37.41_-119.74_2018.csv';
+cell_nsrdb{6}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\MNCC1\85923_34.29_-117.5_2018.csv';
+cell_nsrdb{7}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RLKC1\151675_40.25_-123.3_2018.csv';
+cell_nsrdb{8}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\RSAC1\130670_38.49_-122.7_2018.csv';
+cell_nsrdb{9}  = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\SBVC1\87449_34.45_-119.7_2018.csv';
+cell_nsrdb{10} = 'C:\Users\bxl180002\Downloads\RampSolar\NSRDB\STFC1\84346_34.13_-117.94_2018.csv';
 
-for i = 1:numel(cell_csv)
-    T = readtable(cell_csv{i}, 'HeaderLines', 2);
-    T.TIME = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, 0, 'TimeZone', 'UTC');    
+cell_Tnsrdb = cell(numel(cell_nsrdb), 1);
+
+for i = 1:numel(cell_nsrdb)
+    T = readtable(cell_nsrdb{i}, 'HeaderLines', 2);
+    T.TIME = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, 0, 'TimeZone', 'UTC');
     lat = lat_all(i);
     lon = lon_all(i);
-    T.GHI_CS = mean_clearsky_ghi(lat, lon, T.TIME, dt);
+    Location = pvl_makelocationstruct(lat, lon);
+    Location.altitude = 0;
+    Time.UTCOffset = zeros(size(T.TIME, 1), 1); % tarray must be UTC time
+    Time.year   = T.TIME.Year;
+    Time.month  = T.TIME.Month;
+    Time.day    = T.TIME.Day;
+    Time.hour   = T.TIME.Hour;
+    Time.minute = T.TIME.Minute;
+    Time.second = T.TIME.Second;
+    [SunAz, SunEl, ApparentSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    T.SunAz = SunAz;
+    T.SunEl = SunEl;
+    T.ApparentSunEl = ApparentSunEl;
+    T.GHI_CS = pvl_clearsky_haurwitz(90-ApparentSunEl);
+%     T.GHI_CS = mean_clearsky_ghi(lat, lon, T.TIME, dt);
     T.k = T.GHI./T.GHI_CS;
-%     T.k = T.GHI./T.ClearskyGHI; % Clear-sky index
+%     T.k = T.GHI./T.ClearskyGHI; % Clear-sky index using NSRDB's clear-sky GHI
 
-    cell_T{i} = T;
+    cell_Tnsrdb{i} = T;
 end
 
 tmp = [];
 
-for i = 1: numel(cell_T)
-    tmp = [tmp cell_T{i}.k];
+for i = 1: numel(cell_Tnsrdb)
+    tmp = [tmp cell_Tnsrdb{i}.k];
 end
 i_selected = ~any((tmp<=0)|(tmp>=5)|isnan(tmp), 2); % Only use 0 < k < 5
 corrcoef(tmp(i_selected, :))
 % tmp(any(isnan(tmp), 2), :) = [];
 % tmp(any(tmp==1, 2), :) = [];
 % corrcoef(tmp)
+
+% Try different marginal distributions
+for i = 1: 10
+    T = cell_Tnsrdb{i};
+    k_selected = T.k(T.SunEl>5);
+    pd_gmmodel   = fitgmdist(k_selected, 2);
+    pd_gammodel  = fitdist(k_selected, 'Gamma');
+    pd_lognormal = fitdist(k_selected, 'Lognormal');
+    pd_gaussian  = fitdist(k_selected, 'Normal');
+    [y_pdf, bincenter, x_edges] = return_pdf(k_selected, 0.02);
+    
+    figure();
+    subplot(2, 1, 1); 
+    plot(bincenter, pdf(pd_gmmodel, bincenter(:)), 'b');
+    hold on;
+    plot(bincenter, pdf(pd_gammodel, bincenter(:)), 'r');
+    plot(bincenter, pdf(pd_lognormal, bincenter(:)), 'g');
+    plot(bincenter, pdf(pd_gaussian, bincenter(:)), 'g--');
+    legend('GMM', 'Gamma', 'Lognormal', 'Normal');
+    bar(bincenter, y_pdf);
+    
+    subplot(2, 1, 2); % pp plot
+    cdf_actual = cumsum(y_pdf.*0.02);
+    plot([0, 1], [0, 1], 'k');
+    hold on; 
+    plot(cdf_actual, cdf(pd_gmmodel, bincenter(:)), 'b');
+    plot(cdf_actual, cdf(pd_gammodel, bincenter(:)), 'r');
+    plot(cdf_actual, cdf(pd_lognormal, bincenter(:)), 'g');
+    plot(cdf_actual, cdf(pd_gaussian, bincenter(:)), 'g--');
+    
+    suptitle(cell_names{i});
+end
 end
 
 function prepare_ibm_measurement(m)
+% Preliminary study on IBM's measurement data, i.e., hourly average from RAWS stations
 if m == 4
     dir_work = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_actual';
 elseif m == 5
