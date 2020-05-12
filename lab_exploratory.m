@@ -172,8 +172,8 @@ for m = 1:12
     ref_curve = [ref_curve repmat([avg24hTempC(fDelay+1:end); zeros(fDelay, 1)], 1, eomday(2019, m))];
 end
 
-T_rtd.REF_CURVE = nan;
-T_rtd.REF_CURVE(T_rtd(T_rtd.local_time_start.Year==2019, :), 1) = ref_curve(:);
+T_rtd.REF_CURVE = nan(size(T_rtd, 1), 1);
+T_rtd.REF_CURVE(T_rtd.local_time_start.Year==2019, :) = ref_curve(:);
 
 T_rtd.Solar_B_RTD = sum(T_rtd{:, {'Solar_NP15_RTD', 'Solar_SP15_RTD', 'Solar_ZP26_RTD'}}, 2);
 T_rtd.Solar_A_RTD = nan(size(T_rtd, 1), 1);
@@ -260,10 +260,10 @@ for i = 1: numel(uniquegen)
     T_pwr.TIME = datetime(T_pwr.Year, T_pwr.Month, T_pwr.Day, T_pwr.Hour, T_pwr.Minute, 0, 'TimeZone', 'UTC');
     
     % Calculate uncertainty bandwidth and variability
-    T_pwr.kt_p025 = T_pwr.ghi_p025./T_pwr.ghi_cs;
-    T_pwr.kt_p050 = T_pwr.ghi_p050./T_pwr.ghi_cs;
-    T_pwr.kt_p075 = T_pwr.ghi_p075./T_pwr.ghi_cs;
-    T_pwr.kt_width = T_pwr.kt_p075 - T_pwr.kt_p025;
+    T_pwr.k_p025 = T_pwr.ghi_p025./T_pwr.ghi_cs;
+    T_pwr.k_p050 = T_pwr.ghi_p050./T_pwr.ghi_cs;
+    T_pwr.k_p075 = T_pwr.ghi_p075./T_pwr.ghi_cs;
+    T_pwr.k_width = T_pwr.k_p075 - T_pwr.k_p025;
     
     cell_pwr{i} = T_pwr;
 end
@@ -517,12 +517,12 @@ linkaxes([ax1, ax2, ax_ibm],'x');
 
 %% Explore the relationship between RTD binding forecast and some indicators
 
-% Figure comparing kt p50 fluctuation and RTD binding forecast
+% Figure comparing k p50 fluctuation and RTD binding forecast
 figure();
 for i = 1:numel(cell_pwr)
     ax_ibm(i) = subplot(numel(cell_pwr)+1, 1, i);
     T_pwr = cell_pwr{i};
-    stairs(T_pwr.TIME-duration(0, dt_rtpd, 0), [nan;diff(T_pwr.kt_p050)], 'k');
+    stairs(T_pwr.TIME-duration(0, dt_rtpd, 0), [nan;diff(T_pwr.k_p050)], 'k');
     ylim([-0.2, 0.2]);
     plot_title = strcat(uniquegen{i}, '-', uniquegensite{i});
     title(plot_title);
@@ -536,7 +536,7 @@ figure();
 for i = 1:numel(cell_pwr)
     ax_ibm(i) = subplot(numel(cell_pwr)+1, 1, i);
     T_pwr = cell_pwr{i};
-    stairs(T_pwr.TIME-duration(0, dt_rtpd, 0), T_pwr.kt_width, 'k');
+    stairs(T_pwr.TIME-duration(0, dt_rtpd, 0), T_pwr.k_width, 'k');
     ylim([-0.2, 0.2]);
     plot_title = strcat(uniquegen{i}, '-', uniquegensite{i});
     title(plot_title);
@@ -545,7 +545,7 @@ ax2 = subplot(numel(cell_pwr)+1, 1, numel(cell_pwr)+1);
 stairs(T_rtpd.TIME-duration(0, dt_rtpd, 0), sum(T_rtpd{:, {'Solar_NP15_RTPD', 'Solar_SP15_RTPD', 'Solar_ZP26_RTPD'}}, 2), 'b');
 linkaxes([ax2, ax_ibm],'x');
 
-%% kNN: Explore RMSE of kp vs. FRP, RTD, i.e., only use delta kt as classifier
+%% kNN: Explore RMSE of kp vs. FRP, RTD, i.e., only use delta k as classifier
 % Note that kp here is the ratio of total power over clear-sky power in CAISO
 
 % Select month
@@ -658,14 +658,14 @@ ylabel('Time of FRP shortage');
 title('FRD');
 
 
-%% kNN (kt and width of forecast, one site) starts here, RTD
+%% kNN (k and width of forecast, one site) starts here, RTD
 T_pwr = cell_pwr{5}; % The 5th is CA_Topaz site
 T_pwr.TIME_START = T_pwr.TIME - duration(0, dt_rtpd, 0);
 T_pwr.HOUR_START = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
-T_pwr.dkt = [nan; diff(T_pwr.kt_p050)]; % delta kT
-T_pwr.dkt_sq = [nan; diff(T_pwr.kt_p050)].^2; % % (delta kT)^2
-T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dkt_sq', 'kt_width'}), {'HOUR_START'}, 'mean'); 
-T_pwr_hourly.u = sqrt(T_pwr_hourly.mean_dkt_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
+T_pwr.dk = [nan; diff(T_pwr.k_p050)]; % delta k
+T_pwr.dk_sq = [nan; diff(T_pwr.k_p050)].^2; % % (delta k)^2
+T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dk_sq', 'k_width'}), {'HOUR_START'}, 'mean'); 
+T_pwr_hourly.u = sqrt(T_pwr_hourly.mean_dk_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
 T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
 
 % Select month
@@ -699,10 +699,10 @@ for i = 1: size(T_results_rtd, 1)
     this_date = datetime(T_results_rtd.HOUR_START.Year(i), T_results_rtd.HOUR_START.Month(i), T_results_rtd.HOUR_START.Day(i), 'TimeZone', 'UTC');
     this_hour = T_results_rtd.HOUR_START.Hour(i);
     T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
-    if any(isnan(T_results_rtd{i, {'mean_kt_width', 'u'}}))
+    if any(isnan(T_results_rtd{i, {'mean_k_width', 'u'}}))
         T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(30), :); % We use 30 previous days
     else
-        T_sample.dist = sqrt(sum((T_sample{:, {'mean_kt_width', 'u'}}-T_results_rtd{i, {'mean_kt_width', 'u'}}).^2, 2));
+        T_sample.dist = sqrt(sum((T_sample{:, {'mean_k_width', 'u'}}-T_results_rtd{i, {'mean_k_width', 'u'}}).^2, 2));
         T_sample_sorted = sortrows(T_sample, 'dist');
     end
     selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:30)); % 30 the nearest days
@@ -782,7 +782,7 @@ title('FRD');
 %     which_h = T_pwr_hourly{i, 'Hour'};
 %     which_date = datetime(T_pwr_hourly{i, 'Year'}, T_pwr_hourly{i, 'Month'}, T_pwr_hourly{i, 'Day'});
 %     T_tmp = T_pwr_hourly((T_pwr_hourly.DATE<which_date)&(T_pwr_hourly.Hour==16), :);
-%     T_tmp.dist = sqrt(sum((T_tmp{:, {'mean_kt_width', 'u'}}-T_pwr_hourly{i, {'mean_kt_width', 'u'}}).^2, 2));
+%     T_tmp.dist = sqrt(sum((T_tmp{:, {'mean_k_width', 'u'}}-T_pwr_hourly{i, {'mean_k_width', 'u'}}).^2, 2));
 %     T_tmp_sorted = sortrows(T_tmp, 'dist');
 %     selected_days = ismember(datetime(T_rtpd.TIME.Year, T_rtpd.TIME.Month, T_rtpd.TIME.Day), T_tmp_sorted.DATE(1:30)); % 30 the nearest days
 %     sample_error_max = T_rtpd{selected_days, 'error_max'};
