@@ -233,11 +233,13 @@ month_ibm = [
 
 uniquegen     = {'gen55', 'gen56', 'gen59', 'gen60', 'gen61'};
 uniquegensite = {'MNCC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'};
+uniquegenlat  = [34.31, 34.12, 37.41, 35.53, 35.38]; 
+uniquegenlon  = [-117.50,-117.94,-119.74,-118.63,-120.18];
 
 allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
-gensite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
-genlat = [34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
-genlon = [-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
+allgensite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+allgenlat = [34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
+allgenlon = [-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
 
 dirhome = pwd;
 cell_pwr = cell(numel(uniquegen), 1);
@@ -259,6 +261,21 @@ for i = 1: numel(uniquegen)
     T_pwr = T_pwr(ia, :);
     T_pwr.TIME = datetime(T_pwr.Year, T_pwr.Month, T_pwr.Day, T_pwr.Hour, T_pwr.Minute, 0, 'TimeZone', 'UTC');
     
+    % Calculate solar elevation to filter invalid clear-sky index
+    Location = pvl_makelocationstruct(uniquegenlat(i), uniquegenlon(i));
+    Time.year   = T_pwr.TIME.Year;
+    Time.month  = T_pwr.TIME.Month;
+    Time.day    = T_pwr.TIME.Day;
+    Time.hour   = T_pwr.TIME.Hour;
+    Time.minute = T_pwr.TIME.Minute;
+    Time.second = T_pwr.TIME.Second;
+    Time.UTCOffset = zeros(size(T_pwr, 1), 1);
+    [SunAz, SunEl, ApparentSunEl, SolarTime] = pvl_ephemeris(Time, Location);
+    T_pwr.ApparentSunEl = ApparentSunEl;
+    T_pwr.SunEl = SunEl;
+    T_pwr{T_pwr.ApparentSunEl<=3, 'ghi_cs'} = 0; % Consider only solar elevation > 3 degree
+    T_pwr{T_pwr.ApparentSunEl<=3, 'pwr_cs'} = 0; % Consider only solar elevation > 3 degree
+    
     % Calculate uncertainty bandwidth and variability of clear-sky index (k)
     T_pwr.k_p025 = T_pwr.ghi_p025./T_pwr.ghi_cs;
     T_pwr.k_p050 = T_pwr.ghi_p050./T_pwr.ghi_cs;
@@ -270,6 +287,14 @@ for i = 1: numel(uniquegen)
     T_pwr.kpv_p050 = T_pwr.pwr_p050./T_pwr.pwr_cs;
     T_pwr.kpv_p075 = T_pwr.pwr_p075./T_pwr.pwr_cs;
     T_pwr.kpv_width = T_pwr.kpv_p075 - T_pwr.kpv_p025;
+    
+    figure();
+    subplot(2, 1, 1);
+    hist(T_pwr.k_p050);
+    title('k');
+    subplot(2, 1, 2);
+    hist(T_pwr.kpv_p050);
+    title('kpv');
     
     cell_pwr{i} = T_pwr;
 end
@@ -782,127 +807,263 @@ ylabel('Time of FRP shortage');
 title('FRD');
 
 %% Explore different classifiers, one-dim, RTD
-T_pwr = cell_pwr{5}; % The 5th is CA_Topaz site
-T_pwr.TIME_START = T_pwr.TIME - duration(0, dt_rtpd, 0);
-T_pwr.HOUR_START = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
-
-% % Classifier 1: k (50 percentile), mean
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_p050'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'mean_k_p050'} = 'classifier_1';
-
-% % Classifier 2: k (50 percentile), std.
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_p050'}), {'HOUR_START'}, 'std'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'std_k_p050'} = 'classifier_1';
-
-% % Classifier 3: k (50 percentile), variability
-% T_pwr.dk = [nan; diff(T_pwr.k_p050)]; % delta k
-% T_pwr.dk_sq = [nan; diff(T_pwr.k_p050)].^2; % % (delta k)^2
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dk_sq', 'k_width'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.v = sqrt(T_pwr_hourly.mean_dk_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
-% T_pwr_hourly.Properties.VariableNames{'v'} = 'classifier_1';
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-
-% % Classifier 4: k_pv (50 percentile), mean
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_p050'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'mean_kpv_p050'} = 'classifier_1';
-
-% % Classifier 5: k_pv (50 percentile), std
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_p050'}), {'HOUR_START'}, 'std'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'std_kpv_p050'} = 'classifier_1';
-
-% % Classifier 6: k (50 percentile), variability
-% T_pwr.dkpv = [nan; diff(T_pwr.kpv_p050)]; % delta k
-% T_pwr.dkpv_sq = [nan; diff(T_pwr.kpv_p050)].^2; % % (delta k)^2
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dkpv_sq'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.vpv = sqrt(T_pwr_hourly.mean_dkpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
-% T_pwr_hourly.Properties.VariableNames{'vpv'} = 'classifier_1';
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-
-% % Classifier 7: width of k (75 - 25 percentile), mean
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_width'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'mean_k_width'} = 'classifier_1';
-
-% % Classifier 8: width of k (75 - 25 percentile), std
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_width'}), {'HOUR_START'}, 'std'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'std_k_width'} = 'classifier_1';
-
-% % Classifier 9: width of k (75 - 25 percentile), variability
-% T_pwr.w = [nan; diff(T_pwr.k_width)]; % delta k width
-% T_pwr.dw_sq = [nan; diff(T_pwr.dw)].^2; % % (delta k)^2
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dw_sq'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.vw = sqrt(T_pwr_hourly.mean_dw_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
-% T_pwr_hourly.Properties.VariableNames{'vw'} = 'classifier_1';
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-
-% % Classifier 10: width of kpv (75 - 25 percentile), mean
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_width'}), {'HOUR_START'}, 'mean'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'mean_kpv_width'} = 'classifier_1';
-
-% % Classifier 11: width of k (75 - 25 percentile), std
-% T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_width'}), {'HOUR_START'}, 'std'); 
-% T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_pwr_hourly.Properties.VariableNames{'std_kpv_width'} = 'classifier_1';
-
-% % Classifier 9: width of k (75 - 25 percentile), variability
-T_pwr.dwpv = [nan; diff(T_pwr.kpv_width)]; % delta k width
-T_pwr.dwpv_sq = [nan; diff(T_pwr.dwpv)].^2; % % (delta k)^2
-T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dwpv_sq'}), {'HOUR_START'}, 'mean'); 
-T_pwr_hourly.vwpv = sqrt(T_pwr_hourly.mean_dwpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
-T_pwr_hourly.Properties.VariableNames{'vwpv'} = 'classifier_1';
-T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
-
-% Select month
+% Select month, risk factor, and k
 this_month = 10;
+risk_factor = 10; % This is the coefficient for 1 MW of reserve shortage
+karray = 5:5:60;
 
-% Baseline
-T_baseline_rtd = array2table(unique(T_rtd.HOUR_START(T_rtd.HOUR_START.Month==this_month)), 'VariableNames', {'HOUR_START'}); % Result container
-% T_rtd_DATE = datetime(T_rtd.HOUR_START.Year, T_rtd.HOUR_START.Month, T_rtd.HOUR_START.Day, 'TimeZone', 'UTC');
-% T_rtd_DATE_unique = unique(T_rtd_DATE);
-for i = 1: size(T_baseline_rtd, 1)
-    this_date = datetime(T_baseline_rtd.HOUR_START.Year(i), T_baseline_rtd.HOUR_START.Month(i), T_baseline_rtd.HOUR_START.Day(i), 'TimeZone', 'UTC');
-    this_hour = T_baseline_rtd.HOUR_START.Hour(i);
-    selected_days = (T_rtd.TIME_START<this_date)&(T_rtd.TIME_START>=this_date-days(30))&(T_rtd.HOUR_START.Hour==this_hour); % We use 30 previous days
-%     selected_days = (T_rtd_DATE<which_date)&(T_rtd_DATE>=which_date-days(30))&(T_rtd.HOUR_START.Hour==which_hour); % We use 30 previous days
-%     valid_days = T_rtd_DATE_unique((T_rtd_DATE_unique<which_date)&(T_rtd_DATE_unique>=which_date-days(30)));
-%     selected_days = (ismember(T_rtd_DATE, valid_days))&(T_rtd.HOUR_START.Hour==which_hour);
-    sample_error = T_rtd{selected_days, 'FORECAST_ERROR_Brtd_Artd'};
-%     T_sample = T_pwr_hourly((T_pwr_hourly.DATE<which_date)&(T_pwr_hourly.HOUR_START.Hour==which_hour), :);
-%     T_sample_sorted = T_sample(T_sample.DATE>=which_date-days(30), :); % We use 30 previous days
-%     selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day), T_sample_sorted.DATE(1:30)); % 30 the nearest days
-%     sample_error = T_rtd{selected_days&(T_rtd.TIME_START.Hour==which_hour), 'FORECAST_ERROR_Brtd_Artd'};
-    [f,x] = ecdf(sample_error(:));
-    T_baseline_rtd.FRU(i) = interp1(f, x, 0.975);
-    T_baseline_rtd.FRD(i) = interp1(f, x, 0.025);
-end
+% Result container
+cell_baseline_rtd = cell(numel(karray), 5); % site, k, classifier
+cell_results_rtd  = cell(numel(karray), 5, 12); % site, k, classifier
 
-% Test one month knn
-T_results_rtd = T_pwr_hourly(T_pwr_hourly.DATE.Month==this_month, :); % Result container
-% T_results_rtd = array2table(unique(T_rtd.HOUR_START(T_rtd.HOUR_START.Month==5)), 'VariableNames', {'HOUR_START'}); % Result container
-for i = 1: size(T_results_rtd, 1)
-    this_date = datetime(T_results_rtd.HOUR_START.Year(i), T_results_rtd.HOUR_START.Month(i), T_results_rtd.HOUR_START.Day(i), 'TimeZone', 'UTC');
-    this_hour = T_results_rtd.HOUR_START.Hour(i);
-    T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
-    if any(isnan(T_results_rtd{i, 'classifier_1'}))
-        T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(30), :); % We use 30 previous days
-    else
-        T_sample.dist = sqrt(sum((T_sample{:, 'classifier_1'}-T_results_rtd{i, 'classifier_1'}).^2, 2)); % Euclidean distance
-        T_sample_sorted = sortrows(T_sample, 'dist');
+for s = 1: 5
+    fprintf('s = %g\n', s);
+    
+    T_pwr = cell_pwr{s}; % The 5th is CA_Topaz site
+    T_pwr.TIME_START  = T_pwr.TIME - duration(0, dt_rtpd, 0);
+    T_pwr.HOUR_START  = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
+
+    % Baseline
+    frp_imbalance_baseline = zeros(numel(karray), 1);
+    fru_over_baseline  = zeros(numel(karray), 1);
+    fru_short_baseline = zeros(numel(karray), 1);
+    frd_over_baseline  = zeros(numel(karray), 1);
+    frd_short_baseline = zeros(numel(karray), 1);
+
+    fprintf('Baseline\n');
+    for k = karray
+        T_baseline_rtd = array2table(unique(T_rtd.HOUR_START(T_rtd.HOUR_START.Month==this_month)), 'VariableNames', {'HOUR_START'}); % Result container
+        % T_rtd_DATE = datetime(T_rtd.HOUR_START.Year, T_rtd.HOUR_START.Month, T_rtd.HOUR_START.Day, 'TimeZone', 'UTC');
+        % T_rtd_DATE_unique = unique(T_rtd_DATE);
+        for i = 1: size(T_baseline_rtd, 1)
+            this_date = datetime(T_baseline_rtd.HOUR_START.Year(i), T_baseline_rtd.HOUR_START.Month(i), T_baseline_rtd.HOUR_START.Day(i), 'TimeZone', 'UTC');
+            this_hour = T_baseline_rtd.HOUR_START.Hour(i);
+            selected_days = (T_rtd.TIME_START<this_date)&(T_rtd.TIME_START>=this_date-days(k))&(T_rtd.HOUR_START.Hour==this_hour); % We use 30 previous days
+        %     selected_days = (T_rtd_DATE<which_date)&(T_rtd_DATE>=which_date-days(30))&(T_rtd.HOUR_START.Hour==which_hour); % We use 30 previous days
+        %     valid_days = T_rtd_DATE_unique((T_rtd_DATE_unique<which_date)&(T_rtd_DATE_unique>=which_date-days(30)));
+        %     selected_days = (ismember(T_rtd_DATE, valid_days))&(T_rtd.HOUR_START.Hour==which_hour);
+            sample_error = T_rtd{selected_days, 'FORECAST_ERROR_Brtd_Artd'};
+        %     T_sample = T_pwr_hourly((T_pwr_hourly.DATE<which_date)&(T_pwr_hourly.HOUR_START.Hour==which_hour), :);
+        %     T_sample_sorted = T_sample(T_sample.DATE>=which_date-days(30), :); % We use 30 previous days
+        %     selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day), T_sample_sorted.DATE(1:30)); % 30 the nearest days
+        %     sample_error = T_rtd{selected_days&(T_rtd.TIME_START.Hour==which_hour), 'FORECAST_ERROR_Brtd_Artd'};
+            [f,x] = ecdf(sample_error(:));
+            T_baseline_rtd.FRU(i) = interp1(f, x, 0.975);
+            T_baseline_rtd.FRD(i) = interp1(f, x, 0.025);
+        end
+
+        % This is the actual need of FRP
+        f_error_rtd = T_rtd{ismember(T_rtd.HOUR_START, T_baseline_rtd.HOUR_START), 'FORECAST_ERROR_Brtd_Artd'}; % 5-min
+        fru_need_rtd = max(reshape(f_error_rtd, 12, numel(f_error_rtd)/12), [], 1)';
+        frd_need_rtd = min(reshape(f_error_rtd, 12, numel(f_error_rtd)/12), [], 1)';
+
+        % Calculate baseline FRP imbalance
+        T_baseline_rtd.FRU_error = T_baseline_rtd.FRU - fru_need_rtd;
+        T_baseline_rtd.FRD_error = T_baseline_rtd.FRD - frd_need_rtd;
+        
+        cell_baseline_rtd{karray==k, s} = T_baseline_rtd;
+
+        fru_over_baseline(k)  = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error>=0)));
+        fru_short_baseline(k) = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error<=0)));
+
+        frd_over_baseline(k)  = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error<=0)));
+        frd_short_baseline(k) = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error>=0)));
+
+        frp_imbalance_baseline(k) = fru_over_baseline(k) + risk_factor*fru_short_baseline(k) + frd_over_baseline(k) + risk_factor*frd_short_baseline(k);
+        fprintf('k = %g\n', k);
     end
-    selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:30)); % 30 the nearest days
-    sample_error = T_rtd{selected_days&(T_rtd.TIME_START.Hour==this_hour), 'FORECAST_ERROR_Brtd_Artd'};
-    [f,x] = ecdf(sample_error(:));
-    T_results_rtd.FRU(i) = interp1(f, x, 0.975);
-    T_results_rtd.FRD(i) = interp1(f, x, 0.025);
+    
+    fprintf('kNN\n');
+    % Select classifier
+    for classifier = 1: 12
+        switch classifier
+            case 1
+                % % Classifier 1: k (50 percentile), mean
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_p050'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'mean_k_p050'} = 'classifier_1';
+            case 2
+                % % Classifier 2: k (50 percentile), std.
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_p050'}), {'HOUR_START'}, 'std'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'std_k_p050'} = 'classifier_1';
+            case 3
+                % % Classifier 3: k (50 percentile), variability
+                T_pwr.dk = [nan; diff(T_pwr.k_p050)]; % delta k
+                T_pwr.dk_sq = [nan; diff(T_pwr.k_p050)].^2; % % (delta k)^2
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dk_sq', 'k_width'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.v = sqrt(T_pwr_hourly.mean_dk_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
+                T_pwr_hourly.Properties.VariableNames{'v'} = 'classifier_1';
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+            case 4
+                % % Classifier 4: k_pv (50 percentile), mean
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_p050'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'mean_kpv_p050'} = 'classifier_1';
+            case 5
+                % % Classifier 5: k_pv (50 percentile), std
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_p050'}), {'HOUR_START'}, 'std'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'std_kpv_p050'} = 'classifier_1';
+            case 6
+                % % Classifier 6: k (50 percentile), variability
+                T_pwr.dkpv = [nan; diff(T_pwr.kpv_p050)]; % delta k
+                T_pwr.dkpv_sq = [nan; diff(T_pwr.kpv_p050)].^2; % % (delta k)^2
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dkpv_sq'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.vpv = sqrt(T_pwr_hourly.mean_dkpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
+                T_pwr_hourly.Properties.VariableNames{'vpv'} = 'classifier_1';
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+            case 7
+                % % Classifier 7: width of k (75 - 25 percentile), mean
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_width'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'mean_k_width'} = 'classifier_1';
+            case 8
+                % % Classifier 8: width of k (75 - 25 percentile), std
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'k_width'}), {'HOUR_START'}, 'std'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'std_k_width'} = 'classifier_1';
+            case 9
+                % % Classifier 9: width of k (75 - 25 percentile), variability
+                T_pwr.dw = [nan; diff(T_pwr.k_width)]; % delta k width
+                T_pwr.dw_sq = [nan; diff(T_pwr.dw)].^2; % % (delta k)^2
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dw_sq'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.vw = sqrt(T_pwr_hourly.mean_dw_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
+                T_pwr_hourly.Properties.VariableNames{'vw'} = 'classifier_1';
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+            case 10
+                % % Classifier 10: width of kpv (75 - 25 percentile), mean
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_width'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'mean_kpv_width'} = 'classifier_1';
+            case 11
+                % % Classifier 11: width of k (75 - 25 percentile), std
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'kpv_width'}), {'HOUR_START'}, 'std'); 
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+                T_pwr_hourly.Properties.VariableNames{'std_kpv_width'} = 'classifier_1';
+            case 12
+                % % Classifier 12: width of k (75 - 25 percentile), variability
+                T_pwr.dwpv = [nan; diff(T_pwr.kpv_width)]; % delta k width
+                T_pwr.dwpv_sq = [nan; diff(T_pwr.dwpv)].^2; % % (delta k)^2
+                T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dwpv_sq'}), {'HOUR_START'}, 'mean'); 
+                T_pwr_hourly.vwpv = sqrt(T_pwr_hourly.mean_dwpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
+                T_pwr_hourly.Properties.VariableNames{'vwpv'} = 'classifier_1';
+                T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
+        end
+
+        frp_imbalance_knn = zeros(numel(karray), 1);
+        fru_over_knn  = zeros(numel(karray), 1);
+        fru_short_knn = zeros(numel(karray), 1);
+        frd_over_knn  = zeros(numel(karray), 1);
+        frd_short_knn = zeros(numel(karray), 1);
+        fprintf('classifier = %g\n', classifier);
+        for k = karray
+            % Test one month knn
+            T_results_rtd = T_pwr_hourly(T_pwr_hourly.DATE.Month==this_month, :); % Result container
+            % T_results_rtd = array2table(unique(T_rtd.HOUR_START(T_rtd.HOUR_START.Month==5)), 'VariableNames', {'HOUR_START'}); % Result container
+            for i = 1: size(T_results_rtd, 1)
+                this_date = datetime(T_results_rtd.HOUR_START.Year(i), T_results_rtd.HOUR_START.Month(i), T_results_rtd.HOUR_START.Day(i), 'TimeZone', 'UTC');
+                this_hour = T_results_rtd.HOUR_START.Hour(i);
+                T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
+                if any(isnan(T_results_rtd{i, 'classifier_1'}))
+                    T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(k), :); % We use 30 previous days, i.e., baseline, if data is nan
+                    selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); % 30 the nearest days for baseline
+                else
+                    T_sample.dist = sqrt(sum((T_sample{:, 'classifier_1'}-T_results_rtd{i, 'classifier_1'}).^2, 2)); % Euclidean distance
+                    T_sample_sorted = sortrows(T_sample, 'dist');
+                    selected_days = ismember(datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); 
+                end
+
+                sample_error = T_rtd{selected_days&(T_rtd.TIME_START.Hour==this_hour), 'FORECAST_ERROR_Brtd_Artd'};
+                [f,x] = ecdf(sample_error(:));
+                T_results_rtd.FRU(i) = interp1(f, x, 0.975);
+                T_results_rtd.FRD(i) = interp1(f, x, 0.025);
+            end
+
+            T_results_rtd.FRU_error = T_results_rtd.FRU - fru_need_rtd;
+            T_results_rtd.FRD_error = T_results_rtd.FRD - frd_need_rtd;
+
+            cell_results_rtd{karray==k, s, classifier} = T_results_rtd;
+
+            fru_over_knn(k)  = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error>=0)));
+            fru_short_knn(k) = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error<=0)));
+
+            frd_over_knn(k)  = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error<=0)));
+            frd_short_knn(k) = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error>=0)));
+
+            frp_imbalance_knn(k) = fru_over_knn(k) + risk_factor*fru_short_knn(k) + frd_over_knn(k) + risk_factor*frd_short_knn(k);
+            fprintf('k = %g\n', k);
+
+        end
+    end
+
 end
 
-% Visualize the results, RTD
+%% Visualization
+
+risk_factor = 1;
+
+for s = 1: 5
+    frp_imbalance_baseline = zeros(numel(karray), 1);
+    fru_over_baseline  = zeros(numel(karray), 1);
+    fru_short_baseline = zeros(numel(karray), 1);
+    frd_over_baseline  = zeros(numel(karray), 1);
+    frd_short_baseline = zeros(numel(karray), 1);
+    
+    frp_imbalance_knn = zeros(numel(karray), numel(classifier));
+    fru_over_knn  = zeros(numel(karray), numel(classifier));
+    fru_short_knn = zeros(numel(karray), numel(classifier));
+    frd_over_knn  = zeros(numel(karray), numel(classifier));
+    frd_short_knn = zeros(numel(karray), numel(classifier));
+    for k = karray
+        T_baseline_rtd = cell_baseline_rtd{karray==k, s};
+        fru_over_baseline(karray==k)  = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error>=0)));
+        fru_short_baseline(karray==k) = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error<=0)));
+
+        frd_over_baseline(karray==k)  = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error<=0)));
+        frd_short_baseline(karray==k) = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error>=0)));
+
+        frp_imbalance_baseline(karray==k) = fru_over_baseline(karray==k) + risk_factor*fru_short_baseline(karray==k) + frd_over_baseline(karray==k) + risk_factor*frd_short_baseline(karray==k);
+        
+        for classifier = 1: 12
+            T_results_rtd = cell_results_rtd{karray==k, s, classifier};
+            fru_over_knn(karray==k, classifier)  = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error>=0)));
+            fru_short_knn(karray==k, classifier) = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error<=0)));
+
+            frd_over_knn(karray==k, classifier)  = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error<=0)));
+            frd_short_knn(karray==k, classifier) = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error>=0)));
+
+            frp_imbalance_knn(karray==k, classifier) = fru_over_knn(karray==k, classifier) + risk_factor*fru_short_knn(karray==k, classifier) + frd_over_knn(karray==k, classifier) + risk_factor*frd_short_knn(karray==k, classifier);
+
+        end
+
+    end
+
+    figure();
+    plot(karray, frp_imbalance_baseline, '-k', karray, frp_imbalance_knn, '-r'); 
+    title(strcat('Risk-adjusted imbalance: ', uniquegensite(s)));
+    legend('Baseline', 'kNN');
+    
+    figure();
+    subplot(2, 2, 1);
+    plot(karray, fru_over_baseline, '-k', karray, fru_over_knn, '-r'); title('FRU over supply');
+    ylabel('MW'); xlabel('k');
+    subplot(2, 2, 2);
+    plot(karray, frd_over_baseline, '-k', karray, frd_over_knn, '-r'); title('FRD over supply');
+    ylabel('MW'); xlabel('k');
+    subplot(2, 2, 3);
+    plot(karray, fru_short_baseline, '-k', karray, fru_short_knn, '-r'); title('FRU shortage');
+    ylabel('MW'); xlabel('k');
+    subplot(2, 2, 4);
+    plot(karray, frd_short_baseline, '-k', karray, frd_short_knn, '-r'); title('FRD shortage');
+    ylabel('MW'); xlabel('k');
+    suptitle(strcat('Risk-adjusted imbalance: ', uniquegensite(s)));
+
+    
+    
+end
+
+%% Visualize the results, RTD
 figure();
 T_results_rtd.TIME   = T_results_rtd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
 T_baseline_rtd.TIME = T_baseline_rtd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
@@ -966,7 +1127,6 @@ ylabel('Time of FRP shortage');
 title('FRD');
 
 % Penalty adjusted MW
-risk_factor = 1; % This is the coefficient for 1 MW of reserve shortage
 
 fru_less_need_baseline = fru_compare_rtd(:, 1) - max(frp_need_rtd, [], 2);
 fru_imbalance_baseline = sum(fru_less_need_baseline(fru_less_need_baseline>0)) - sum(fru_less_need_baseline(fru_less_need_baseline<0).*risk_factor);
