@@ -809,7 +809,6 @@ title('FRD');
 %% Explore different classifiers, one-dim, RTD
 % Select month, risk factor, and k
 this_month = 10;
-risk_factor = 10; % This is the coefficient for 1 MW of reserve shortage
 karray = 5:5:60;
 
 % Result container
@@ -822,13 +821,6 @@ for s = 1: 5
     T_pwr = cell_pwr{s}; % The 5th is CA_Topaz site
     T_pwr.TIME_START  = T_pwr.TIME - duration(0, dt_rtpd, 0);
     T_pwr.HOUR_START  = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
-
-    % Baseline
-    frp_imbalance_baseline = zeros(numel(karray), 1);
-    fru_over_baseline  = zeros(numel(karray), 1);
-    fru_short_baseline = zeros(numel(karray), 1);
-    frd_over_baseline  = zeros(numel(karray), 1);
-    frd_short_baseline = zeros(numel(karray), 1);
 
     fprintf('Baseline\n');
     for k = karray
@@ -863,13 +855,6 @@ for s = 1: 5
         
         cell_baseline_rtd{karray==k, s} = T_baseline_rtd;
 
-        fru_over_baseline(k)  = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error>=0)));
-        fru_short_baseline(k) = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error<=0)));
-
-        frd_over_baseline(k)  = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error<=0)));
-        frd_short_baseline(k) = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error>=0)));
-
-        frp_imbalance_baseline(k) = fru_over_baseline(k) + risk_factor*fru_short_baseline(k) + frd_over_baseline(k) + risk_factor*frd_short_baseline(k);
         fprintf('k = %g\n', k);
     end
     
@@ -951,11 +936,6 @@ for s = 1: 5
                 T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
         end
 
-        frp_imbalance_knn = zeros(numel(karray), 1);
-        fru_over_knn  = zeros(numel(karray), 1);
-        fru_short_knn = zeros(numel(karray), 1);
-        frd_over_knn  = zeros(numel(karray), 1);
-        frd_short_knn = zeros(numel(karray), 1);
         fprintf('classifier = %g\n', classifier);
         for k = karray
             % Test one month knn
@@ -984,14 +964,6 @@ for s = 1: 5
             T_results_rtd.FRD_error = T_results_rtd.FRD - frd_need_rtd;
 
             cell_results_rtd{karray==k, s, classifier} = T_results_rtd;
-
-            fru_over_knn(k)  = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error>=0)));
-            fru_short_knn(k) = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error<=0)));
-
-            frd_over_knn(k)  = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error<=0)));
-            frd_short_knn(k) = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error>=0)));
-
-            frp_imbalance_knn(k) = fru_over_knn(k) + risk_factor*fru_short_knn(k) + frd_over_knn(k) + risk_factor*frd_short_knn(k);
             fprintf('k = %g\n', k);
 
         end
@@ -999,11 +971,31 @@ for s = 1: 5
 
 end
 
-%% Visualization
+% Visualization
 
-risk_factor = 1;
+risk_factor = 1; % This is the coefficient for 1 MW of reserve shortage
 
 for s = 1: 5
+    frp_imbalance_baseline_hourly = zeros(numel(karray), 1, 24);
+    fru_over_baseline_hourly  = zeros(numel(karray), 1, 24);
+    fru_short_baseline_hourly = zeros(numel(karray), 1, 24);
+    frd_over_baseline_hourly  = zeros(numel(karray), 1, 24);
+    frd_short_baseline_hourly = zeros(numel(karray), 1, 24);
+    
+    frp_imbalance_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+    fru_over_knn_hourly  = zeros(numel(karray), numel(classifier), 24);
+    fru_short_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+    frd_over_knn_hourly  = zeros(numel(karray), numel(classifier), 24);
+    frd_short_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+    
+    frp_freqshort_baseline_hourly = zeros(numel(karray), 1, 24);
+    fru_freqshort_baseline_hourly = zeros(numel(karray), 1, 24);
+    frd_freqshort_baseline_hourly = zeros(numel(karray), 1, 24);
+    
+    frp_freqshort_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+    fru_freqshort_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+    frd_freqshort_knn_hourly = zeros(numel(karray), numel(classifier), 24);
+
     frp_imbalance_baseline = zeros(numel(karray), 1);
     fru_over_baseline  = zeros(numel(karray), 1);
     fru_short_baseline = zeros(numel(karray), 1);
@@ -1015,55 +1007,265 @@ for s = 1: 5
     fru_short_knn = zeros(numel(karray), numel(classifier));
     frd_over_knn  = zeros(numel(karray), numel(classifier));
     frd_short_knn = zeros(numel(karray), numel(classifier));
+    
     for k = karray
         T_baseline_rtd = cell_baseline_rtd{karray==k, s};
+        T_baseline_rtd.hour_start_local = datetime(T_baseline_rtd.HOUR_START, 'TimeZone', '-08:00');
+        
+        for ih = 1: 24
+            h = ih - 1;
+            fru_over_baseline_hourly(karray==k, 1, ih)  = abs(sum(T_baseline_rtd.FRU_error( (T_baseline_rtd.FRU_error>=0) & (T_baseline_rtd.hour_start_local.Hour==h) )));
+            fru_short_baseline_hourly(karray==k, 1, ih) = abs(sum(T_baseline_rtd.FRU_error( (T_baseline_rtd.FRU_error<=0) & (T_baseline_rtd.hour_start_local.Hour==h) )));
+            frd_over_baseline_hourly(karray==k, 1, ih)  = abs(sum(T_baseline_rtd.FRD_error( (T_baseline_rtd.FRD_error<=0) & (T_baseline_rtd.hour_start_local.Hour==h) )));
+            frd_short_baseline_hourly(karray==k, 1, ih) = abs(sum(T_baseline_rtd.FRD_error( (T_baseline_rtd.FRD_error>=0) & (T_baseline_rtd.hour_start_local.Hour==h) )));
+
+            fru_freqshort_baseline_hourly(karray==k, 1, ih) = sum((T_baseline_rtd.FRU_error<=0) & (T_baseline_rtd.hour_start_local.Hour==h))/size(T_baseline_rtd, 1);
+            frd_freqshort_baseline_hourly(karray==k, 1, ih) = sum((T_baseline_rtd.FRD_error>=0) & (T_baseline_rtd.hour_start_local.Hour==h))/size(T_baseline_rtd, 1);
+        end
+
         fru_over_baseline(karray==k)  = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error>=0)));
         fru_short_baseline(karray==k) = abs(sum(T_baseline_rtd.FRU_error(T_baseline_rtd.FRU_error<=0)));
-
         frd_over_baseline(karray==k)  = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error<=0)));
         frd_short_baseline(karray==k) = abs(sum(T_baseline_rtd.FRD_error(T_baseline_rtd.FRD_error>=0)));
-
         frp_imbalance_baseline(karray==k) = fru_over_baseline(karray==k) + risk_factor*fru_short_baseline(karray==k) + frd_over_baseline(karray==k) + risk_factor*frd_short_baseline(karray==k);
         
         for classifier = 1: 12
             T_results_rtd = cell_results_rtd{karray==k, s, classifier};
+            T_results_rtd.hour_start_local = datetime(T_results_rtd.HOUR_START, 'TimeZone', '-08:00');
+            
+            for ih = 1: 24
+                h = ih - 1;
+                fru_over_knn_hourly(karray==k, classifier, ih)  = abs(sum(T_results_rtd.FRU_error( (T_results_rtd.FRU_error>=0) & (T_results_rtd.hour_start_local.Hour==h) )));
+                fru_short_knn_hourly(karray==k, classifier, ih) = abs(sum(T_results_rtd.FRU_error( (T_results_rtd.FRU_error<=0) & (T_results_rtd.hour_start_local.Hour==h) )));
+                frd_over_knn_hourly(karray==k, classifier, ih)  = abs(sum(T_results_rtd.FRD_error( (T_results_rtd.FRD_error<=0) & (T_results_rtd.hour_start_local.Hour==h) )));
+                frd_short_knn_hourly(karray==k, classifier, ih) = abs(sum(T_results_rtd.FRD_error( (T_results_rtd.FRD_error>=0) & (T_results_rtd.hour_start_local.Hour==h) )));
+                
+                fru_freqshort_knn_hourly(karray==k, classifier, ih) = sum((T_results_rtd.FRU_error<=0) & (T_results_rtd.hour_start_local.Hour==h))/size(T_results_rtd, 1);
+                frd_freqshort_knn_hourly(karray==k, classifier, ih) = sum((T_results_rtd.FRD_error>=0) & (T_results_rtd.hour_start_local.Hour==h))/size(T_results_rtd, 1);
+            end
+
             fru_over_knn(karray==k, classifier)  = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error>=0)));
             fru_short_knn(karray==k, classifier) = abs(sum(T_results_rtd.FRU_error(T_results_rtd.FRU_error<=0)));
-
             frd_over_knn(karray==k, classifier)  = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error<=0)));
             frd_short_knn(karray==k, classifier) = abs(sum(T_results_rtd.FRD_error(T_results_rtd.FRD_error>=0)));
-
             frp_imbalance_knn(karray==k, classifier) = fru_over_knn(karray==k, classifier) + risk_factor*fru_short_knn(karray==k, classifier) + frd_over_knn(karray==k, classifier) + risk_factor*frd_short_knn(karray==k, classifier);
 
         end
-
+        frp_imbalance_baseline_hourly = fru_over_baseline_hourly + risk_factor.*fru_short_baseline_hourly + frd_over_baseline_hourly + risk_factor.*frd_short_baseline_hourly;
+        frp_imbalance_knn_hourly = fru_over_knn_hourly + risk_factor.*fru_short_knn_hourly + frd_over_knn_hourly + risk_factor.*frd_short_knn_hourly;
+        frp_freqshort_baseline_hourly = fru_freqshort_baseline_hourly + frd_freqshort_baseline_hourly;
+        frp_freqshort_knn_hourly = fru_freqshort_knn_hourly + frd_freqshort_knn_hourly;
     end
 
     figure();
-    plot(karray, frp_imbalance_baseline, '-k', karray, frp_imbalance_knn, '-r'); 
+    h = plot(karray, frp_imbalance_knn, karray, frp_imbalance_baseline, '-k.');
+    set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+    set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+    set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+    set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+    set(h([2, 5, 8, 11]), 'LineStyle', '--');
+    set(h([3, 6, 9, 12]), 'LineStyle', ':');
+    set(h(1:12), 'Marker', '.');
     title(strcat('Risk-adjusted imbalance: ', uniquegensite(s)));
-    legend('Baseline', 'kNN');
+%     legend({'\mu(k)', '\sigma(k)', 'u(k)', '\mu(k_P)', '\sigma(k_P)', 'u(k_P)', '\mu(w)', '\sigma(w)', 'u(w)', '\mu(w_P)', '\sigma(w_P)', 'u(w_P)', 'Baseline'});
+    ylabel('MW'); xlabel('k');
     
     figure();
     subplot(2, 2, 1);
-    plot(karray, fru_over_baseline, '-k', karray, fru_over_knn, '-r'); title('FRU over supply');
+    h = plot(karray, fru_over_knn, karray, fru_over_baseline, '-k.');
+    set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+    set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+    set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+    set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+    set(h([2, 5, 8, 11]), 'LineStyle', '--');
+    set(h([3, 6, 9, 12]), 'LineStyle', ':');
+    set(h(1:12), 'Marker', '.');
+    title('FRU over supply');
     ylabel('MW'); xlabel('k');
+
     subplot(2, 2, 2);
-    plot(karray, frd_over_baseline, '-k', karray, frd_over_knn, '-r'); title('FRD over supply');
+    h = plot(karray, frd_over_knn, karray, frd_over_baseline, '-k.'); 
+    set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+    set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+    set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+    set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+    set(h([2, 5, 8, 11]), 'LineStyle', '--');
+    set(h([3, 6, 9, 12]), 'LineStyle', ':');
+    set(h(1:12), 'Marker', '.');
+    title('FRD over supply');
     ylabel('MW'); xlabel('k');
+
     subplot(2, 2, 3);
-    plot(karray, fru_short_baseline, '-k', karray, fru_short_knn, '-r'); title('FRU shortage');
+    h = plot(karray, fru_short_knn, karray, fru_short_baseline, '-k.'); 
+    set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+    set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+    set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+    set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+    set(h([2, 5, 8, 11]), 'LineStyle', '--');
+    set(h([3, 6, 9, 12]), 'LineStyle', ':');
+    set(h(1:12), 'Marker', '.');
+    title('FRU shortage');
     ylabel('MW'); xlabel('k');
+
     subplot(2, 2, 4);
-    plot(karray, frd_short_baseline, '-k', karray, frd_short_knn, '-r'); title('FRD shortage');
+    h = plot(karray, frd_short_knn, karray, frd_short_baseline, '-k.'); 
+    set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+    set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+    set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+    set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+    set(h([2, 5, 8, 11]), 'LineStyle', '--');
+    set(h([3, 6, 9, 12]), 'LineStyle', ':');
+    set(h(1:12), 'Marker', '.');
+    title('FRD shortage');
     ylabel('MW'); xlabel('k');
     suptitle(strcat('Risk-adjusted imbalance: ', uniquegensite(s)));
-
     
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, frp_imbalance_knn_hourly(:, :, hr), karray, squeeze(frp_imbalance_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('Risk adjusted imbalance, site:', uniquegensite(s)));
     
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, fru_over_knn_hourly(:, :, hr), karray, squeeze(fru_over_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRU over procurement, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, fru_short_knn_hourly(:, :, hr), karray, squeeze(fru_short_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRU shortage, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, frd_over_knn_hourly(:, :, hr), karray, squeeze(frd_over_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRD over procurement, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, frd_short_knn_hourly(:, :, hr), karray, squeeze(frd_short_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRD shortage, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, frp_freqshort_knn_hourly(:, :, hr), karray, squeeze(frp_freqshort_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRP LOLP, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, fru_freqshort_knn_hourly(:, :, hr), karray, squeeze(fru_freqshort_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRU LOLP, site:', uniquegensite(s)));
+    
+    figure();
+    h_plot = 9:16;
+    for ih = 1:numel(h_plot)
+        hr = h_plot(ih);
+        subplot(3, 3, ih);
+        h = plot(karray, frd_freqshort_knn_hourly(:, :, hr), karray, squeeze(frd_freqshort_baseline_hourly(:, :, hr)), '-k.');
+        set(h(1:3), 'Color', [0, 0.4470, 0.7410]);
+        set(h(4:6), 'Color', [0.8500, 0.3250, 0.0980]);
+        set(h(7:9), 'Color', [0.9290, 0.6940, 0.1250]);
+        set(h(10:12), 'Color', [0.4940, 0.1840, 0.5560]);
+        set(h([2, 5, 8, 11]), 'LineStyle', '--');
+        set(h([3, 6, 9, 12]), 'LineStyle', ':');
+        set(h(1:12), 'Marker', '.');
+        xlim([min(karray), max(karray)]);
+        title(strcat('Hour ', num2str(hr)));
+    end
+    suptitle(strcat('FRD LOLP, site:', uniquegensite(s)));
 end
 
-%% Visualize the results, RTD
+%% Visualize the results, RTD (this is just for one case of RTD kNN, i.e., one k, one classifier, one site)
 figure();
 T_results_rtd.TIME   = T_results_rtd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
 T_baseline_rtd.TIME = T_baseline_rtd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
