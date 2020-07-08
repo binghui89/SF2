@@ -56,8 +56,9 @@ end
 clear knn_1 knn_2;
 %%
 % Calculate the evaluation metrics for the optimal selection of kNN parameters
+ns = size(cell_results_rtpd, 2); % Number of sites
 array_ndays = 5*[1, 2, 3, 4, 5, 6];
-cell_optimalknn_rtpd = cell(numel(array_ndays), 1);
+cell_optimalknn_rtpd = cell(numel(array_ndays), ns);
 for indays = 1: numel(array_ndays)
     ndays = array_ndays(indays);
     tic;
@@ -127,75 +128,113 @@ for indays = 1: numel(array_ndays)
 
     which_criteria = 1;
 
-%     s = 2;
-    for irow = 1: size(T_optimal_rtpd, 1)
-        this_hour = T_optimal_rtpd.HOUR_START(irow);
-        criteria_fru = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
-        criteria_frd = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
-        criteria_fru_30day = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
-        criteria_frd_30day = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
-        for ik = 1:nK
-            for ic = 1: nC
-                T_results_rtpd = cell_results_rtpd{ik, s, ic};
-                criteria_fru(ic+(ik-1)*nC, 1) = ik;
-                criteria_fru(ic+(ik-1)*nC, 2) = ic;
-                criteria_fru(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_freqshort_hd'};
-                criteria_fru(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_short'};
-                criteria_fru(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_over'};
-                criteria_fru(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_imbalance'};
+    for s = 1: ns
+        for irow = 1: size(T_optimal_rtpd, 1)
+            this_hour = T_optimal_rtpd.HOUR_START(irow);
+            criteria_fru = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
+            criteria_frd = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
+            criteria_fru_30day = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
+            criteria_frd_30day = nan(size(cell_results_rtpd, 1)*size(cell_results_rtpd, 3), 5);
+            for ik = 1:nK
+                for ic = 1: nC
+                    T_results_rtpd = cell_results_rtpd{ik, s, ic};
+                    criteria_fru(ic+(ik-1)*nC, 1) = ik;
+                    criteria_fru(ic+(ik-1)*nC, 2) = ic;
+                    criteria_fru(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_freqshort_hd'};
+                    criteria_fru(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_short'};
+                    criteria_fru(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_over'};
+                    criteria_fru(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_imbalance'};
 
-                criteria_frd(ic+(ik-1)*nC, 1) = ik;
-                criteria_frd(ic+(ik-1)*nC, 2) = ic;
-                criteria_frd(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_freqshort_hd'};
-                criteria_frd(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_short'};
-                criteria_frd(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_over'};
-                criteria_frd(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_imbalance'};
+                    criteria_frd(ic+(ik-1)*nC, 1) = ik;
+                    criteria_frd(ic+(ik-1)*nC, 2) = ic;
+                    criteria_frd(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_freqshort_hd'};
+                    criteria_frd(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_short'};
+                    criteria_frd(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_over'};
+                    criteria_frd(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_imbalance'};
 
-                criteria_fru_30day(ic+(ik-1)*nC, 1) = ik;
-                criteria_fru_30day(ic+(ik-1)*nC, 2) = ic;
-                criteria_fru_30day(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_freqshort_hd_30day'};
-                criteria_fru_30day(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_short_30day'};
-                criteria_fru_30day(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_over_30day'};
-                criteria_fru_30day(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_imbalance_30day'};
+                    criteria_fru_30day(ic+(ik-1)*nC, 1) = ik;
+                    criteria_fru_30day(ic+(ik-1)*nC, 2) = ic;
+                    criteria_fru_30day(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_freqshort_hd_30day'};
+                    criteria_fru_30day(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_short_30day'};
+                    criteria_fru_30day(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_over_30day'};
+                    criteria_fru_30day(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'fru_imbalance_30day'};
 
-                criteria_frd_30day(ic+(ik-1)*nC, 1) = ik;
-                criteria_frd_30day(ic+(ik-1)*nC, 2) = ic;
-                criteria_frd_30day(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_freqshort_hd_30day'};
-                criteria_frd_30day(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_short_30day'};
-                criteria_frd_30day(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_over_30day'};
-                criteria_frd_30day(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_imbalance_30day'};
+                    criteria_frd_30day(ic+(ik-1)*nC, 1) = ik;
+                    criteria_frd_30day(ic+(ik-1)*nC, 2) = ic;
+                    criteria_frd_30day(ic+(ik-1)*nC, 3) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_freqshort_hd_30day'};
+                    criteria_frd_30day(ic+(ik-1)*nC, 4) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_short_30day'};
+                    criteria_frd_30day(ic+(ik-1)*nC, 5) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_over_30day'};
+                    criteria_frd_30day(ic+(ik-1)*nC, 6) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'frd_imbalance_30day'};
+                end
             end
-        end
-        switch which_criteria
-            case 1 % Use 30 days data, Sort by: (reliability, oversupply, imbalance, shortage, number of days)
-                criteria_fru_sorted = sortrows(criteria_fru_30day, [3, 5, 6, 5, 1]); 
-                criteria_frd_sorted = sortrows(criteria_frd_30day, [3, 5, 6, 4, 1]);
-            case 2 % Use 30 days data, Sort by: (imbalance, reliability, total shortage, total oversupply, number of days)
-                criteria_fru_sorted = sortrows(criteria_fru_30day, [6, 3, 4, 5, 1]);
-                criteria_frd_sorted = sortrows(criteria_frd_30day, [6, 3, 4, 5, 1]);
-            case 3 % Use real data, Sort by: (reliability, oversupply, imbalance, shortage, number of days)
-                criteria_fru_sorted = sortrows(criteria_fru, [3, 5, 6, 4, 1]); 
-                criteria_frd_sorted = sortrows(criteria_frd, [3, 5, 6, 4, 1]);
-            case 4 % Use real data, Sort by: (imbalance, reliability, total shortage, total oversupply, number of days)
-                criteria_fru_sorted = sortrows(criteria_fru, [6, 3, 4, 5, 1]); 
-                criteria_frd_sorted = sortrows(criteria_frd, [6, 3, 4, 5, 1]);
-        end
+            switch which_criteria
+                case 1 % Use 30 days data, Sort by: (reliability, oversupply, imbalance, shortage, number of days)
+                    criteria_fru_sorted = sortrows(criteria_fru_30day, [3, 5, 6, 5, 1]); 
+                    criteria_frd_sorted = sortrows(criteria_frd_30day, [3, 5, 6, 4, 1]);
+                case 2 % Use 30 days data, Sort by: (imbalance, reliability, total shortage, total oversupply, number of days)
+                    criteria_fru_sorted = sortrows(criteria_fru_30day, [6, 3, 4, 5, 1]);
+                    criteria_frd_sorted = sortrows(criteria_frd_30day, [6, 3, 4, 5, 1]);
+                case 3 % Use real data, Sort by: (reliability, oversupply, imbalance, shortage, number of days)
+                    criteria_fru_sorted = sortrows(criteria_fru, [3, 5, 6, 4, 1]); 
+                    criteria_frd_sorted = sortrows(criteria_frd, [3, 5, 6, 4, 1]);
+                case 4 % Use real data, Sort by: (imbalance, reliability, total shortage, total oversupply, number of days)
+                    criteria_fru_sorted = sortrows(criteria_fru, [6, 3, 4, 5, 1]); 
+                    criteria_frd_sorted = sortrows(criteria_frd, [6, 3, 4, 5, 1]);
+            end
 
-        k_optimal = criteria_fru_sorted(1, 1);
-        c_optimal = criteria_fru_sorted(1, 2);
-        T_results_rtpd = cell_results_rtpd{k_optimal, s, c_optimal};
-        T_optimal_rtpd.FRU(irow) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'FRU'};
-        T_optimal_rtpd.k_optimal_fru(irow) = k_optimal;
-        T_optimal_rtpd.c_optimal_fru(irow) = c_optimal;
+            k_optimal = criteria_fru_sorted(1, 1);
+            c_optimal = criteria_fru_sorted(1, 2);
+            T_results_rtpd = cell_results_rtpd{k_optimal, s, c_optimal};
+            T_optimal_rtpd.FRU(irow) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'FRU'};
+            T_optimal_rtpd.k_optimal_fru(irow) = k_optimal;
+            T_optimal_rtpd.c_optimal_fru(irow) = c_optimal;
 
-        k_optimal = criteria_frd_sorted(1, 1);
-        c_optimal = criteria_frd_sorted(1, 2);
-        T_results_rtpd = cell_results_rtpd{k_optimal, s, c_optimal};
-        T_optimal_rtpd.FRD(irow) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'FRD'};
-        T_optimal_rtpd.k_optimal_frd(irow) = k_optimal;
-        T_optimal_rtpd.c_optimal_frd(irow) = c_optimal;
+            k_optimal = criteria_frd_sorted(1, 1);
+            c_optimal = criteria_frd_sorted(1, 2);
+            T_results_rtpd = cell_results_rtpd{k_optimal, s, c_optimal};
+            T_optimal_rtpd.FRD(irow) = T_results_rtpd{T_results_rtpd.HOUR_START==T_optimal_rtpd.HOUR_START(irow), 'FRD'};
+            T_optimal_rtpd.k_optimal_frd(irow) = k_optimal;
+            T_optimal_rtpd.c_optimal_frd(irow) = c_optimal;
+        end
+        cell_optimalknn_rtpd{indays, s} = T_optimal_rtpd;
     end
-    cell_optimalknn_rtpd{indays, 1} = T_optimal_rtpd;
+end
+
+%% Plot
+figure();
+hold on;
+for s = 1:5
+    fprintf('s=%g\n', s);
+    for i = 1 : 6
+        T_optimal_rtpd = cell_optimalknn_rtpd{i, s};
+        f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_max'}; % 15-min
+        f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_min'}; % 15-min
+        T_errormax_rtpd = array2table(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4)', 'VariableNames', {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'});
+        T_errormin_rtpd = array2table(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4)', 'VariableNames', {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'});
+        T_optimal_rtpd = [T_optimal_rtpd T_errormax_rtpd T_errormin_rtpd];
+        T_optimal_rtpd.FRU_NEED = max(T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, [], 2);
+        T_optimal_rtpd.FRD_NEED = min(T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, [], 2);
+        
+        % Calculate FRU/FRD errors for that hour and each 15-min interval
+        T_fruerror_rtpd = array2table(T_optimal_rtpd.FRU-T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, 'VariableNames', {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'});
+        T_frderror_rtpd = array2table(T_optimal_rtpd.FRD-T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, 'VariableNames', {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'});
+        T_optimal_rtpd = [T_optimal_rtpd T_fruerror_rtpd T_frderror_rtpd];
+        T_optimal_rtpd.FRU_error = T_optimal_rtpd.FRU - T_optimal_rtpd.FRU_NEED;
+        T_optimal_rtpd.FRD_error = T_optimal_rtpd.FRD - T_optimal_rtpd.FRD_NEED;
+        
+        % Calculate evaluation metrics: Total oversupply
+        fru_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRU_error(T_optimal_rtpd.FRU_error>=0)));
+        frd_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRD_error(T_optimal_rtpd.FRD_error<=0)));
+        frp_rtpd_over_dknn(i) = fru_rtpd_over_knn + frd_rtpd_over_knn;
+
+        tmp = T_optimal_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
+        fru_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
+        tmp = T_optimal_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
+        frd_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
+        frp_rtpd_freqshort_dknn_hd(i) = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
+        fprintf('n=%g, reliability=%.2f, over=%.2f\n', 5*i, frp_rtpd_freqshort_dknn_hd(i), frp_rtpd_over_dknn(i));
+    end
+    plot(frp_rtpd_freqshort_dknn_hd, frp_rtpd_over_dknn./1E3, '-^');
 end
 
 %% Calculate evaluation metric for the optimal kNN
