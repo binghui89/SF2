@@ -132,7 +132,7 @@ for i = 1: numel(uniquegen)
 end
 cd(dirhome);
 
-%% Multi-dim classifier, multi-site, RTPD
+%% One-dim classifier, multi-site average, RTPD
 
 % Select month and k
 % this_year = 2019;
@@ -171,7 +171,15 @@ for s = 1: 5
     T_pwr_hourly.DATE = datetime(T_pwr_hourly.HOUR_START.Year, T_pwr_hourly.HOUR_START.Month, T_pwr_hourly.HOUR_START.Day, 'TimeZone', 'UTC');
     cell_Tpwrhourly{s} = T_pwr_hourly;
 end
-T_pwr_hourly = T_pwr_hourly(:, {'HOUR_START', 'DATE'});
+% Calculate 5-site mean
+T_pwr_hourly_mean = T_pwr_hourly(:, {'HOUR_START', 'DATE'}); % Five site average
+all_column = {'mean_k_p050', 'mean_kpv_p050', 'mean_k_width', 'mean_kpv_width', 'std_k_p050', 'std_kpv_p050', 'std_k_width', 'std_kpv_width', 'vk', 'vpv', 'vw', 'vwpv'};
+array_pwr_hourly = nan(size(T_pwr_hourly_mean, 1), 12, 5);
+for j = 1:5
+    T_pwr_hourly = cell_Tpwrhourly{j};
+    array_pwr_hourly(:, :, j) = T_pwr_hourly{:, all_column};
+end
+T_pwr_hourly_mean = [T_pwr_hourly_mean array2table(mean(array_pwr_hourly, 3), 'VariableNames', all_column)];
 
 for s = 1
     fprintf('Baseline\n');
@@ -207,35 +215,32 @@ for s = 1
     fprintf('kNN\n');
     % Select classifier
     for classifier = 1: 12
+        T_pwr_hourly = T_pwr_hourly_mean;
         switch classifier
             case 1
-                colname = 'mean_k_p050';
+                T_pwr_hourly.Properties.VariableNames{'mean_k_p050'} = 'classifier_1';
             case 2
-                colname = 'std_k_p050';
+                T_pwr_hourly.Properties.VariableNames{'std_k_p050'} = 'classifier_1';
             case 3
-                colname = 'vk';
+                T_pwr_hourly.Properties.VariableNames{'vk'} = 'classifier_1';
             case 4
-                colname = 'mean_kpv_p050';
+                T_pwr_hourly.Properties.VariableNames{'mean_kpv_p050'} = 'classifier_1';
             case 5
-                colname = 'std_kpv_p050';
+                T_pwr_hourly.Properties.VariableNames{'std_kpv_p050'} = 'classifier_1';
             case 6
-                colname = 'vpv';
+                T_pwr_hourly.Properties.VariableNames{'vpv'} = 'classifier_1';
             case 7
-                colname = 'mean_k_width';
+                T_pwr_hourly.Properties.VariableNames{'mean_k_width'} = 'classifier_1';
             case 8
-                colname = 'std_k_width';
+                T_pwr_hourly.Properties.VariableNames{'std_k_width'} = 'classifier_1';
             case 9
-                colname = 'vw';
+                T_pwr_hourly.Properties.VariableNames{'vw'} = 'classifier_1';
             case 10
-                colname = 'mean_kpv_width';
+                T_pwr_hourly.Properties.VariableNames{'mean_kpv_width'} = 'classifier_1';
             case 11
-                colname = 'std_kpv_width';
+                T_pwr_hourly.Properties.VariableNames{'std_kpv_width'} = 'classifier_1';
             case 12
-                colname = 'vwpv';
-        end
-        for j = 1:5
-            T_tmp = cell_Tpwrhourly{j};
-            T_pwr_hourly{:, strcat('classifier_', num2str(j))} = T_tmp{:, colname};
+                T_pwr_hourly.Properties.VariableNames{'vwpv'} = 'classifier_1';
         end
 
         fprintf('classifier = %g\n', classifier);
@@ -247,11 +252,11 @@ for s = 1
                 this_date = datetime(T_results_rtpd.HOUR_START.Year(i), T_results_rtpd.HOUR_START.Month(i), T_results_rtpd.HOUR_START.Day(i), 'TimeZone', 'UTC');
                 this_hour = T_results_rtpd.HOUR_START.Hour(i);
                 T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
-                if any(isnan(T_results_rtpd{i, {'classifier_1', 'classifier_2'}}), 2)
+                if any(isnan(T_results_rtpd{i, 'classifier_1'}))	
                     T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(k), :); % We use 30 previous days, i.e., baseline, if data is nan
                     selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); % 30 the nearest days for baseline
                 else
-                    T_sample.dist = sqrt(sum((T_sample{:, {'classifier_1', 'classifier_2'}}-T_results_rtpd{i, {'classifier_1', 'classifier_2'}}).^2, 2)); % Euclidean distance
+                    T_sample.dist = sqrt(sum((T_sample{:, 'classifier_1'}-T_results_rtpd{i, 'classifier_1'}).^2, 2)); % Euclidean distance
                     T_sample_sorted = sortrows(T_sample, 'dist');
                     selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); 
                 end

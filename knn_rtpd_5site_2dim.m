@@ -132,7 +132,7 @@ for i = 1: numel(uniquegen)
 end
 cd(dirhome);
 
-%% Multi-dim classifier, multi-site average, RTPD
+%% Two-dim classifier, multi-site average, RTPD
 
 % Select month and k
 % this_year = 2019;
