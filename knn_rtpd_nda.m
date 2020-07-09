@@ -112,10 +112,49 @@ cd(dirhome);
 % this_year = 2019;
 % this_month = 10;
 % karray = 5:5:60;
-karray = 30;
 
 % Result container
-cell_baseline_rtpd = cell(numel(karray), 1); % k, site, classifier
+% cell_baseline_rtpd = cell(numel(karray), 1); % k, site, classifier
+
+fprintf('Baseline\n');
+%         T_baseline_rtpd = array2table(unique(T_nda.HOUR_START((T_nda.HOUR_START_local.Month==this_month)&(T_nda.HOUR_START_local.Year==this_year))), 'VariableNames', {'HOUR_START'}); % Result container
+%         T_baseline_rtpd.HOUR_START_local = datetime(T_baseline_rtpd.HOUR_START, 'TimeZone', 'America/Los_Angeles');
+T_baseline_rtpd = T_nda((T_nda.HOUR_START_local.Month==this_month)&(T_nda.HOUR_START_local.Year==this_year), :);
+[~, IA, IC ] = unique(T_baseline_rtpd.HOUR_START);
+T_baseline_rtpd = T_baseline_rtpd(IA, {'HOUR_START', 'HOUR_START_local', 'DATE_START', 'DATE_START_local'});
+for i = 1: size(T_baseline_rtpd, 1)
+    this_date = T_baseline_rtpd.DATE_START(i);
+    this_date_local = T_baseline_rtpd.DATE_START_local(i);
+    this_hour_local = T_baseline_rtpd.HOUR_START_local.Hour(i);
+    isweekday = (mod(weekday(this_date), 6) ~= 1);
+    if isweekday
+        ndays = 40;
+    else
+        ndays = 20;
+    end
+    selected_days = ismember(T_nda.DATE_START_local, return_history_days(this_date_local, ndays))&(T_nda.HOUR_START_local.Hour==this_hour_local); % We use 30 previous days
+    sample_error_max = T_nda{selected_days, 'error_max'};
+    sample_error_min = T_nda{selected_days, 'error_min'};
+    [f,x] = ecdf(sample_error_max(:));
+    T_baseline_rtpd.FRU(i) = interp1(f, x, 0.975);
+    [f,x] = ecdf(sample_error_min(:));
+    T_baseline_rtpd.FRD(i) = interp1(f, x, 0.025);
+end
+
+% This is the actual need of FRP
+f_errormax_rtpd = T_nda{ismember(T_nda.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
+fru_need_rtpd = max(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4), [], 1)';
+f_errormin_rtpd = T_nda{ismember(T_nda.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min	
+frd_need_rtpd = min(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4), [], 1)';	
+
+% Calculate baseline FRP imbalance
+T_baseline_rtpd.FRU_error = T_baseline_rtpd.FRU - fru_need_rtpd;
+T_baseline_rtpd.FRD_error = T_baseline_rtpd.FRD - frd_need_rtpd;
+
+%     cell_baseline_rtpd{karray==k, s} = T_baseline_rtpd;
+    
+%% KNN
+karray = 30;
 cell_results_rtpd  = cell(numel(karray), 1, 4); % k, site, classifier
 
 cell_Tpwrhourly = cell(5, 1);
@@ -159,41 +198,6 @@ T_pwr_hourly_mean.HOUR_START_local = datetime(T_pwr_hourly_mean.HOUR_START, 'Tim
 T_pwr_hourly_mean.DATE_START_local = datetime(T_pwr_hourly_mean.HOUR_START_local.Year, T_pwr_hourly_mean.HOUR_START_local.Month, T_pwr_hourly_mean.HOUR_START_local.Day, 'TimeZone', 'America/Los_Angeles');
 
 for s = 1
-        fprintf('Baseline\n');
-    for k = karray
-%         T_baseline_rtpd = array2table(unique(T_nda.HOUR_START((T_nda.HOUR_START_local.Month==this_month)&(T_nda.HOUR_START_local.Year==this_year))), 'VariableNames', {'HOUR_START'}); % Result container
-%         T_baseline_rtpd.HOUR_START_local = datetime(T_baseline_rtpd.HOUR_START, 'TimeZone', 'America/Los_Angeles');
-        T_baseline_rtpd = T_nda((T_nda.HOUR_START_local.Month==this_month)&(T_nda.HOUR_START_local.Year==this_year), :);
-        [~, IA, IC ] = unique(T_baseline_rtpd.HOUR_START);
-        T_baseline_rtpd = T_baseline_rtpd(IA, {'HOUR_START', 'HOUR_START_local', 'DATE_START', 'DATE_START_local'});
-        for i = 1: size(T_baseline_rtpd, 1)
-            this_date = T_baseline_rtpd.DATE_START(i);
-            this_date_local = T_baseline_rtpd.DATE_START_local(i);
-            this_hour_local = T_baseline_rtpd.HOUR_START_local.Hour(i);
-            selected_days = ismember(T_nda.DATE_START_local, return_history_days(this_date_local, k))&(T_nda.HOUR_START_local.Hour==this_hour_local); % We use 30 previous days
-            sample_error_max = T_nda{selected_days, 'error_max'};
-            sample_error_min = T_nda{selected_days, 'error_min'};
-            [f,x] = ecdf(sample_error_max(:));
-            T_baseline_rtpd.FRU(i) = interp1(f, x, 0.975);
-            [f,x] = ecdf(sample_error_min(:));
-            T_baseline_rtpd.FRD(i) = interp1(f, x, 0.025);
-        end
-
-        % This is the actual need of FRP
-        f_errormax_rtpd = T_nda{ismember(T_nda.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
-        fru_need_rtpd = max(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4), [], 1)';
-        f_errormin_rtpd = T_nda{ismember(T_nda.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min	
-        frd_need_rtpd = min(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4), [], 1)';	
-
-        % Calculate baseline FRP imbalance
-        T_baseline_rtpd.FRU_error = T_baseline_rtpd.FRU - fru_need_rtpd;
-        T_baseline_rtpd.FRD_error = T_baseline_rtpd.FRD - frd_need_rtpd;
-        
-        cell_baseline_rtpd{karray==k, s} = T_baseline_rtpd;
-
-        fprintf('k = %g\n', k);
-    end
-    
     fprintf('kNN\n');
     % Select classifier
 
@@ -223,6 +227,7 @@ for s = 1
 
         fprintf('classifier = %g\n', classifier);
         for k = karray
+            fprintf('k = %g\n', k);
             % Test one month knn
             T_results_rtpd = T_pwr_hourly(T_pwr_hourly.DATE_START_local.Month==this_month, :); % Result container
             T_results_rtpd.use_knn = false(size(T_results_rtpd, 1), 1);
