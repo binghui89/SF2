@@ -1,8 +1,8 @@
 function lab_milestone()
 % test_logn_distribution();
 % test_discretize_lognormal();
-ramping_requirement_rtd_nl();
-% ramping_requirement_rtpd_nl();
+% ramping_requirement_rtd_nl();
+ramping_requirement_rtpd_nl();
 % cell_history = return_30_days(2019, 5, 31);
 end
 
@@ -21,7 +21,7 @@ cell_history = cell(ndays, 1);
 validnumber = 0;
 historyday  = thisday;
 while validnumber < ndays
-    historyday = historyday - day(1);
+    historyday = historyday - days(1);
     if mod(weekday(historyday), 6) == 1
         historyisweekday = false;
     else
@@ -142,7 +142,7 @@ for select_day = 27: 31
 
     figure();
     hold on;
-    xtime = datetime(2019,select_month,select_day,0,5,0):minutes(5): (datetime(2019,select_month,select_day,0,5,0) + day(1) - minutes(5));
+    xtime = datetime(2019,select_month,select_day,0,5,0):minutes(5): (datetime(2019,select_month,select_day,0,5,0) + days(1) - minutes(5));
 
     % h1 = plot(xtime, reshape(repmat(min(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(max(reshape(fru_prob, 12, 24)), 12, 1), 288, 1));
     h1 =plot(xtime, reshape(repmat(max(reshape(frd_prob, 12, 24)), 12, 1), 288, 1), xtime, reshape(repmat(min(reshape(fru_prob, 12, 24)), 12, 1), 288, 1));
