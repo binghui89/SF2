@@ -182,7 +182,7 @@ T_baseline_rtpd.FRU_error = T_baseline_rtpd.FRU - fru_need_rtpd;
 T_baseline_rtpd.FRD_error = T_baseline_rtpd.FRD - frd_need_rtpd;
 
 %% KNN Two-dim classifier, multi-site average, RTPD
-karray = 5:5:60;
+karray = 5:5:40;
 cell_results_rtpd  = cell(numel(karray), 1, 4); % k, site, classifier
 cell_Tpwrhourly = cell(5, 1);
 for s = 1: 5
@@ -263,10 +263,15 @@ for s = 1
                 this_date = T_results_rtpd.DATE(i);
                 this_date_local = T_results_rtpd.DATE_START_local(i);
                 this_hour_local = T_results_rtpd.HOUR_START_local.Hour(i);
+                isweekday = T_results_rtpd.isweekday(i);
                 if any(isnan(T_results_rtpd{i, {'classifier_1', 'classifier_2'}}), 2)
-                    selected_days = ismember(T_rtpd.DATE_START_local, return_history_days(this_date_local, k))&(T_rtpd.HOUR_START_local.Hour==this_hour_local); % We use 30 previous days
+                    if isweekday
+                        ndays = 40;
+                    else
+                        ndays = 20;
+                    end
+                    selected_days = ismember(T_rtpd.DATE_START_local, return_history_days(this_date_local, ndays))&(T_rtpd.HOUR_START_local.Hour==this_hour_local); % We use 30 previous days
                 else
-                    isweekday = T_results_rtpd.isweekday(i);
                     T_sample = T_pwr_hourly((T_pwr_hourly.DATE_START_local<this_date_local)&(T_pwr_hourly.HOUR_START_local.Hour==this_hour_local)&(T_pwr_hourly.isweekday==isweekday), :);
                     T_sample.dist = sqrt(sum((T_sample{:, {'classifier_1', 'classifier_2'}}-T_results_rtpd{i, {'classifier_1', 'classifier_2'}}).^2, 2)); % Euclidean distance
                     T_sample_sorted = sortrows(T_sample, 'dist');
@@ -298,15 +303,17 @@ figure();
 T_results_rtpd.HOUR  = T_results_rtpd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
 T_baseline_rtpd.HOUR = T_baseline_rtpd.HOUR_START + duration(1, 0, 0); % We always use the end of an interval as time stamp
 
-stairs(T_rtpd.TIME_START, T_rtpd.UP_RTPD, '-b');
+h(1) = stairs(T_rtpd.TIME_START_local, T_rtpd.UP_RTPD, '-b');
 hold on;
-stairs(T_rtpd.TIME_START, -1.*T_rtpd.DOWN_RTPD, '-b');
-stairs(T_rtpd.TIME_START, T_rtpd.error_max, '-r');
-stairs(T_rtpd.TIME_START, T_rtpd.error_min, '-r')
-stairs(T_results_rtpd.HOUR_START, T_results_rtpd.FRU, '-g');
-stairs(T_results_rtpd.HOUR_START, T_results_rtpd.FRD, '-g');
-stairs(T_baseline_rtpd.HOUR_START, T_baseline_rtpd.FRU, '-k');
-stairs(T_baseline_rtpd.HOUR_START, T_baseline_rtpd.FRD, '-k');
+stairs(T_rtpd.TIME_START_local, -1.*T_rtpd.DOWN_RTPD, '-b');
+h(2) = stairs(T_rtpd.TIME_START_local, T_rtpd.error_max, '-r');
+stairs(T_rtpd.TIME_START_local, T_rtpd.error_min, '-r')
+h(3) = stairs(T_results_rtpd.HOUR_START_local, T_results_rtpd.FRU, '-g');
+stairs(T_results_rtpd.HOUR_START_local, T_results_rtpd.FRD, '-g');
+h(4) = stairs(T_baseline_rtpd.HOUR_START_local, T_baseline_rtpd.FRU, '-k');
+stairs(T_baseline_rtpd.HOUR_START_local, T_baseline_rtpd.FRD, '-k');
+legend(h, {'OASIS', 'NL error', 'kNN', 'Baseline'});
+ylabel('MW');
 
 % Use box plot to show changes of FRP, RTD
 fru_compare_rtpd = [T_baseline_rtpd{(T_baseline_rtpd.HOUR_START.Hour>=16)&(T_baseline_rtpd.HOUR_START.Hour<=24), {'FRU'}} T_results_rtpd{(T_results_rtpd.HOUR_START.Hour>=16)&(T_results_rtpd.HOUR_START.Hour<=24), {'FRU'}}];
