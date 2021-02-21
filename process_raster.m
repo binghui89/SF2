@@ -266,6 +266,9 @@ end
 if false
     save('raster.mat', 'ar_datetime', 'ar_datetime_local', 'ar_quantiles', 'BOUNDARY', 'deltat', 'lat_center', 'lat_edge', 'lon_center', 'lon_edge', 'T_pv', 'T_pvcell');
 end
+%% Load CAISO data RTD and RTPD
+load_caiso_data;
+
 %% Clear-sky GHI calculation
 add_pvlib();
 
