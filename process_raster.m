@@ -234,6 +234,7 @@ for m = 1:numel(cell_datetime)
 end
 toc;
 ar_datetime = [cell_datetime{1}; cell_datetime{2}];
+ar_datetime_local.TimeZone = 'America/Los_Angeles';
 disp('File names ready!');
 
 % Load data and only save those data from locations with PV plants
@@ -260,6 +261,10 @@ for j = 1: size(cell_filepath, 2)
     clear tmp;
     clear data_quantile;
     toc;
+end
+
+if false
+    save('raster.mat', 'ar_datetime', 'ar_datetime_local', 'ar_quantiles', 'BOUNDARY', 'deltat', 'lat_center', 'lat_edge', 'lon_center', 'lon_edge', 'T_pv', 'T_pvcell');
 end
 %% Clear-sky GHI calculation
 add_pvlib();
