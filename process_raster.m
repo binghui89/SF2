@@ -20,7 +20,7 @@ imagesc(R1.LongitudeLimits(:), flipud(R1.LatitudeLimits(:)), A);
 set(gca,'YDir', 'normal'); % Set origin to the bottom left corner
 colormap jet;
 
-%% Check file availability and data validity
+%% Check file availability and data validity, run on Ganymede for better performance
 dirhome = pwd;
 if ispc
     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202002\content';
@@ -124,7 +124,13 @@ if false
     writetable([T_error(:, 'Time'), T_error_local], 'summary.xlsx', 'Sheet', 2, 'WriteMode','Append');
 end
 
-%% Read all PV plants coordinates from EIA-860 2019 table
+%% Step 1: Read all PV plants coordinates from EIA-860 2019 table
+fname = 'Solar forecast (PAIRS Team) (select sites)-GHI Quantile Forecast-horizon_60_quantile_50[solar_forecast_median]-02_01_2020T20_00_00.tiff';
+[A1, R1] = readgeoraster(fname); % Example, we need the R1 here to give estimate of lat and lon ranges
+info = georasterinfo(fname);
+m = info.MissingDataIndicator;
+A = standardizeMissing(A1,m);
+
 T_eia860_caiso = readtable('eia860_2019_caiso.csv', 'Delimiter',',');
 cap = T_eia860_caiso.NameplateCapacity_MW_;
 
@@ -168,30 +174,75 @@ for i = 1: height(T_pv)
 end
 T_pvcell = grpstats(T_pv, {'nx', 'ny'}, {'sum'}, 'DataVars', {'TotalCapacity'}); % nx is the index of latitude of the PV plant, ny is the index of longitude of the PV plant
 T_pvcell.Properties.VariableNames{'sum_TotalCapacity'} = 'TotalCapacity';
-T_pvcell{:, 'ind'} = sub2ind([size(cell_data{1}, 1), size(cell_data{1}, 2)], T_pvcell{:, 'ny'}, T_pvcell{:, 'nx'}); % Sub to index
+% T_pvcell{:, 'ind'} = sub2ind([size(cell_data{1}, 1), size(cell_data{1}, 2)], T_pvcell{:, 'ny'}, T_pvcell{:, 'nx'}); % Sub to index
+T_pvcell{:, 'ind'} = sub2ind([size(A, 1), size(A, 2)], T_pvcell{:, 'ny'}, T_pvcell{:, 'nx'}); % Sub to index
 T_pvcell{:, 'cell_lat'} = lat_center(T_pvcell{:, 'ny'}); % Note this is the center coordinate of the IBM cell, not the actual PV plant
 T_pvcell{:, 'cell_lon'} = lon_center(T_pvcell{:, 'nx'}); % Note this is the center coordinate of the IBM cell, not the actual PV plant
 T_pvcell{:, 'within_boundary'} = (T_pvcell{:, 'cell_lon'}>=BOUNDARY.WEST) & (T_pvcell{:, 'cell_lon'}<=BOUNDARY.EAST) & (T_pvcell{:, 'cell_lat'}>=BOUNDARY.SOUTH) & (T_pvcell{:, 'cell_lat'}<=BOUNDARY.NORTH);
 
-cell_pvcellghi = cell(5, 1);
-for j = 1: 5
-    tmp = reshape(cell_data{j}, size(cell_data{j}, 1)*size(cell_data{j}, 2), size(cell_data{j}, 3));
-    cell_pvcellghi{j} = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
-end
+% cell_pvcellghi = cell(5, 1);
+% for j = 1: 5
+%     tmp = reshape(cell_data{j}, size(cell_data{j}, 1)*size(cell_data{j}, 2), size(cell_data{j}, 3));
+%     cell_pvcellghi{j} = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+% end
 
-%% Temporary code, for small memory machine
-cell_pvcellghi = cell(5, 1);
-for j = 1: 5
+%% Step 2: For small memory machine, load data and process it based on CAISO PV plant locations
+cell_dircontent = {'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202002\content', 'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202003\content'};
+cell_datetime = cell(2, 1);
+deltat = duration(0, 10, 0);
+
+% All timestamps in Feb 2020
+ar_datetime = [];
+for d = 1:29
+    datetime_start = datetime(2020, 2, d, 9, 0, 0, 'TimeZone', 'UTC');
+    datetime_end = datetime(2020, 2, d, 2, 50, 0, 'TimeZone', 'UTC') + duration(24, 0, 0);
+    time_per_day = [datetime_start: deltat: datetime_end]';
+    ar_datetime = [ar_datetime; time_per_day];
+end
+cell_datetime{1} = ar_datetime;
+
+% All time stamps in March 2020
+ar_datetime = [];
+for d = 1:31
+    datetime_start = datetime(2020, 3, d, 9, 0, 0, 'TimeZone', 'UTC');
+    datetime_end = datetime(2020, 3, d, 2, 50, 0, 'TimeZone', 'UTC') + duration(24, 0, 0);
+    time_per_day = [datetime_start: deltat: datetime_end]';
+    ar_datetime = [ar_datetime; time_per_day];
+end
+cell_datetime{2} = ar_datetime;
+
+% Prepare file paths from all months
+ar_quantiles = [5, 25, 50, 75, 95];
+cell_filepath = {}; % First dim: Time, Second dim: Quantile
+tic;
+for m = 1:numel(cell_datetime)
+    ar_datetime = cell_datetime{m};
+    dircontent = cell_dircontent{m};
+    for i = 1: size(ar_datetime, 1)
+        cellrow = {};
+        for j = 1: numel(ar_quantiles)
+            tiff_name = strcat(... 
+                'Solar forecast (PAIRS Team) (select sites)-GHI Quantile Forecast-horizon_60_quantile_', ...
+                sprintf('%d', ar_quantiles(j)), ...
+                '[solar_forecast_median]-', ...
+                sprintf('%02d_%02d_%4dT%02d_%02d_%02d', ar_datetime(i).Month, ar_datetime(i).Day, ar_datetime(i).Year, ar_datetime(i).Hour, ar_datetime(i).Minute, ar_datetime(i).Second), ...
+                '.tiff');
+            cellrow = [cellrow fullfile(dircontent, tiff_name)];
+        end
+        cell_filepath = [cell_filepath; cellrow];
+    end
+end
+toc;
+ar_datetime = [cell_datetime{1}; cell_datetime{2}];
+disp('File names ready!');
+
+% Load data and only save those data from locations with PV plants
+cell_pvcellghi = cell(numel(ar_quantiles), 1);
+for j = 1: size(cell_filepath, 2)
     tic;
     data_quantile = nan(320, 480, numel(ar_datetime));
-    cd(dirwork);
-    for i = 1: numel(ar_datetime)
-        tiff_name = strcat(... 
-        'Solar forecast (PAIRS Team) (select sites)-GHI Quantile Forecast-horizon_60_quantile_', ...
-        sprintf('%d', ar_quantiles(j)), ...
-        '[solar_forecast_median]-', ...
-        sprintf('%02d_%02d_%4dT%02d_%02d_%02d', ar_datetime(i).Month, ar_datetime(i).Day, ar_datetime(i).Year, ar_datetime(i).Hour, ar_datetime(i).Minute, ar_datetime(i).Second), ...
-        '.tiff');
+    for i = 1: size(cell_filepath, 1)
+        tiff_name = string(cell_filepath(i, j));
         if isfile(tiff_name)
             ar_istiff(i, j) = 1;
             [A, R] = readgeoraster(tiff_name); % Example
@@ -204,14 +255,12 @@ for j = 1: 5
             fprintf('No file found: %s\n', tiff_name);
         end
     end
-    cd(dirhome);
     tmp = reshape(data_quantile, size(data_quantile, 1)*size(data_quantile, 2), size(data_quantile, 3));
     cell_pvcellghi{j} = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
     clear tmp;
     clear data_quantile;
     toc;
 end
-
 %% Clear-sky GHI calculation
 add_pvlib();
 
