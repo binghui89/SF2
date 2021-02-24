@@ -1,0 +1,1312 @@
+Utility ID,Utility Name,Plant Code,Plant Name,State,County,Generator ID,Status,Technology,Prime Mover,Sector Name,Sector,Nameplate Capacity (MW),Summer Capacity (MW),Winter Capacity (MW),Operating Month,Operating Year,Lenses / Mirrors?,Single-Axis Tracking?,Dual-Axis Tracking?,Fixed Tilt?,East West Fixed Tilt?,Parabolic Trough?,Linear Fresnel?,Power Tower?,Dish Engine?,Other Solar Technology?,Azimuth Angle,Tilt Angle,DC Net Capacity (MW),Crystalline Silicon?,Thin-Film (CdTe)?,Thin-Film (A-Si)?,Thin-Film (CIGS)?,Thin-Film (Other)?,Other Materials?,Net Metering Agreement?,Net Metering DC Capacity (MW),Virtual Net Metering Agreement?,Virtual Net Metering DC Capacity (MW),Latitude,Longitude,Balancing Authority Code
+56769,Consolidated Edison Development Inc.,56944,CM10,NV,Clark,PV01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,12,2008,,,,Y,,,,,,,180.0,25.0,12.4,,Y,,,,,N, ,N, ,35.7881,-114.9933,CISO
+17609,Southern California Edison Co,56996,Solar Photovoltaic Project #02,CA,San Bernardino,S1A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,12,2009,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,33.985244,-117.700826,CISO
+17609,Southern California Edison Co,56996,Solar Photovoltaic Project #02,CA,San Bernardino,S1B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,12,2009,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,33.985244,-117.700826,CISO
+56294,SunE WG113 Moreno Valley LLC,57004,SunEdison Walgreens Moreno Valley,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,9,2007,,Y,,,,,,,,,180.0,15.0,1.2,Y,,,,,,Y,1.0,N, ,33.8672,-117.23,CISO
+56431,SunE U6 Holdings LLC,57005,Mariani Packing Vacaville Solar,CA,Solano,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,11,2008,,Y,,,,,,,,,100.0, ,1.1,Y,,,,,,Y,1.0,N, ,38.40008,-121.96366,CISO
+56296,SunE WG45 Woodland LLC,57006,Walgreens Woodland Distribution Center,CA,Yolo,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,8,2007,,Y,,,,,,,,,180.0,15.0,1.2,Y,,,,,,Y,1.0,N, ,38.674894,-121.713362,CISO
+56297,SunE CPA CDC2 LLC,57007,SunEdison Ironwood State Prison,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,5,2008,,Y,,,,,,,,,90.0, ,1.2,Y,,,,,,N, ,N, ,33.567268,-114.917979,CISO
+56431,SunE U6 Holdings LLC,57008,SunEdison Procter & Gamble Oxnard,CA,Ventura,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.8,0.8,10,2009,,,,Y,,,,,,,180.0,20.0,1.1,,Y,,,,,Y,1.0,N, ,34.2089,-119.13,CISO
+61219,Longroad Energy Services LLC,57009,Kohls San Bernardino Solar Facility,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,11,2007,,Y,,,,,,,,,180.0,0.0,1.2,Y,,,,,,Y,1.0,N, ,34.094695,-117.266831,CISO
+56434,SunE M5 Holdings LLC,57010,SunEdison Anheuser Busch Fairfield,CA,Solano,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,12,2008,,Y,,,,,,,,,0.0,0.0,1.1,Y,,,,,,N, ,N, ,38.232108,-122.092706,CISO
+56302,SunE CPA CDC1 LLC,57011,Chuckawalla Valley State Prison,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,6,2006,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,33.565329,-114.903629,CISO
+56434,SunE M5 Holdings LLC,57012,SunEdison Walmart Apple Valley DC,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.9,0.9,3,2009,,Y,,,,,,,,,0.0,0.0,1.1,Y,,,,,,Y,1.0,N, ,34.5975,-117.2,CISO
+14328,Pacific Gas & Electric Co.,57041,Vaca Dixon Solar Station,CA,Solano,1,OP,Solar Photovoltaic,PV,Electric Utility,1,2.0,2.0,2.0,12,2009,,,,Y,,,,,,,180.0,30.0,2.6,Y,,,,,,N, ,N, ,38.4106,-121.9264,CISO
+56769,Consolidated Edison Development Inc.,57205,CM48,NV,Clark,PV02,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,8.0,8.0,8.0,6,2010,,,,Y,,,,,,,180.0,25.0,10.1,,Y,,,,,N, ,N, ,35.7814,-114.9933,CISO
+56769,Consolidated Edison Development Inc.,57205,CM48,NV,Clark,PV03,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,9,2010,,,,Y,,,,,,,180.0,25.0,12.6,,Y,,,,,N, ,N, ,35.7814,-114.9933,CISO
+56769,Consolidated Edison Development Inc.,57205,CM48,NV,Clark,PV04,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,10,2010,,,,Y,,,,,,,180.0,25.0,12.6,,Y,,,,,N, ,N, ,35.7814,-114.9933,CISO
+56769,Consolidated Edison Development Inc.,57205,CM48,NV,Clark,PV05,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,11,2010,,,,Y,,,,,,,180.0,25.0,12.6,,Y,,,,,N, ,N, ,35.7814,-114.9933,CISO
+56769,Consolidated Edison Development Inc.,57205,CM48,NV,Clark,PV06,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,12,2010,,,,Y,,,,,,N,180.0,25.0,12.6,,Y,,,,,N, ,N, ,35.7814,-114.9933,CISO
+17609,Southern California Edison Co,57217,Solar Photovoltaic Project #03,CA,San Bernardino,S003A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,3,2011,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.094279,-117.400113,CISO
+17609,Southern California Edison Co,57217,Solar Photovoltaic Project #03,CA,San Bernardino,S003B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,3,2011,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.094279,-117.400113,CISO
+17609,Southern California Edison Co,57219,Solar Photovoltaic Project #05,CA,San Bernardino,S005A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.086276,-117.230571,CISO
+17609,Southern California Edison Co,57219,Solar Photovoltaic Project #05,CA,San Bernardino,S005B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.086276,-117.230571,CISO
+17609,Southern California Edison Co,57219,Solar Photovoltaic Project #05,CA,San Bernardino,S005C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.086276,-117.230571,CISO
+17609,Southern California Edison Co,57219,Solar Photovoltaic Project #05,CA,San Bernardino,S005D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.086276,-117.230571,CISO
+17609,Southern California Edison Co,57219,Solar Photovoltaic Project #05,CA,San Bernardino,S005E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.086276,-117.230571,CISO
+17609,Southern California Edison Co,57220,Solar Photovoltaic Project #06,CA,San Bernardino,S006A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.041389,-117.573055,CISO
+17609,Southern California Edison Co,57220,Solar Photovoltaic Project #06,CA,San Bernardino,S006B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.041389,-117.573055,CISO
+17609,Southern California Edison Co,57220,Solar Photovoltaic Project #06,CA,San Bernardino,S006C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.041389,-117.573055,CISO
+17609,Southern California Edison Co,57220,Solar Photovoltaic Project #06,CA,San Bernardino,S006D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.041389,-117.573055,CISO
+17609,Southern California Edison Co,57221,Solar Photovoltaic Project #07,CA,San Bernardino,S007A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.086111,-117.2275,CISO
+17609,Southern California Edison Co,57221,Solar Photovoltaic Project #07,CA,San Bernardino,S007B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.086111,-117.2275,CISO
+17609,Southern California Edison Co,57221,Solar Photovoltaic Project #07,CA,San Bernardino,S007C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.086111,-117.2275,CISO
+17609,Southern California Edison Co,57221,Solar Photovoltaic Project #07,CA,San Bernardino,S007D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.086111,-117.2275,CISO
+17609,Southern California Edison Co,57221,Solar Photovoltaic Project #07,CA,San Bernardino,S007E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.086111,-117.2275,CISO
+17609,Southern California Edison Co,57222,Solar Photovoltaic Project #08,CA,San Bernardino,S008A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.041944,-117.565,CISO
+17609,Southern California Edison Co,57222,Solar Photovoltaic Project #08,CA,San Bernardino,S008B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.041944,-117.565,CISO
+17609,Southern California Edison Co,57222,Solar Photovoltaic Project #08,CA,San Bernardino,S008C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.041944,-117.565,CISO
+17609,Southern California Edison Co,57222,Solar Photovoltaic Project #08,CA,San Bernardino,S008D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.041944,-117.565,CISO
+17609,Southern California Edison Co,57223,Solar Photovoltaic Project #09,CA,San Bernardino,S009A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.042778,-117.571666,CISO
+17609,Southern California Edison Co,57223,Solar Photovoltaic Project #09,CA,San Bernardino,S009B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.042778,-117.571666,CISO
+17609,Southern California Edison Co,57224,Solar Photovoltaic Project #10,CA,San Bernardino,S010A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.075,-117.516944,CISO
+17609,Southern California Edison Co,57224,Solar Photovoltaic Project #10,CA,San Bernardino,S010B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.075,-117.516944,CISO
+17609,Southern California Edison Co,57224,Solar Photovoltaic Project #10,CA,San Bernardino,S010C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.075,-117.516944,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57225,Solar Photovoltaic Project #11,CA,San Bernardino,S011G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.075833,-117.241388,CISO
+17609,Southern California Edison Co,57226,Solar Photovoltaic Project #12,CA,San Bernardino,S012A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.042222,-117.561666,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57227,Solar Photovoltaic Project #13,CA,San Bernardino,S013G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.083499,-117.23557,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,0.0,0.6,,Y,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57229,Solar Photovoltaic Project #15,CA,San Bernardino,S015G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.079167,-117.516666,CISO
+17609,Southern California Edison Co,57230,Solar Photovoltaic Project #16,CA,San Bernardino,S016A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.085556,-117.233611,CISO
+17609,Southern California Edison Co,57230,Solar Photovoltaic Project #16,CA,San Bernardino,S016B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.085556,-117.233611,CISO
+17609,Southern California Edison Co,57230,Solar Photovoltaic Project #16,CA,San Bernardino,S016C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.085556,-117.233611,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57231,Solar Photovoltaic Project #17,CA,San Bernardino,S017G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,5.0,0.6,Y,,,,,,N, ,N, ,34.072778,-117.503333,CISO
+17609,Southern California Edison Co,57232,Solar Photovoltaic Project #18,CA,San Bernardino,S018A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.083333,-117.516388,CISO
+17609,Southern California Edison Co,57232,Solar Photovoltaic Project #18,CA,San Bernardino,S018B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.083333,-117.516388,CISO
+17609,Southern California Edison Co,57232,Solar Photovoltaic Project #18,CA,San Bernardino,S018C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.083333,-117.516388,CISO
+17609,Southern California Edison Co,57236,Solar Photovoltaic Project #23,CA,San Bernardino,S023A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.080833,-117.520277,CISO
+17609,Southern California Edison Co,57236,Solar Photovoltaic Project #23,CA,San Bernardino,S023B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.080833,-117.520277,CISO
+17609,Southern California Edison Co,57236,Solar Photovoltaic Project #23,CA,San Bernardino,S023C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.080833,-117.520277,CISO
+17609,Southern California Edison Co,57236,Solar Photovoltaic Project #23,CA,San Bernardino,S023D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.080833,-117.520277,CISO
+17609,Southern California Edison Co,57236,Solar Photovoltaic Project #23,CA,San Bernardino,S023E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2013,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.080833,-117.520277,CISO
+17609,Southern California Edison Co,57237,Solar Photovoltaic Project #22,CA,San Bernardino,S022A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.08,-117.2114,CISO
+17609,Southern California Edison Co,57237,Solar Photovoltaic Project #22,CA,San Bernardino,S022B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.08,-117.2114,CISO
+17609,Southern California Edison Co,57237,Solar Photovoltaic Project #22,CA,San Bernardino,S022C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.08,-117.2114,CISO
+17609,Southern California Edison Co,57237,Solar Photovoltaic Project #22,CA,San Bernardino,S022D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,8,2011,,,,Y,,,,,,,180.0,10.0,0.8,Y,,,,,,N, ,N, ,34.08,-117.2114,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026H,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026I,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,S026J,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,SO26K,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57245,Solar Photovoltaic Project #26,CA,San Bernardino,SO26L,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.131214,-117.425324,CISO
+17609,Southern California Edison Co,57246,Solar Photovoltaic Project #27,CA,San Bernardino,S027A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.131111,-117.421666,CISO
+17609,Southern California Edison Co,57246,Solar Photovoltaic Project #27,CA,San Bernardino,S027B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.131111,-117.421666,CISO
+17609,Southern California Edison Co,57246,Solar Photovoltaic Project #27,CA,San Bernardino,S027C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.131111,-117.421666,CISO
+17609,Southern California Edison Co,57246,Solar Photovoltaic Project #27,CA,San Bernardino,S027D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.131111,-117.421666,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+17609,Southern California Edison Co,57247,Solar Photovoltaic Project #28,CA,San Bernardino,S028G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,5.0,0.7,Y,,,,,,N, ,N, ,34.094167,-117.274166,CISO
+56618,Victor Valley Community College District,57254,Victor Valley CC CPV Solar,CA,San Bernardino,1PV,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,6,2010,,,Y,,,,,,,, , ,1.0,Y,,,,,,N, ,N, ,34.48017,-117.257938,CISO
+59397,NRG Solar Alpine,57295,Alpine Solar,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,66.0,66.0,66.0,2,2013,,,,Y,,,,,,,180.5,25.0,86.4,,Y,,,,,N, ,N, ,34.7892,-118.5047,CISO
+56769,Consolidated Edison Development Inc.,57340,Panoche Valley Solar Farm,CA,San Benito,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,140.0,140.0,140.0,1,2018,,Y,,,,,,,,,0.0, ,188.0,Y,,,,,,N, ,N, ,36.627,-120.879,CISO
+56700,Avenal Solar Holdings LLC,57359,Avenal Park,CA,Kings,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,6.0,6.0,6.0,8,2011,,,,Y,,,,,,,180.0,25.0,7.0,Y,,Y,,,,N, ,N, ,35.989722,-120.11,CISO
+56700,Avenal Solar Holdings LLC,57360,Sun City Project LLC,CA,Kings,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,8,2011,,,,Y,,,,,,,180.0,25.0,25.0,Y,,Y,,,,N, ,N, ,35.983056,-120.110277,CISO
+56700,Avenal Solar Holdings LLC,57361,Sand Drag LLC,CA,Kings,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.0,19.0,19.0,8,2011,,N,,Y,,,,,,,180.0,25.0,24.0,Y,,Y,,,,N, ,N, ,35.982778,-120.110277,CISO
+59396,Agua Caliente Solar,57373,Agua Caliente Solar Project,AZ,Yuma,AGU1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,90.7,90.7,90.7,5,2012,,,,Y,,,,,,,195.0,15.0,116.3,,Y,,,,,N, ,N, ,32.9774,-113.4945,CISO
+59396,Agua Caliente Solar,57373,Agua Caliente Solar Project,AZ,Yuma,AGU2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,136.0,136.0,136.0,12,2012,,,,Y,,,,,,,195.0,15.0,141.6,,Y,,,,,N, ,N, ,32.9774,-113.4945,CISO
+59396,Agua Caliente Solar,57373,Agua Caliente Solar Project,AZ,Yuma,AGU3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,121.0,121.0,121.0,2,2014,,,,Y,,,,,,,195.0,15.0,140.7,,Y,,,,,N, ,N, ,32.9774,-113.4945,CISO
+56722,AV Solar Ranch 1 LLC,57378,AV Solar Ranch One,CA,Los Angeles,AVSR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,253.0,241.5,241.5,8,2014,,Y,,Y,,,,,,,180.0,25.0,279.0,,Y,,,,,N, ,N, ,34.780278,-118.42444,CISO
+56751,Yolo County of,57422,Yolo County Solar Project,CA,Yolo,1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,12,2010,,,Y,,,,,,,, , ,1.1,Y,,,,,,Y,1.0,N, ,38.659722,-121.7294,CISO
+56762,"NRG Renew Operation & Maintenance, LLC",57439,California Valley Solar Ranch,CA,San Luis Obispo,HPR2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,32.3,32.3,32.3,10,2013,,Y,N,,,,,,,,90.0,0.0,39.0,Y,,,,,,N, ,N, ,35.323739,-119.91663,CISO
+56762,"NRG Renew Operation & Maintenance, LLC",57439,California Valley Solar Ranch,CA,San Luis Obispo,HPR2A,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,21.0,21.0,21.0,9,2012,,Y,N,,,,,,,,90.0,0.0,26.3,Y,,,,,,N, ,N, ,35.323739,-119.91663,CISO
+56762,"NRG Renew Operation & Maintenance, LLC",57439,California Valley Solar Ranch,CA,San Luis Obispo,HPR2B,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,86.5,86.5,86.5,1,2013,,Y,N,,,,,,,,90.0,0.0,113.3,Y,,,,,,N, ,N, ,35.323739,-119.91663,CISO
+56762,"NRG Renew Operation & Maintenance, LLC",57439,California Valley Solar Ranch,CA,San Luis Obispo,HPR2C,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,70.0,70.0,70.0,10,2013,,Y,N,,,,,,,,90.0,0.0,86.4,Y,,,,,,N, ,N, ,35.323739,-119.91663,CISO
+56762,"NRG Renew Operation & Maintenance, LLC",57439,California Valley Solar Ranch,CA,San Luis Obispo,HPR2D,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.0,40.0,40.0,1,2013,,Y,N,,,,,,,,90.0,0.0,47.9,Y,,,,,,N, ,N, ,35.323739,-119.91663,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42H,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42I,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+17609,Southern California Edison Co,57441,Solar Photovoltaic Project #42,CA,Tulare,S42J,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,11,2012,,,,Y,,,,,,,180.0,25.0,0.7,Y,,,,,,N, ,N, ,36.028056,-119.074722,CISO
+57271,NRG Solar Borrego I,57455,Solar Borrego I,CA,San Diego,SB1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.0,26.0,26.0,2,2013,,Y,,,,,,,,,45.0,45.0,26.5,Y,,,,,,N, ,N, ,33.298889,-116.35083,CISO
+56819,CSOLAR IV South LLC,57490,Imperial Solar Energy Center South,CA,Imperial,56819,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,128.9,128.9,128.9,11,2013,,,,Y,,,,,,,180.0,25.0,172.2,,Y,,,,,N, ,N, ,32.663289,-115.658284,CISO
+57260,CSOLAR IV West LLC,57491,Imperial Solar Energy Center West,CA,Imperial,56819,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,148.7,148.7,148.7,4,2016,,Y,,,,,,,,,180.0,0.0,182.3,,Y,,,,,N, ,N, ,32.772225,-115.779311,CISO
+14328,Pacific Gas & Electric Co.,57497,Stroud Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,20.0,20.0,20.0,9,2011,,,,Y,,,,,,,180.0,25.0,24.6,Y,,,,,,N, ,N, ,36.531389,-120.106944,CISO
+14328,Pacific Gas & Electric Co.,57498,Five Points Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,15.0,15.0,15.0,9,2011,,,,Y,,,,,,,180.0,25.0,17.6,Y,,,,,,N, ,N, ,36.400278,-120.103333,CISO
+14328,Pacific Gas & Electric Co.,57499,Westside Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,15.0,15.0,15.0,8,2011,,,,Y,,,,,,,180.0,25.0,18.5,Y,,,,,,N, ,N, ,36.378726,-120.124898,CISO
+61219,Longroad Energy Services LLC,57506,FRV SI Transport Solar LP,CA,Sacramento,SEIM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,8,2010,,,,Y,,,,,,,180.0,5.0,1.2,Y,,,,,,N, ,N, ,38.4869,-121.3911,CISO
+14328,Pacific Gas & Electric Co.,57521,Giffen,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,10.0,10.0,10.0,6,2012,,,,Y,,,,,,,180.0,25.0,13.1,Y,,,,,,N, ,N, ,36.530278,-120.316111,CISO
+14328,Pacific Gas & Electric Co.,57522,Cantua Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,20.0,20.0,20.0,6,2012,,,,Y,,,,,,,180.0,25.0,26.3,Y,,,,,,N, ,N, ,36.425085,-120.343543,CISO
+14328,Pacific Gas & Electric Co.,57523,Huron Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,20.0,20.0,20.0,6,2012,,,,Y,,,,,,,180.0,25.0,26.8,Y,,,,,,N, ,N, ,36.181389,-120.030555,CISO
+17609,Southern California Edison Co,57534,Solar Photovoltaic Project #32,CA,San Bernardino,S32A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.031667,-117.571944,CISO
+17609,Southern California Edison Co,57534,Solar Photovoltaic Project #32,CA,San Bernardino,S32B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.031667,-117.571944,CISO
+17609,Southern California Edison Co,57534,Solar Photovoltaic Project #32,CA,San Bernardino,S32C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.031667,-117.571944,CISO
+17609,Southern California Edison Co,57535,Solar Photovoltaic Project #33,CA,San Bernardino,S33A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.0325,-117.569166,CISO
+17609,Southern California Edison Co,57535,Solar Photovoltaic Project #33,CA,San Bernardino,S33B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,1,2015,,,,Y,,,,,,,180.0,10.0,0.6,Y,,,,,,N, ,N, ,34.0325,-117.569166,CISO
+56902,"RE SFCity1, LP",57559,Sunset Reservoir North Basin,CA,San Francisco,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.5,4.5,4.5,9,2010,,,,Y,,,,,,,180.0,6.0,5.0,Y,,,,,,N, ,N, ,37.750894,-122.481758,CISO
+17573,South San Joaquin Irr District,57579,Robert O Schulz Solar Farm,CA,Stanislaus,1,OP,Solar Photovoltaic,PV,Electric Utility,1,0.9,0.9,0.9,5,2008,,,Y,,,,,,,, , ,1.2,Y,,,,,,Y,1.2,N, ,37.8583,-120.8917,CISO
+17573,South San Joaquin Irr District,57579,Robert O Schulz Solar Farm,CA,Stanislaus,2,OP,Solar Photovoltaic,PV,Electric Utility,1,0.4,0.4,0.4,5,2009,,,Y,,,,,,,, , ,0.4,,Y,,,,,Y,0.4,N, ,37.8583,-120.8917,CISO
+56917,Broadridge Customer Communications,57580,Broadridge Cogen,CA,El Dorado,PV1,OP,Solar Photovoltaic,PV,IPP CHP,3,0.3,0.3,0.3,12,2011,,,,,,,,,,Y, , ,0.3,,N,Y,,,,Y,0.3,N, ,38.6183,-121.0564,CISO
+56917,Broadridge Customer Communications,57580,Broadridge Cogen,CA,El Dorado,PV2,OP,Solar Photovoltaic,PV,IPP CHP,3,0.5,0.5,0.5,12,2011,,,,,,,,,,Y, , ,0.5,,N,Y,,,,Y,0.5,N, ,38.6183,-121.0564,CISO
+56980,"Regulus Solar, LLC",57650,Regulus Solar Project,CA,Kern,FRV4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,60.0,60.0,60.0,11,2014,,Y,,,,,,,,,0.0,0.0,81.6,Y,,,,,,N, ,N, ,35.3,-118.851944,CISO
+17650,Southern Power Co,57651,Adobe Solar,CA,KERN,FRV3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2014,,Y,,,,,,,,,90.0, ,26.4,Y,,,,,,N, ,N, ,35.102778,-118.954444,CISO
+56982,Kern Community College District,57655,Bakersfield College Solar 01,CA,Kern,BC01,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.1,1.1,1.1,11,2010,,Y,,,,,,,,,1.0,1.0,1.1,Y,,,,,,Y,1.0,N, ,35.411817,-118.96864,CISO
+56984,"Temescal Canyon RV, LLC",57656,"Temescal Canyon RV, LLC",CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,5,2011,,,,Y,,,,,,,225.0,2.0,1.5,Y,,,,,,N, ,N, ,33.826389,-117.511667,CISO
+57006,"SunE GIL1, LLC",57682,City of Madera WWTP,CA,Madera,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.0,1.0,9,2009,,,Y,,,,,,,, , ,1.2,Y,,,,,,Y,1.0,N, ,36.9408,-120.1572,CISO
+57007,"SunE WF3-ST Holdings, LLC",57683,"Staples La Mirada, CA",CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,0.9,0.9,3,2009,,,,Y,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.0,N, ,33.881667,-118.0175,CISO
+59874,Topaz Solar Farms LLC,57695,Topaz Solar Farm,CA,San Luis Obispo,TPZ1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,129.8,129.8,129.8,4,2013,,,,Y,,,,,,,180.0,25.0,166.0,,Y,,,,,N, ,N, ,35.405556,-120.068611,CISO
+59874,Topaz Solar Farms LLC,57695,Topaz Solar Farm,CA,San Luis Obispo,TPZ2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,151.2,151.2,151.2,6,2013,,,,Y,,,,,,,180.0,25.0,191.9,,Y,,,,,N, ,N, ,35.405556,-120.068611,CISO
+59874,Topaz Solar Farms LLC,57695,Topaz Solar Farm,CA,San Luis Obispo,TPZ3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,102.1,102.1,102.1,1,2014,,,,Y,,,,,,,180.0,25.0,131.4,,Y,,,,,N, ,N, ,35.405556,-120.068611,CISO
+59874,Topaz Solar Farms LLC,57695,Topaz Solar Farm,CA,San Luis Obispo,TPZ4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,90.3,90.3,90.3,11,2014,,,,Y,,,,,,,180.0,25.0,116.1,,Y,,,,,N, ,N, ,35.405556,-120.068611,CISO
+59874,Topaz Solar Farms LLC,57695,Topaz Solar Farm,CA,San Luis Obispo,TPZ5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,112.5,112.5,112.5,10,2014,,,,Y,,,,,,,180.0,25.0,146.7,,Y,,,,,N, ,N, ,35.405556,-120.068611,CISO
+60281,"Altus Power America Management, LLC",57697,Aerojet I,CA,Sacramento,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,12,2009,,Y,,,,,,,,,225.0,45.0,3.0,Y,,,,,,N, ,N, ,38.613508,-121.162879,CISO
+60281,"Altus Power America Management, LLC",57698,Aerojet II,CA,Sacramento,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.7,2.7,2.7,6,2010,,Y,,,,,,,,,225.0,45.0,2.7,Y,,,,,,N, ,N, ,38.6086,-121.1703,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,11,2011,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,10,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,10,2012,,,,Y,,,,,,,180.0,20.0,15.2,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,11,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,10,2012,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,12,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,12,2012,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,1,2012,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,12,2011,,,,Y,,,,,,,180.0,20.0,14.1,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,5,2012,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,6,2012,,,,Y,,,,,,,180.0,20.0,22.5,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,8.0,8.0,8.0,8,2012,,,,Y,,,,,,,180.0,20.0,11.3,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,9,2012,,,,Y,,,,,,,180.0,20.0,21.9,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,10,2012,,,,Y,,,,,,,180.0,20.0,15.6,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+56769,Consolidated Edison Development Inc.,57707,Mesquite Solar 1,AZ,Maricopa,9,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.0,16.0,16.0,10,2012,,,,Y,,,,,,,180.0,20.0,22.0,Y,,,,,,N, ,N, ,33.341833,-112.904028,CISO
+57170,"EDF Renewable Asset Holdings, Inc.",57708,Catalina Solar LLC,CA,Kern,INV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,110.0,110.0,110.0,12,2012,,,,Y,,,,,,,178.0,20.0,143.0,,Y,,,,,N, ,N, ,34.938261,-118.334492,CISO
+60025,Greenbacker Renewable Energy Corporation,57722,North Palm Springs 4A,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,10,2012,,Y,,,,,,,,,225.0,45.0,4.0,Y,,,,,,N, ,N, ,33.909722,-116.5625,CISO
+60025,Greenbacker Renewable Energy Corporation,57743,North Palm Springs 1A,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.4,2.4,4,2012,,Y,,,,,,,,,225.0,45.0,2.4,Y,,,,,,N, ,N, ,33.924167,-116.593333,CISO
+57073,"Solar Star California XV, LLC",57764,Naval Air Weapons Station China Lake,CA,Kern,1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,11.1,11.1,11.1,9,2012,,Y,,,,,,,,,0.0,0.0,13.8,Y,,,,,,N, ,N, ,35.68771,-117.68137,CISO
+58315,SSA Solar of CA 2 LLC,57773,Palo Verde College,CA,Riverside,1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.2,1.2,1.2,8,2009,,Y,,,,,,,,,0.0,30.0,1.2,Y,,,,,,N, ,N, ,33.661667,-114.651667,CISO
+57104,Golden Springs Development Company LLC,57796,Golden Springs Building C-1,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.2,1.2,2,2012,,,,Y,,,,,,,180.0,10.0,1.3,Y,,,,,,N, ,N, ,33.914167,-118.053611,CISO
+57104,Golden Springs Development Company LLC,57797,Golden Springs Building D,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,3,2012,,,,Y,,,,,,,180.0,10.0,1.4,Y,,,,,,N, ,N, ,33.911944,-118.052222,CISO
+58661,"Sustainable Power Group, LLC",57827,Dinuba Wastewater Treatment Plant,CA,Tulare,DSPV,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,11,2011,,Y,N,N,,,,,,,90.0, ,1.2,Y,,,,,,N, ,N, ,36.538056,-119.426388,CISO
+57154,Heliocentric LLC,57831,Heliocentric,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.3,1.5,3,2012,,,,Y,,,,,,,180.0,30.0,1.7,Y,,,,,,N, ,N, ,34.65434,-117.971004,CISO
+57159,L-8 Solar Project LLC,57836,L-8 Solar Project,CA,Los Angeles,TSM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.3,1.5,5,2012,,,,Y,,,,,,,180.0,30.0,1.7,Y,,,,,,N, ,N, ,34.654347,-117.973103,CISO
+59139,SunEdison LLC,57840,ISH Solar Hospital SDMC,CA,San Diego,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,12,2011,,,,Y,,,,,,,0.0,5.0,1.1,Y,,,,,,N, ,N, ,32.791667,-117.095277,CISO
+59139,SunEdison LLC,57841,ISH Solar Hospital Downey,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,9,2011,,,,Y,,,,,,,0.0,10.0,1.1,Y,,,,,,N, ,N, ,33.921667,-118.124444,CISO
+56918,University of California San Diego,57856,Univ of California San Diego Solar,CA,San Diego,SGU1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.2,1.2,1.2,12,2008,N,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,32.874379,-117.238927,CISO
+57194,City of Industry,57860,Industry MetroLink PV 1,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,Electric Utility,1,1.5,1.5,1.5,4,2012,,,,Y,,,,,,,223.0,5.0,2.0,Y,,,,,,N, ,N, ,34.008661,-117.845603,CISO
+57213,Castle Rock Cooling,57870,Castle Rock Vineyards,CA,Tulare,SOLAR,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,9,2010,,,,Y,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,35.801111,-119.110556,CISO
+14328,Pacific Gas & Electric Co.,57891,Guernsey Solar Station,CA,Kings,1,OP,Solar Photovoltaic,PV,Electric Utility,1,20.0,20.0,20.0,8,2013,,Y,,,,,,,,,90.0,0.0,25.5,Y,,,,,,N, ,N, ,36.163889,-119.650556,CISO
+14328,Pacific Gas & Electric Co.,57892,Gates Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,20.0,20.0,20.0,6,2013,,,,Y,,,,,,,180.0,25.0,27.7,Y,,,,,,N, ,N, ,36.176389,-120.114167,CISO
+57262,Kern County Water Agency,57895,Improvement Dst No. 4,CA,Kern,ID4,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.1,1.1,1.1,1,2009,,N,,Y,Y,,,,,,180.0,22.0,1.2,Y,,,,,,N, ,N, ,35.402778,-119.038611,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48A,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48B,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48C,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48D,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48E,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48F,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48G,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48H,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48I,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+17609,Southern California Edison Co,57900,Solar Photovoltaic Project #48,CA,San Bernardino,S48J,OP,Solar Photovoltaic,PV,Electric Utility,1,0.5,0.5,0.5,2,2015,,,,Y,,,,,,,180.0,10.0,0.7,Y,,,,,,N, ,N, ,34.081111,-117.228056,CISO
+57273,SS San Antonio West LLC,57904,San Antonio West Solar Rooftop,CA,Riverside,CHNO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2012,,N,,Y,,,,,,,180.0,20.0,1.9,Y,,,,,,N, ,N, ,33.965617,-117.659059,CISO
+49893,Invenergy Services LLC,57959,Desert Green Solar Farm LLC,CA,San Diego,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,6.3,6.3,6.3,11,2014,N,,Y,,,,,,,, , ,8.9,,,,,,Y,N, ,N, ,33.27055,-116.34805,CISO
+57345,Butte-Glenn Community College District,57970,Butte College Main Campus Solar,CA,Butte,SOL1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,3.5,3.2,3.1,7,2011,,,,Y,,,,,,,195.0,18.0,4.5,Y,,,,,,Y,4.5,N, ,39.648056,-121.644167,CISO
+62060,CleanCapital,57982,Meridian Vineyards,CA,San Luis Obispo,PV-1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,12,2010,,,,Y,,,,,,,180.0,30.0,0.6,Y,,,,,,Y,0.6,N, ,35.670278,-120.566944,CISO
+62060,CleanCapital,57982,Meridian Vineyards,CA,San Luis Obispo,PV-2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.6,0.6,0.6,12,2010,,,,Y,,,,,,,180.0,30.0,0.7,Y,,,,,,Y,0.7,N, ,35.670278,-120.566944,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.3,40.3,40.3,11,2013,,,,Y,,,,,,,120.0,22.5,44.9,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL10,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.2,30.2,30.2,11,2013,,,,Y,,,,,,,120.0,22.5,37.9,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL11,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.2,20.2,20.2,11,2013,,,,Y,,,,,,,120.0,22.5,25.3,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.3,40.3,40.3,11,2013,,,,Y,,,,,,,120.0,22.5,54.4,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.3,40.3,40.3,11,2013,,,,Y,,,,,,,120.0,22.5,52.0,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.2,30.2,30.2,11,2013,,,,Y,,,,,,,120.0,22.5,39.0,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,25.2,25.2,25.2,6,2014,,,,Y,,,,,,,120.0,22.5,33.0,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,25.2,25.2,25.2,8,2014,,,,Y,,,,,,,120.0,22.5,33.0,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.2,20.2,20.2,8,2014,,,,Y,,,,,,,120.0,22.5,26.4,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,18.9,18.9,18.9,10,2014,,,,Y,,,,,,,120.0,22.5,24.7,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+58289,"NextEra Energy Desert Sunlight 300, LLC",57993,"Desert Sunlight 300, LLC",CA,Riverside,DSL9,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,22.7,22.7,22.7,10,2014,,,,Y,,,,,,,120.0,22.5,28.4,,Y,,,,,N, ,N, ,33.823056,-115.393889,CISO
+56769,Consolidated Edison Development Inc.,58002,Alpaugh North,CA,Tulare,SPS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2012,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.9025,-119.442778,CISO
+56769,Consolidated Edison Development Inc.,58003,Alpaugh 50,CA,Tulare,SPS50,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,50.0,50.0,50.0,12,2012,,Y,,,,,,,,,0.0,0.0,66.0,Y,,,,,,N, ,N, ,35.898333,-119.435278,CISO
+56769,Consolidated Edison Development Inc.,58017,Copper Mountain Solar 2,NV,Clark,PV01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.0,30.0,30.0,10,2012,,,,Y,,,,,,,180.0,25.0,36.6,,Y,,,,,N, ,N, ,35.786389,-114.962778,CISO
+56769,Consolidated Edison Development Inc.,58017,Copper Mountain Solar 2,NV,Clark,PV02,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.0,30.0,30.0,8,2012,,,,Y,,,,,,,180.0,25.0,36.6,,Y,,,,,N, ,N, ,35.786389,-114.962778,CISO
+56769,Consolidated Edison Development Inc.,58017,Copper Mountain Solar 2,NV,Clark,PV03,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.0,34.0,34.0,7,2012,,,,Y,,,,,,,180.0,25.0,41.2,,Y,,,,,N, ,N, ,35.786389,-114.962778,CISO
+56769,Consolidated Edison Development Inc.,58017,Copper Mountain Solar 2,NV,Clark,PV04,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.0,30.0,30.0,1,2015,,,,Y,,,,,,,180.0,25.0,36.6,,Y,,,,,N, ,N, ,35.786389,-114.962778,CISO
+56769,Consolidated Edison Development Inc.,58017,Copper Mountain Solar 2,NV,Clark,PV05,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,30.0,30.0,30.0,2,2015,,,,Y,,,,,,,180.0,25.0,36.6,,Y,,,,,N, ,N, ,35.786389,-114.962778,CISO
+57389,IKEA Property Inc,58028,IKEA Tejon 345,CA,Kern,PV,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.5,1.5,1.5,4,2011,,,,Y,,,,,,,180.0,12.0,1.8,Y,,,,,,Y,1.8,N, ,34.975278,-118.946944,CISO
+57405,NLH1 Solar LLC,58034,Nickel 1 Solar Facility,CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2012,,,,Y,,,,,,,180.0,25.0,1.8,Y,,,,,,N, ,N, ,35.647295,-119.716512,CISO
+60898,Axium US Solar Holdings LLC,58039,Axium Modesto Solar,CA,Stanislaus,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,25.0,25.0,25.0,12,2012,,Y,,,,,,,,,0.0,0.0,31.3,Y,,,,,,N, ,N, ,37.734167,-120.995556,CISO
+57435,MolsonCoors Irwindale Brewery,58056,MolsonCoors Irwindale Brewery,CA,Los Angeles,PV,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,2.5,2.5,2.5,3,2015,,Y,,,,,,,,,28.0,28.0,3.2,Y,,,,,,N, ,N, ,34.121667,-117.938333,CISO
+62060,CleanCapital,58073,SEPV 1,CA,Los Angeles,SEPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,5,2012,,Y,,,,,,,,,90.0, ,2.3,Y,,,,,,Y,2.3,N, ,34.618861,-117.939444,CISO
+62060,CleanCapital,58074,SEPV 2,CA,San Bernardino,SEPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,6,2012,,Y,,,,,,,,,90.0, ,2.2,Y,,,,,,Y,2.2,N, ,34.174167,-116.152778,CISO
+59622,"Ahana Renewables, LLC",58076,Edwards Air Force Base,CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2011,,Y,,,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,34.9077,-117.9206,CISO
+59622,"Ahana Renewables, LLC",58076,Edwards Air Force Base,CA,Kern,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2011,,Y,,,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,34.9077,-117.9206,CISO
+59622,"Ahana Renewables, LLC",58076,Edwards Air Force Base,CA,Kern,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2011,,Y,,,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,34.9077,-117.9206,CISO
+62060,CleanCapital,58118,La Joya Del Sol,CA,Fresno,JDS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2012,,Y,,,,,,,,,90.0, ,1.8,Y,,,,,,Y,1.8,N, ,36.678611,-119.7975,CISO
+58111,RE Kansas South LLC,58148,RE Kansas South LLC,CA,Kings,KS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,6,2013,,Y,,,,,,,,,0.0,0.0,27.0,Y,,,,,,N, ,N, ,36.226111,-119.834167,CISO
+58112,TA-High Desert LLC,58149,TA-High Desert LLC,CA,Los Angeles,TAHD,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,3,2013,,Y,,,,,,,,,0.0,0.0,25.6,Y,,,,,,N, ,N, ,34.708889,-118.304722,CISO
+58104,California State University at Fullerton,58169,CSUF Trigeneration,CA,Orange,CPAC,OP,Solar Photovoltaic,PV,Commercial CHP,5,0.3,0.3,0.3,1,2012,,,,Y,,,,,,,180.0,10.0,0.4,Y,,,,,,N, ,N, ,33.880638,-117.88656,CISO
+58104,California State University at Fullerton,58169,CSUF Trigeneration,CA,Orange,KHS,OP,Solar Photovoltaic,PV,Commercial CHP,5,0.3,0.3,0.3,1,2012,,,,Y,,,,,,,180.0,10.0,0.4,Y,,,,,,N, ,N, ,33.880638,-117.88656,CISO
+58104,California State University at Fullerton,58169,CSUF Trigeneration,CA,Orange,NPS,OP,Solar Photovoltaic,PV,Commercial CHP,5,2.0,2.0,2.0,12,2016,,,,Y,,,,,,,180.0,10.0,2.2,Y,,,,,,N, ,N, ,33.880638,-117.88656,CISO
+58104,California State University at Fullerton,58169,CSUF Trigeneration,CA,Orange,PS4,OP,Solar Photovoltaic,PV,Commercial CHP,5,0.3,0.3,0.3,1,2012,,,,Y,,,,,,,180.0,10.0,0.3,Y,,,,,,N, ,N, ,33.880638,-117.88656,CISO
+58104,California State University at Fullerton,58169,CSUF Trigeneration,CA,Orange,SCPS,OP,Solar Photovoltaic,PV,Commercial CHP,5,1.0,1.0,1.0,12,2016,,,,Y,,,,,,,180.0,10.0,1.1,Y,,,,,,N, ,N, ,33.880638,-117.88656,CISO
+58140,San Bernardino Comm College Dist,58170,Crafton Hills College Solar Farm,CA,San Bernardino,GEN1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.3,1.3,1.3,6,2012,,,Y,,,,,,,, , ,1.3,Y,,,,,,N, ,N, ,34.043056,-117.098889,CISO
+62949,Gamma Genco CV II LLC,58202,RE Victor Phelan Solar One LLC,CA,San Bernardino,VPS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2013,,Y,,,,,,,,,90.0, ,22.3,Y,,,,,,Y,22.3,N, ,34.51231,-117.47753,CISO
+56751,Yolo County of,58204,Grassland 3&4 Solar Project,CA,Yolo,INV3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.5,1.5,7,2013,,,Y,,,,,,,, , ,2.5,Y,,,,,,N, ,N, ,38.500278,-121.694167,CISO
+14328,Pacific Gas & Electric Co.,58206,West Gates Solar Station,CA,Fresno,1,OP,Solar Photovoltaic,PV,Electric Utility,1,10.0,10.0,10.0,5,2013,,,,Y,,,,,,,180.0,25.0,12.9,Y,,,,,,N, ,N, ,36.142222,-120.1325,CISO
+56751,Yolo County of,58217,Grassland 1&2 Solar Project,CA,Yolo,INV4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.5,1.5,7,2013,,,Y,,,,,,,, , ,2.5,Y,,,,,,N, ,N, ,38.500278,-121.694167,CISO
+58197,Newberry Solar 1 LLC,58226,Newberry Solar 1 LLC,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,,Y,,,,N,,,, , ,1.6,Y,,,,,Y,N, ,N, ,34.853581,-116.683108,CISO
+58198,"Highlander Solar 2, LLC",58227,SEPV9 Power Plant,CA,San Bernardino,SPV9,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,9.0,8.5,8.8,6,2013,,Y,,,,,,,,,180.0, ,11.0,Y,,,,,,N, ,N, ,34.192222,-116.090278,CISO
+58661,"Sustainable Power Group, LLC",58232,Tahquitz High School,CA,Riverside,TAHQ,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,9,2012,,Y,,N,,,,,,,90.0, ,1.1,Y,,,,,,Y,1.0,N, ,33.767222,-117.0175,CISO
+58211,"Highlander Solar 1, LLC",58234,SEPV 8,CA,San Bernardino,SPV8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,11.8,11.8,6,2013,,Y,,,,,,,,,180.0, ,14.6,Y,,,,,,N, ,N, ,34.171944,-116.1525,CISO
+58661,"Sustainable Power Group, LLC",58244,West Valley High School Solar,CA,Riverside,WEST,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,0.9,0.9,9,2012,,Y,,N,,,,,,,90.0, ,1.0,Y,,,,,,Y,1.0,N, ,33.719722,-117.009722,CISO
+59455,"Venable Solar, LLC",58289,Venable Solar 1,CA,Riverside,VNPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.1,4,2015,,,,Y,,,,,,,198.0,20.0,1.8,Y,,,,,,N, ,N, ,33.598889,-114.571667,CISO
+59455,"Venable Solar, LLC",58290,Venable Solar 2,CA,Riverside,VSPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.1,4,2015,,,,Y,,,,,,,198.0,20.0,1.8,Y,,,,,,N, ,N, ,33.597222,-114.571667,CISO
+58269,Tulare PV II LLC,58304,Kingsburg Solar,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,,,Y,,,,,,,180.0,20.0,1.7,Y,,,,,,N, ,N, ,36.505278,-119.540278,CISO
+58269,Tulare PV II LLC,58304,Kingsburg Solar,CA,Tulare,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,,,Y,,,,,,,180.0,20.0,1.7,Y,,,,,,N, ,N, ,36.505278,-119.540278,CISO
+58269,Tulare PV II LLC,58304,Kingsburg Solar,CA,Tulare,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.7,0.7,0.7,12,2013,,,,Y,,,,,,N,180.0,20.0,0.8,Y,,,,,,N, ,N, ,36.505278,-119.540278,CISO
+58268,Tulare PV I LLC,58306,Exeter Solar,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,2,2014,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,36.2675,-119.128581,CISO
+58268,Tulare PV I LLC,58306,Exeter Solar,CA,Tulare,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,2,2014,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,36.2675,-119.128581,CISO
+58268,Tulare PV I LLC,58306,Exeter Solar,CA,Tulare,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,2,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.2675,-119.128581,CISO
+58268,Tulare PV I LLC,58307,Ivanhoe Solar,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.3875,-119.255,CISO
+58268,Tulare PV I LLC,58307,Ivanhoe Solar,CA,Tulare,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,1,2014,,,,Y,,,,,,,180.0,20.0,0.6,Y,,,,,,N, ,N, ,36.3875,-119.255,CISO
+58268,Tulare PV I LLC,58307,Ivanhoe Solar,CA,Tulare,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.3875,-119.255,CISO
+58268,Tulare PV I LLC,58308,Lindsay Solar,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.211944,-119.133889,CISO
+58268,Tulare PV I LLC,58308,Lindsay Solar,CA,Tulare,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.211944,-119.133889,CISO
+58268,Tulare PV I LLC,58308,Lindsay Solar,CA,Tulare,4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,1,2014,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,36.211944,-119.133889,CISO
+58268,Tulare PV I LLC,58309,Porterville Solar,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,1,2014,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,36.102778,-119.039722,CISO
+58268,Tulare PV I LLC,58309,Porterville Solar,CA,Tulare,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,1,2014,,,,Y,,,,,,,180.0,20.0,1.2,Y,,,,,,N, ,N, ,36.102778,-119.039722,CISO
+58268,Tulare PV I LLC,58309,Porterville Solar,CA,Tulare,5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.102778,-119.039722,CISO
+60025,Greenbacker Renewable Energy Corporation,58354,Radiance Solar 4,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2013,,,,Y,,,,,,,200.0,25.0,1.8,Y,,,,,,N, ,N, ,34.665556,-118.288056,CISO
+60025,Greenbacker Renewable Energy Corporation,58355,Radiance Solar 5,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2013,,,,Y,,,,,,,200.0,25.0,1.8,Y,,,,,,N, ,N, ,34.665556,-118.286944,CISO
+58355,SPS Atwell Island LLC,58366,Atwell Island,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.2,20.2,20.2,3,2013,,,,Y,,,,,,,180.0,18.0,23.5,,,Y,,,,N, ,N, ,35.895,-119.510833,CISO
+58358,Light Beam Power Co LLC,58370,Gridley Main,CA,Butte,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,3,2013,,Y,,,,,,,,,0.0,0.0,1.2,Y,,,,,,N, ,N, ,39.373333,-121.684167,CISO
+58358,Light Beam Power Co LLC,58371,Gridley Main Two,CA,Butte,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.5,2.5,4,2013,,Y,,,,,,,,,0.0,0.0,3.0,Y,,,,,,N, ,N, ,39.373333,-121.681667,CISO
+56769,Consolidated Edison Development Inc.,58373,White River Solar,CA,Tulare,WRCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,7,2013,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.871389,-119.4625,CISO
+56769,Consolidated Edison Development Inc.,58374,Corcoran Solar,CA,Kings,CSCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,8,2013,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,36.138333,-119.573333,CISO
+58363,Oakley Solar Project LLC,58376,Oakley Solar Project,CA,Contra Costa,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2013,,,,Y,,,,,,,180.0,5.0,1.7,Y,,,,,,N, ,N, ,38.001667,-121.747778,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,AVS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,39.0,38.0,38.0,3,2014,,Y,,,,,,,,,0.0,0.0,48.9,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS11,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.0,52.6,52.6,6,2015,,Y,,,,,,,,,0.0,0.0,67.7,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS12,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.0,52.6,52.6,2,2015,,Y,,,,,,,,,0.0,0.0,67.7,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS13,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,58.5,57.0,57.0,10,2014,,Y,,,,,,,,,0.0,0.0,73.3,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS14,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,33.0,32.2,32.2,6,2015,,Y,,,,,,,,,0.0,0.0,40.7,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS15,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,14.6,14.6,10,2014,,Y,,,,,,,,,0.0,0.0,18.8,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59873,"Solar Star California XIX, LLC",58388,Solar Star 1,CA,Kern,SS16,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,64.5,62.9,62.9,4,2014,,Y,,,,,,,,,0.0,0.0,80.8,Y,,,,,,N, ,N, ,34.8181,-118.4036,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,AVS2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.5,19.0,19.0,3,2014,,Y,,,,,,,,,0.0,0.0,24.4,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,SS21,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,60.0,59.0,59.0,7,2014,,Y,,,,,,,,,0.0,0.0,75.2,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,SS22,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,55.5,55.0,55.0,12,2014,,Y,,,,,,,,,0.0,0.0,69.5,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,SS23,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,48.0,47.0,47.0,12,2014,,Y,,,,,,,,,0.0,0.0,60.1,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,SS24,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,43.5,43.0,43.0,6,2015,,Y,,,,,,,,,0.0,0.0,54.5,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+59872,"Solar Star California XX, LLC",58389,Solar Star 2,CA,Kern,SS25,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,52.5,52.0,52.0,4,2014,,Y,,,,,,,,,0.0,0.0,65.8,Y,,,,,,N, ,N, ,34.848611,-118.352778,CISO
+58413,Lone Valley Solar Park I LLC,58417,Lone Valley Solar Park I LLC,CA,San Bernardino,CP1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,12,2014,,Y,N,,,,,,,,90.0,50.0,10.0,Y,,,,,,N, ,N, ,34.398059,-116.865517,CISO
+58661,"Sustainable Power Group, LLC",58418,Victor Dry Farm Ranch A,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,4.0,6,2015,,,,Y,,,,,,,193.0,15.0,6.0,Y,,,,,,N, ,N, ,34.501111,-117.466667,CISO
+58661,"Sustainable Power Group, LLC",58419,Victor Dry Farm Ranch B,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,4.0,6,2015,,,,Y,,,,,,,193.0,15.0,5.0,Y,,,,,,N, ,N, ,34.497778,-117.471111,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.2,33.4,33.4,7,2013,,Y,,,,,,,,,90.0, ,48.9,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.6,25.6,25.6,8,2013,,Y,,,,,,,,,90.0, ,38.6,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.2,33.4,33.4,10,2013,,Y,,,,,,,,,90.0, ,49.7,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.2,33.4,33.4,12,2013,,Y,,,,,,,,,90.0, ,49.8,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.0,18.6,18.6,4,2014,,Y,,,,,,,,,90.0, ,31.4,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58427,Centinela Solar Energy LLC,58430,Centinela Solar Energy,CA,Imperial,CSE6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.6,25.6,25.6,5,2014,,Y,,,,,,,,,90.0, ,38.6,Y,,,,,,N, ,N, ,32.686944,-115.647778,CISO
+58440,CD US Solar MT 2 LLC,58445,Arrache 4006,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,8,2013,,Y,,,,,,,,,180.0,0.0,1.3,Y,,,,,,N, ,N, ,34.655,-118.051111,CISO
+58440,CD US Solar MT 2 LLC,58445,Arrache 4006,CA,Los Angeles,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,8,2013,,Y,,,,,,,,,45.0,0.0,1.3,Y,,,,,,N, ,N, ,34.655,-118.051111,CISO
+58440,CD US Solar MT 2 LLC,58446,Arrache 4013,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2013,,Y,,,,,,,,,45.0,0.0,2.0,Y,,,,,,N, ,N, ,34.650556,-118.051944,CISO
+58440,CD US Solar MT 2 LLC,58447,Arrache 8083,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,9,2013,,Y,,,,,,,,,45.0,0.0,2.0,Y,,,,,,N, ,N, ,34.647778,-118.061111,CISO
+58440,CD US Solar MT 2 LLC,58447,Arrache 8083,CA,Los Angeles,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,9,2013,,Y,,,,,,,,,45.0,0.0,2.0,Y,,,,,,N, ,N, ,34.647778,-118.061111,CISO
+58440,CD US Solar MT 2 LLC,58447,Arrache 8083,CA,Los Angeles,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,9,2013,,Y,,,,,,,,,45.0,0.0,1.4,Y,,,,,,N, ,N, ,34.647778,-118.061111,CISO
+58440,CD US Solar MT 2 LLC,58448,Nunn,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,7,2013,,Y,,,,,,,,,180.0,0.0,1.4,Y,,,,,,N, ,N, ,34.509167,-117.154444,CISO
+58440,CD US Solar MT 2 LLC,58449,Rutan,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,Y,,,,,,,,,180.0,0.0,1.9,Y,,,,,,N, ,N, ,34.643889,-118.163056,CISO
+58440,CD US Solar MT 2 LLC,58449,Rutan,CA,Los Angeles,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,Y,,,,,,,,,180.0,0.0,1.9,Y,,,,,,N, ,N, ,34.643889,-118.163056,CISO
+58440,CD US Solar MT 2 LLC,58449,Rutan,CA,Los Angeles,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,1,2014,,Y,,,,,,,,,45.0,0.0,1.3,Y,,,,,,N, ,N, ,34.643889,-118.163056,CISO
+58440,CD US Solar MT 2 LLC,58450,Vinam,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2013,,Y,,,,,,,,,45.0,0.0,2.0,Y,,,,,,N, ,N, ,34.668889,-118.061389,CISO
+58440,CD US Solar MT 2 LLC,58451,Ma,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,10,2013,,Y,,,,,,,,,180.0,0.0,2.0,Y,,,,,,N, ,N, ,34.695278,-118.0625,CISO
+58440,CD US Solar MT 2 LLC,58452,Horn,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,10,2013,,Y,,,,,,,,,45.0,0.0,2.0,Y,,,,,,N, ,N, ,34.708889,-118.274167,CISO
+58440,CD US Solar MT 2 LLC,58454,Watts 3115,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2013,,Y,,,,,,,,,180.0,0.0,2.0,Y,,,,,,N, ,N, ,34.600833,-117.642222,CISO
+58440,CD US Solar MT 2 LLC,58454,Watts 3115,CA,San Bernardino,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,12,2013,,Y,,,,,,,,,45.0,0.0,0.7,Y,,,,,,N, ,N, ,34.600833,-117.642222,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,41.9,41.9,41.9,3,2016,,Y,,,,,,,,,0.0,0.0,52.9,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,21.0,21.0,21.0,4,2016,,Y,,,,,,,,,0.0,0.0,26.0,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,39.6,39.6,39.6,6,2016,,Y,,,,,,,,,0.0,0.0,51.2,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,31.4,31.4,31.4,9,2015,,Y,,,,,,,,,0.0,0.0,40.3,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,31.4,31.4,31.4,11,2015,,Y,,,,,,,,,0.0,0.0,40.1,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.9,26.9,26.9,12,2015,,Y,N,,,,,,,,0.0,0.0,32.6,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,41.9,41.9,41.9,1,2016,,Y,,,,,,,,,0.0,0.0,50.6,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+58451,"McCoy Solar, LLC",58462,McCoy Solar Energy Project Hybrid,CA,Riverside,BLK8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,36.5,36.5,36.5,8,2015,,Y,,,,,,,,,0.0,0.0,45.6,,Y,,,,,N, ,N, ,33.694722,-114.739722,CISO
+17650,Southern Power Co,58467,Campo Verde Solar,CA,Imperial,CVS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,147.4,139.0,139.0,10,2013,,,,Y,,,,,,,180.0,25.0,201.9,,Y,,,,,N, ,N, ,32.753333,-115.726389,CISO
+62949,Gamma Genco CV II LLC,58498,RE Rosamond One LLC,CA,Kern,RONE,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2014,,Y,,,,,,,,,90.0, ,26.2,Y,,,,,,Y,26.2,N, ,34.9,-118.246944,CISO
+62949,Gamma Genco CV II LLC,58499,RE Rosamond Two LLC,CA,Kern,RTWO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2014,,Y,,,,,,,,,90.0, ,20.9,Y,,,,,,Y,20.9,N, ,34.900278,-118.238333,CISO
+62949,Gamma Genco CV II LLC,58500,RE Rio Grande Solar LLC,CA,Kern,RIO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2013,,Y,,,,,,,,,90.0, ,5.0,Y,,,,,,Y,5.0,N, ,35.00745,-118.16451,CISO
+62949,Gamma Genco CV II LLC,58502,RE Columbia 3 LLC,CA,Kern,COL3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,1,2014,,Y,,,,,,,,,90.0, ,11.1,Y,,,,,,Y,11.1,N, ,35.024722,-118.164167,CISO
+58486,Chuckawalla Solar LLC,58506,Chuckawalla Solar,CA,Riverside,0937,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,6,2012,,Y,,N,,,,,,N,180.0,0.0,4.4,Y,,,,,,N, ,N, ,33.568333,-114.918056,CISO
+58135,Ecos Energy LLC,58508,Bear Creek Solar,CA,San Joaquin,PV3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,2,2014,,Y,,,,,,,,,180.0,20.0,1.9,Y,,,,,,N, ,N, ,38.136389,-121.148889,CISO
+58135,Ecos Energy LLC,58509,Vintner Solar,CA,San Luis Obispo,PV4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,4,2014,,Y,,,,,,,,,180.0,20.0,2.1,Y,,,,,,N, ,N, ,35.55795,-120.68287,CISO
+58135,Ecos Energy LLC,58510,Kettleman Solar Project,CA,San Joaquin,PV5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,4,2014,,Y,,Y,,,,,,,180.0,20.0,1.4,Y,,,,,,N, ,N, ,38.12139,-121.14122,CISO
+58490,Ironwood Solar LLC,58513,Ironwood Solar LLC,CA,Riverside,0937,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,4,2012,,Y,,N,,,,,,,180.0,0.0,4.6,Y,,,,,,N, ,N, ,33.565,-114.918056,CISO
+57365,Consolidated Edison Solutions Inc,58514,Desert Hot Springs Solar,CA,Riverside,DHCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.3,2.2,2.2,12,2013,,Y,,N,,,,,,,90.0,45.0,2.9,Y,,,,,,N, ,N, ,33.923056,-116.53,CISO
+59622,"Ahana Renewables, LLC",58522,Madera Community Hospital,CA,Madera,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,10,2011,,Y,,,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,36.941111,-120.046667,CISO
+58500,City of Hayward,58525,City of Hayward WWTP,CA,Alameda,1,OP,Solar Photovoltaic,PV,IPP CHP,3,1.0,1.0,1.0,11,2010,,Y,,N,,,,,,,180.0,0.0,1.2,Y,,,,,N,Y,1.2,N, ,37.633526,-122.139717,CISO
+58503,Garnet Solar Generation Station I LLC,58528,Garnet Solar Generation Station I LLC,CA,Riverside,WDT44,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,12,2014,,Y,,,,,,,,,0.0,0.0,5.0,Y,,,,,,N, ,N, ,33.8906,-116.5431,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL12,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,39.1,39.1,39.1,12,2013,,,,Y,,,,,,,120.0,22.5,50.0,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL13,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,39.1,39.1,39.1,1,2014,,,,Y,,,,,,,120.0,22.5,51.3,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL14,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.5,26.5,26.5,4,2014,,,,Y,,,,,,,120.0,22.5,35.4,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL15,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,13.9,13.9,13.9,6,2014,,,,Y,,,,,,,120.0,22.5,19.1,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL16,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,22.7,22.7,22.7,11,2013,,,,Y,,,,,,,120.0,22.5,28.0,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL17,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,29.0,29.0,29.0,11,2013,,,,Y,,,,,,,120.0,22.5,36.0,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL18,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,29.0,29.0,29.0,6,2014,,,,Y,,,,,,,120.0,22.5,38.5,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL19,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,25.2,25.2,25.2,10,2014,,,,Y,,,,,,,120.0,22.5,34.8,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+58290,"NextEra Energy Desert Sunlight 250, LLC",58542,"Desert Sunlight 250, LLC",CA,Riverside,DSL20,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,25.2,25.2,25.2,11,2013,,,,Y,,,,,,,120.0,22.5,37.0,,Y,,,,,N, ,N, ,33.8055,-115.3947,CISO
+60025,Greenbacker Renewable Energy Corporation,58578,Sonora 1,CA,Tuolumne,SON1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,Y,,,,,,,,,0.0,0.0,1.9,Y,,,,,,N, ,N, ,37.889753,-120.528723,CISO
+58540,California PV Energy LLC,58581,Oltmans SCE at Champagne,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2013,,,,Y,,,,,,,180.0,10.0,1.4,Y,,,,,,Y,1.3,N, ,34.043889,-117.531111,CISO
+58540,California PV Energy LLC,58582,Oltmans SCE at Jurupa,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,,,Y,,,,,,,180.0,10.0,2.0,Y,,,,,,Y,2.0,N, ,34.05,-117.596111,CISO
+58544,Sierra Nevada Brewing Co,58585,Sierra Nevada Brewing Co Hybrid,CA,Butte,SOLR,OP,Solar Photovoltaic,PV,Industrial CHP,7,1.7,1.4,0.9,9,2007,,Y,,Y,N,,,,,,180.0,5.0,2.0,Y,,,,,,Y,1.0,N, ,39.724167,-121.815278,CISO
+58546,Cascade Solar LLC,58590,Cascade Solar,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,18.5,18.5,18.5,1,2014,,Y,,,,,,,,,90.0, ,24.1,Y,,,,,,N, ,N, ,34.157222,-116.234444,CISO
+17650,Southern Power Co,58592,Solar Gen 2 Solar Facility,CA,Imperial,ALHM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.4,50.0,50.0,11,2014,,Y,,N,,,,,,,90.0, ,64.7,Y,Y,,,,,N, ,N, ,33.08,-115.47,CISO
+17650,Southern Power Co,58592,Solar Gen 2 Solar Facility,CA,Imperial,ARK,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.4,50.0,50.0,11,2014,,Y,,N,,,,,,,90.0, ,64.7,Y,Y,,,,,N, ,N, ,33.08,-115.47,CISO
+17650,Southern Power Co,58592,Solar Gen 2 Solar Facility,CA,Imperial,SONR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.4,50.0,50.0,11,2014,,Y,,N,,,,,,,90.0, ,64.7,Y,Y,,,,,N, ,N, ,33.08,-115.47,CISO
+58661,"Sustainable Power Group, LLC",58609,Industry Solar Power Generation Station 1 LLC,CA,San Bernardino,ISP1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,Y,,,,,,,,,90.0, ,1.9,Y,,,,,,N, ,N, ,34.553056,-117.456944,CISO
+58661,"Sustainable Power Group, LLC",58610,Navajo Solar Power Generation Station 1 LLC,CA,San Bernardino,NSP1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,Y,,,,,,,,,90.0, ,1.9,Y,,,,,,N, ,N, ,34.551111,-117.191111,CISO
+58661,"Sustainable Power Group, LLC",58611,Powhatan Solar Power Generation Station 1 LLC,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,Y,,,,,,,,,90.0, ,1.9,Y,,,,,,N, ,N, ,34.496944,-117.145,CISO
+58661,"Sustainable Power Group, LLC",58612,Otoe Solar Power Generation Station 1 LLC,CA,San Bernardino,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,,,Y,,,,,,,198.0,20.0,1.9,Y,,,,,,N, ,N, ,34.545,-117.191944,CISO
+58568,"Westlands Solar Farms, LLC",58616,Westlands Solar PV Farm,CA,Fresno,WSF1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,18.0,18.0,14.0,2,2014,,Y,,,,,,,,,180.0, ,23.0,Y,,,,,,N, ,N, ,36.138056,-120.075833,CISO
+58549,County of Alameda GSA,58625,Santa Rita Jail Hybrid,CA,Alameda,SRPV2,OP,Solar Photovoltaic,PV,IPP CHP,3,1.0,1.0,0.1,12,2016,,,,Y,,,,,,,180.0,11.0,1.1,Y,,,,,,Y,1.1,N, ,37.719167,-121.886944,CISO
+58549,County of Alameda GSA,58625,Santa Rita Jail Hybrid,CA,Alameda,SRPV3,OP,Solar Photovoltaic,PV,IPP CHP,3,0.5,0.5,0.1,1,2017,,,,Y,,,,,,,180.0,11.0,0.6,Y,,,,,,Y,0.6,N, ,37.719167,-121.886944,CISO
+58661,"Sustainable Power Group, LLC",58626,Western Antelope Blue Sky Ranch A,CA,Los Angeles,WABSA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,18.0,11,2014,,Y,,,,,,,,N,90.0, ,23.9,Y,,,,,,N, ,N, ,34.681667,-118.324722,CISO
+58661,"Sustainable Power Group, LLC",58627,Western Antelope Dry Ranch,CA,Los Angeles,WADR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,9.0,12,2016,,Y,,N,,,,,,,90.0, ,12.8,,Y,,,,,N, ,N, ,34.688889,-118.320278,CISO
+60947,Tesla Inc.,58633,Monterey Regional Water Pollution Control Agency,CA,Monterey,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2010,,Y,,,,,,,,,195.0,26.0,1.1,Y,,,,,,Y,1.1,N, ,36.721111,-121.787778,CISO
+60947,Tesla Inc.,58634,Lancaster Baptist Church,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2011,,Y,,,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,34.695833,-118.058889,CISO
+58593,Sequoia PV 1 LLC,58642,Tulare 1 and 2,CA,Tulare,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.2,-119.42,CISO
+58593,Sequoia PV 1 LLC,58642,Tulare 1 and 2,CA,Tulare,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.2,-119.42,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.4,26.4,26.4,11,2015,,Y,,,,,,,,,0.0,0.0,33.8,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,27.9,27.9,27.9,12,2015,,Y,,,,,,,,,0.0,0.0,35.9,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.2,37.2,37.2,12,2015,,Y,,,,,,,,,0.0,0.0,49.2,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,35.7,35.7,35.7,1,2016,,Y,,,,,,,,,0.0,0.0,47.3,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,35.0,35.0,35.0,4,2016,,Y,,,,,,,,,0.0,0.0,46.5,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,36.6,36.6,36.6,4,2016,,Y,,,,,,,,,0.0,0.0,48.0,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,35.0,35.0,35.0,5,2016,,Y,,,,,,,,,0.0,0.0,44.5,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+59363,"Silver State Solar Power South, LLC",58644,Silver State Solar Power South,NV,Clark,BLK8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,26.3,26.3,26.3,6,2016,,Y,,,,,,,,,0.0,0.0,33.4,,Y,,,,,N, ,N, ,35.63,-115.32,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,75.9,76.0,76.0,12,2015,,,,Y,,,,,,,180.0,25.0,87.8,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.1,34.0,34.0,12,2015,,,,Y,,,,,,,180.0,25.0,40.6,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.9,38.0,38.0,1,2016,,,,Y,,,,,,,180.0,25.0,42.4,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.9,38.0,38.0,2,2016,,,,Y,,,,,,,180.0,25.0,42.4,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.9,38.0,38.0,4,2016,,,,Y,,,,,,,180.0,25.0,42.4,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.9,38.0,38.0,6,2016,,,,Y,,,,,,,180.0,25.0,42.4,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+17650,Southern Power Co,58646,Stateline Solar,CA,San Bernardino,STL7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,37.9,38.0,38.0,7,2016,,,,Y,,,,,,,180.0,25.0,42.4,,Y,,,,,N, ,N, ,35.6,-115.4,CISO
+58622,Costco Wholesale,58698,Mira Loma,CA,Riverside,D960,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,11,2011,,,,Y,,,,,,,180.0,9.0,1.1,Y,,,,,,Y,1.1,N, ,34.013056,-117.5375,CISO
+58622,Costco Wholesale,58698,Mira Loma,CA,Riverside,D9611,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.5,1.5,1.5,11,2011,,,,Y,,,,,,,180.0,9.0,1.7,Y,,,,,,N, ,N, ,34.013056,-117.5375,CISO
+58622,Costco Wholesale,58698,Mira Loma,CA,Riverside,D9612,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,0.5,0.5,0.5,11,2011,,,,Y,,,,,,,180.0,9.0,0.6,Y,,,,,,N, ,N, ,34.013056,-117.5375,CISO
+17650,Southern Power Co,58711,Lost Hills/Blackwell,CA,Kern,BLKW,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,4,2015,,Y,,,,,,,,,90.0, ,16.2,,Y,,,,,N, ,N, ,35.62,-119.85,CISO
+17650,Southern Power Co,58711,Lost Hills/Blackwell,CA,Kern,LTHL,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,4,2015,,Y,,,,,,,,,90.0, ,27.3,,Y,,,,,N, ,N, ,35.62,-119.85,CISO
+17650,Southern Power Co,58713,North Star Solar,CA,Fresno,NSTR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,61.6,60.0,60.0,6,2015,,Y,,,,,,,,,90.0, ,73.0,,Y,,,,,N, ,N, ,36.73,-120.41,CISO
+58654,Orion Solar I LLC,58718,Orion Solar I,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,4,2014,,Y,,,,,,,,,90.0, ,15.7,Y,,,,,,N, ,N, ,35.150694,-118.875,CISO
+58655,"Orion Solar II, LLC",58721,Orion Solar II,CA,Kern,ORION,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,8.0,8.0,8.0,6,2014,,Y,,,,,,,,,90.0, ,10.5,Y,,,,,,N, ,N, ,35.150694,-118.875278,CISO
+58661,"Sustainable Power Group, LLC",58748,North Bay Solar 1,CA,Solano,NBWT,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,1.0,8,2013,,Y,,,,,,,,,90.0, ,1.1,Y,,,,,,Y,1.1,N, ,38.300556,-121.966389,CISO
+58661,"Sustainable Power Group, LLC",58750,Lancaster Dry Farm Ranch B,CA,Los Angeles,LDFRB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,11,2014,,Y,,N,,,,,,,90.0, ,6.0,Y,,,,,,N, ,N, ,34.716944,-118.289444,CISO
+58661,"Sustainable Power Group, LLC",58751,Rodeo Solar C2,CA,Los Angeles,RSC2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,5,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.713333,-118.289444,CISO
+58661,"Sustainable Power Group, LLC",58752,Rodeo Solar D2,CA,Los Angeles,RSD2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,5,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.713333,-118.289444,CISO
+58661,"Sustainable Power Group, LLC",58753,Summer Solar A2,CA,Los Angeles,SSA2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58754,Summer Solar B2,CA,Los Angeles,SSB2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58755,Summer Solar C2,CA,Los Angeles,SSC2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58756,Summer Solar D2,CA,Los Angeles,SSD2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,7,2014,,,,Y,,,,,,,193.0,25.0,1.2,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58757,Summer North Solar,CA,Los Angeles,UE2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,,,Y,,,,N,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58757,Summer North Solar,CA,Los Angeles,UF2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,12,2014,,,,Y,,,,,,,193.0,25.0,2.8,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58757,Summer North Solar,CA,Los Angeles,UG2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58757,Summer North Solar,CA,Los Angeles,UH2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.723056,-118.289722,CISO
+58661,"Sustainable Power Group, LLC",58761,Expressway Solar A,CA,San Bernardino,EXSA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,5,2014,,,,Y,,,,,,,193.0,25.0,2.7,Y,,,,,,N, ,N, ,34.582222,-117.341667,CISO
+58661,"Sustainable Power Group, LLC",58762,Expressway Solar B,CA,San Bernardino,EXSB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,5,2014,,,,Y,,,,,,,193.0,25.0,2.4,Y,,,,,,N, ,N, ,34.583333,-117.340278,CISO
+58661,"Sustainable Power Group, LLC",58763,Expressway Solar C2,CA,San Bernardino,EXSC2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,,,Y,,,,,,,193.0,25.0,2.1,Y,,,,,,N, ,N, ,34.584444,-117.341389,CISO
+58696,Ignite Solar Holdings LLC,58814,Shasta Solar Farm,CA,Shasta,GENA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,3,2014,,Y,,,,,,,,,90.0, ,2.2,Y,,,,,,N, ,N, ,41.031389,-121.4225,CISO
+58696,Ignite Solar Holdings LLC,58814,Shasta Solar Farm,CA,Shasta,GENB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,3,2014,,Y,,,,,,,,,90.0, ,2.2,Y,,,,,,N, ,N, ,41.031389,-121.4225,CISO
+58661,"Sustainable Power Group, LLC",58831,Redcrest Solar Farm,CA,Kern,PV-1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,16.6,16.0,16.0,10,2015,,Y,,,,,,,,,90.0, ,20.9,,Y,,,,,N, ,N, ,35.321944,-118.812778,CISO
+58759,Perpetual Energy Systems,58889,ASTI,CA,Sonoma,ASTI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,2,2009,,,,Y,,,,,,,24.0,5.0,1.2,Y,,,,,,N, ,N, ,38.761389,-122.975278,CISO
+58759,Perpetual Energy Systems,58890,Beringer,CA,Sonoma,BERI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.1,0.6,1,2009,,,,Y,,,,,,,26.0,5.0,1.3,Y,,,,,,N, ,N, ,38.510833,-122.479722,CISO
+58775,Sol Orchard San Diego 22 LLC,58906,Valley Center 1,CA,San Diego,VC1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.5,2.5,12,2013,,Y,,,,,,,,,0.0,45.0,3.4,Y,,,,,,N, ,N, ,33.234167,-117.001667,CISO
+58776,Sol Orchard San Diego 23 LLC,58907,Valley Center 2,CA,San Diego,VC2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2013,,Y,,,,,,,,,0.0,45.0,6.8,Y,,,,,,N, ,N, ,33.234167,-117.001667,CISO
+58786,Sol Orchard San Diego 20 LLC,58909,Ramona 1,CA,San Diego,RAM1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,12,2013,,Y,,,,,,,,,0.0,45.0,2.7,Y,,,,,,N, ,N, ,33.012222,-116.875,CISO
+58787,Sol Orchard San Diego 21 LLC,58911,Ramona 2,CA,San Diego,RAM2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2013,,Y,,,,,,,,,0.0,45.0,6.6,Y,,,,,,N, ,N, ,33.012222,-116.875,CISO
+57104,Golden Springs Development Company LLC,58912,Santa Fe Springs Rooftop Solar BLDG M,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.8,1.8,1.8,3,2015,,N,,Y,,,,,,,180.0,10.0,2.3,Y,,,,,,N, ,N, ,33.910833,-118.044444,CISO
+57104,Golden Springs Development Company LLC,58913,Santa Fe Springs Rooftop Solar BLDG H,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,3,2015,,Y,,N,,,,,,,180.0,10.0,2.0,Y,,,,,,N, ,N, ,33.910833,-118.044444,CISO
+61315,Solarenewal LLC,58918,2081 Terzian Solar Project,CA,Fresno,2081,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.2,1.2,2,2014,,Y,N,,,,,,,,90.0, ,1.6,Y,,,,,,N, ,N, ,36.67,-119.415833,CISO
+61315,Solarenewal LLC,58919,2127 Harris Solar Project,CA,Butte,2127,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,4,2014,,Y,,,,,,,,,90.0, ,1.4,Y,,,,,,N, ,N, ,39.291667,-121.669722,CISO
+61315,Solarenewal LLC,58920,2097 Helton Solar Project,CA,Merced,2097,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,4,2014,,Y,,,,,,,,,90.0, ,2.0,Y,,,,,,N, ,N, ,37.352222,-120.506944,CISO
+58812,GLT Cloverdale Solar LLC,58949,Cloverdale Solar I,CA,Sonoma,TBD,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,180.0,25.0,1.7,Y,,,,,,N, ,N, ,38.773056,-123.017778,CISO
+60947,Tesla Inc.,58963,Las Virgenes Municipal Water District,CA,Los Angeles,PV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,2,2014,,Y,N,N,,,,,,,117.0,0.0,1.1,Y,,,,,,Y,1.1,N, ,34.136111,-118.701944,CISO
+56769,Consolidated Edison Development Inc.,58973,White River Solar 2,CA,Tulare,W2CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.8,19.8,19.8,9,2014,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.874722,-119.046111,CISO
+17650,Southern Power Co,58975,Henrietta Solar Project,CA,Kings,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,102.0,100.0,100.0,8,2016,,Y,,,,,,,,,90.0, ,127.9,Y,,,,,,N, ,N, ,36.218806,-119.805833,CISO
+58468,Dominion Renewable Energy,58983,RE Camelot LLC,CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,45.0,45.0,45.0,12,2014,,Y,,,,,,,,,180.0,60.0,59.1,Y,,,,,N,N, ,N, ,35.026667,-118.185556,CISO
+58468,Dominion Renewable Energy,58984,"RE Adams East, LLC",CA,Fresno,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.0,19.0,19.0,12,2014,,Y,,,,,,,,,180.0,45.0,24.9,,Y,,,,,N, ,N, ,36.6175,-120.290833,CISO
+58468,Dominion Renewable Energy,58985,"RE Kansas Solar, LLC",CA,Kings,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2014,,Y,,,,,,,,,180.0,45.0,27.1,,Y,,,,,N, ,N, ,36.247778,-119.833889,CISO
+58468,Dominion Renewable Energy,58986,"RE Old River One, LLC",CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2014,,Y,,,,,,,,,180.0,45.0,26.8,,Y,,,,,N, ,N, ,35.223333,-119.088889,CISO
+58468,Dominion Renewable Energy,58990,"RE Columbia Two, LLC",CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,15.0,15.0,12,2014,,Y,,,,,,,,,180.0,60.0,19.4,Y,N,,,,N,N, ,N, ,35.026667,-118.185556,CISO
+58468,Dominion Renewable Energy,58991,"RE Kent South, LLC",CA,Kings,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2014,,Y,,,,,,,,,180.0,45.0,26.3,,Y,,,,,N, ,N, ,36.226111,-119.905278,CISO
+58661,"Sustainable Power Group, LLC",59008,Woodmere Solar Farm,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,15.0,14.0,12,2015,,Y,,,,,,,,,90.0, ,18.8,,Y,,,,,N, ,N, ,35.323056,-118.821389,CISO
+58661,"Sustainable Power Group, LLC",59009,Hayworth Solar,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,27.0,26.0,25.0,12,2015,,Y,,,,,,,,,90.0, ,33.3,,Y,,,,,N, ,N, ,35.325278,-118.878611,CISO
+57130,Janssen Pharmaceutical Co,59058,Vacaville,CA,Solano,GEN 1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,9,2007,,,,Y,,,,,,,90.0,30.0,1.0,Y,,,,,,N, ,N, ,38.399444,-121.960278,CISO
+58468,Dominion Renewable Energy,59086,"Cottonwood Solar, LLC (Goose Lake)",CA,Kern,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,5,2015,,Y,,,,,,,,,180.0,45.0,16.9,,Y,,,,,N, ,N, ,35.593611,-119.58,CISO
+58468,Dominion Renewable Energy,59087,"Cottonwood Solar, LLC (City of Corcoran)",CA,Kings,GEN 1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,12.0,12.0,12.0,5,2015,,Y,,,,,,,,,180.0,45.0,14.9,,Y,,,,,N, ,N, ,36.134444,-119.554444,CISO
+60947,Tesla Inc.,59094,Division 1,CA,Los Angeles,GEN 1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,180.0,15.0,1.7,Y,,,,,,Y,1.7,N, ,34.708333,-118.130556,CISO
+60947,Tesla Inc.,59095,Division 2,CA,Los Angeles,GEN 1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,6,2014,,,,Y,,,,,,,180.0,5.0,1.1,Y,,,,,,Y,1.1,N, ,34.708333,-118.130556,CISO
+60947,Tesla Inc.,59096,Division 3,CA,Los Angeles,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,6,2014,,,,Y,,,,,,,180.0,15.0,1.1,Y,,,,,,Y,1.1,N, ,34.708333,-118.130556,CISO
+60947,Tesla Inc.,59098,Kettering Solar 1,CA,Los Angeles,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,6,2014,,,,Y,,,,,,,180.0,5.0,1.1,Y,,,,,,Y,1.1,N, ,34.700278,-118.123611,CISO
+60947,Tesla Inc.,59099,Kettering Solar 2,CA,Los Angeles,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,6,2014,,,,Y,,,,,,,180.0,15.0,1.1,Y,,,,,,Y,1.1,N, ,34.700278,-118.123611,CISO
+58944,"Enerparc CA 1, LLC",59122,Enerparc CA1 LLC,CA,San Benito,ECA11,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,6,2014,,,,Y,,,,,,,200.0,28.0,2.2,Y,,,,,,N, ,N, ,36.831667,-121.404167,CISO
+59622,"Ahana Renewables, LLC",59129,CSD 2- Freedom High,CA,Contra Costa,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,8,2013,,,,Y,,,,,,,182.0,15.0,1.1,Y,,,,,,Y,1.1,N, ,37.969722,-121.719444,CISO
+59622,"Ahana Renewables, LLC",59130,CSD 2 - Heritage High,CA,Contra Costa,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,9,2013,,,,Y,,,,,,,102.0,10.0,1.4,Y,,,,,,Y,1.4,N, ,37.921944,-121.755556,CISO
+59622,"Ahana Renewables, LLC",59132,EAFB - North Base,CA,Kern,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,2,2012,,Y,,N,,,,,,,180.0,25.0,1.1,Y,,,,,,Y,1.1,N, ,34.9325,-117.907222,CISO
+59622,"Ahana Renewables, LLC",59133,EAFB - South Base,CA,Kern,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,2,2012,,Y,,,,,,,,,180.0,25.0,1.1,Y,,,,,,Y,1.1,N, ,34.917222,-117.900278,CISO
+59622,"Ahana Renewables, LLC",59138,SDCCD - Miramar,CA,San Diego,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,2,2011,,,,Y,,,,,,,180.0,7.5,1.1,Y,,,,,,Y,1.1,N, ,32.906111,-117.121389,CISO
+59622,"Ahana Renewables, LLC",59139,SDCWA - Twin Oaks,CA,San Diego,57449,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,5,2011,,,,Y,,,,,,,180.0,20.0,1.1,Y,,,,,,Y,1.1,N, ,33.21,-117.170556,CISO
+58968,RE Mustang LLC,59150,RE Mustang LLC,CA,Kings,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,100.0,100.0,100.0,8,2016,,Y,,,,,,,,,0.0,0.0,134.4,Y,,,,,,N, ,N, ,36.221667,-119.903056,CISO
+58976,"PsomasFMG Lancaster Solar Crest, LLC",59167,Lancaster Solar 1,CA,Los Angeles,LS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,,,Y,,,,,,,270.0,22.0,1.8,Y,,,,,,N, ,N, ,34.715,-118.095,CISO
+58976,"PsomasFMG Lancaster Solar Crest, LLC",59169,Lancaster Solar 2,CA,Los Angeles,LS2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,Y,,,,,,,,,270.0,22.0,1.8,Y,,,,,,N, ,N, ,34.710556,-118.166111,CISO
+59139,SunEdison LLC,59182,Hesperia,CA,San Bernardino,10-94,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2014,,,,Y,,,,,,,180.0,20.0,1.7,Y,,,,,,N, ,N, ,34.435,-117.378056,CISO
+58468,Dominion Renewable Energy,59183,"CID Solar, LLC",CA,Kings,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2014,,Y,,,,,,,,,180.0,45.0,27.2,,Y,,,N,,N, ,N, ,36.138056,-119.564722,CISO
+58593,Sequoia PV 1 LLC,59203,Farmersville,CA,Tulare,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.19,-119.12,CISO
+58593,Sequoia PV 1 LLC,59203,Farmersville,CA,Tulare,PV2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.19,-119.12,CISO
+58593,Sequoia PV 1 LLC,59203,Farmersville,CA,Tulare,PV3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.19,-119.12,CISO
+59004,Sequoia PV 3 LLC,59219,Porterville 6 and 7,CA,Tulare,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.05,-119.02,CISO
+59004,Sequoia PV 3 LLC,59219,Porterville 6 and 7,CA,Tulare,PV2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.05,-119.02,CISO
+59041,Lone Valley Solar Park II LLC,59237,Lone Valley Solar Park II LLC,CA,San Bernardino,CPII,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2014,,Y,N,,,,,,,,90.0,50.0,20.0,Y,,,,,,N, ,N, ,34.408333,-116.8625,CISO
+60605,"Rio Bravo Solar I, LLC",59249,Rio Bravo Solar 1 LLC,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.5,14.1,12,2016,,Y,,,,,,,,,180.0, ,26.0,Y,,,,,,N, ,N, ,35.416111,-119.6825,CISO
+60606,"Rio Bravo Solar II, LLC",59250,Rio Bravo Solar II LLC,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.5,14.1,12,2016,,Y,,,,,,,,,180.0, ,26.0,Y,,,,,,N, ,N, ,35.4225,-119.629167,CISO
+60607,"Wildwood Solar II, LLC",59253,Wildwood Solar II,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,14.7,11.2,1,2017,,Y,,,,,,,,,180.0, ,21.0,Y,,,,,,N, ,N, ,35.63,-119.573889,CISO
+58661,"Sustainable Power Group, LLC",59262,Lancaster Little Rock,CA,Los Angeles,LLRC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2014,,,,Y,,,,,,,180.0,25.0,7.0,,Y,,,,,N, ,N, ,34.599444,-117.932778,CISO
+59089,Merced Solar LLC,59265,Merced Solar LLC,CA,Merced,PV8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,Y,,N,,,,,,,180.0,25.0,1.9,Y,,,,,,N, ,N, ,37.267778,-120.484444,CISO
+59090,Mission Solar LLC,59267,Mission Solar LLC,CA,Merced,PV9,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,Y,,N,,,,,,,180.0,25.0,1.9,Y,,,,,,N, ,N, ,37.267778,-120.4825,CISO
+59091,Hollister Solar LLC,59268,Hollister Solar LLC,CA,San Benito,PV10,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,Y,,,,,,,,,180.0,25.0,1.9,Y,,,,,,N, ,N, ,36.8625,-121.428889,CISO
+58661,"Sustainable Power Group, LLC",59269,Victor Mesa Linda B2,CA,San Bernardino,VMLB2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.6,1.5,11,2014,,,,Y,,,,,,,180.0,20.0,2.1,Y,,,,,,N, ,N, ,34.512778,-117.387222,CISO
+58661,"Sustainable Power Group, LLC",59270,Victor Mesa Linda C2,CA,San Bernardino,VMLC2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.6,1.5,11,2014,,,,Y,,,,,,,180.0,20.0,2.1,Y,,,,,,N, ,N, ,34.511389,-117.387222,CISO
+58661,"Sustainable Power Group, LLC",59271,Victor Mesa Linda D2,CA,San Bernardino,VMLD2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.6,1.5,11,2014,,,,Y,,,,,,,180.0,20.0,2.1,Y,,,,,,N, ,N, ,34.509444,-117.387222,CISO
+58661,"Sustainable Power Group, LLC",59272,Victor Mesa Linda E2,CA,San Bernardino,VMLE2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.6,1.5,11,2014,,,,Y,,,,,,,180.0,20.0,2.1,Y,,,,,,N, ,N, ,34.508056,-117.387222,CISO
+58661,"Sustainable Power Group, LLC",59273,SEPV Palmdale East,CA,Los Angeles,PALME,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,9.0,9.0,8,2015,,Y,,N,,,,,,,90.0, ,11.5,Y,,,,,,N, ,N, ,34.613056,-117.938889,CISO
+58540,California PV Energy LLC,59283,California PV Energy at ISD WWTP,CA,Contra Costa,W4236,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,8,2014,,,,Y,,,,,,,168.0,30.0,1.2,Y,,,,,,Y,1.2,N, ,38.001111,-121.703889,CISO
+59104,"Sequoia PV 2, LLC",59300,Hanford 1 and 2,CA,Kings,HAN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.306667,-119.629167,CISO
+59104,"Sequoia PV 2, LLC",59300,Hanford 1 and 2,CA,Kings,HAN2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,8,2014,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,36.306667,-119.629167,CISO
+59121,"Pumpjack Solar I, LLC",59322,Pumpjack Solar I,CA,Kern,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2015,,Y,,,,,,,,,180.0, ,26.0,Y,,,,,,N, ,N, ,35.305556,-119.6225,CISO
+58468,Dominion Renewable Energy,59334,"Catalina Solar 2, LLC",CA,Kern,INV-1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,18.0,18.0,18.0,8,2015,,Y,,,,,,,,,180.0,45.0,24.3,Y,,,,,,N, ,N, ,34.812222,-118.352778,CISO
+61230,"CD Arevon USA, Inc.",59339,Quinto Solar PV Project,CA,Merced,SSC13,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,108.0,105.1,76.8,11,2015,,Y,,,,,,,,,0.0,0.0,108.0,Y,,,,,,N, ,N, ,37.130278,-121.052222,CISO
+59139,SunEdison LLC,59359,SCE-Snowline-Duncan Road (North),CA,San Bernardino,10400,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,10,2014,,Y,,,,,,,,,0.0,0.0,1.6,Y,,,,,,N, ,N, ,34.473889,-117.562778,CISO
+59139,SunEdison LLC,59360,SCE-Snowline-Duncan Road (South),CA,San Bernardino,11113,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,10,2014,,Y,,,,,,,,,0.0,0.0,1.1,Y,,,,,,N, ,N, ,34.471389,-117.562222,CISO
+59158,"Wildwood Solar I, LLC",59380,"Wildwood Solar I, LLC",CA,Kern,WLD1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.5,19.5,19.5,2,2015,,Y,,,,,,,,,180.0, ,26.0,Y,,,,,N,N, ,N, ,35.615833,-119.578333,CISO
+59173,City of Tulare Water Pollution Control,59395,City of Tulare Water Facility,CA,Tulare,SC500,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.0,1.0,0.8,2,2011,,,,Y,,,,,,,180.0,40.0,1.2,Y,,,,,,Y,1.2,N, ,36.185,-119.375,CISO
+59176,Diamond Valley Solar LLC,59405,Diamond Valley Solar Project,CA,Riverside,PV11,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,1,2015,,Y,,,,,,,,,180.0,25.0,1.5,Y,,,,,,N, ,N, ,33.713056,-117.0725,CISO
+59183,Shafter Solar LLC,59408,Shafter Solar LLC,CA,Kern,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2015,,Y,,,,,,,,,0.0,0.0,26.8,Y,,,,,,N, ,N, ,35.393333,-119.127778,CISO
+59185,"CD US Solar PO 3, LLC",59409,"Madelyn Solar, LLC",CA,San Bernardino,SNL17,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2014,,Y,,,,,,,,,45.0,0.0,1.3,Y,,,,,,N, ,N, ,34.768333,-117.323611,CISO
+59185,"CD US Solar PO 3, LLC",59410,"Rudy Solar, LLC",CA,San Bernardino,SNL19,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,Y,,,,,,,,,45.0,0.0,2.1,Y,,,,,,N, ,N, ,34.766389,-117.323611,CISO
+59185,"CD US Solar PO 3, LLC",59411,"Mitchell Solar, LLC",CA,San Bernardino,SNL18,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2014,,Y,,,,,,,,,45.0,0.0,2.1,Y,,,,,,N, ,N, ,34.765,-117.323611,CISO
+59050,Algonquin Power Co,59412,Algonquin SKIC20 Solar LLC,CA,Kern,SKI20,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2015,,Y,,,,,,,,,180.0, ,25.0,Y,,,,,N,N, ,N, ,35.126111,-119.243333,CISO
+56769,Consolidated Edison Development Inc.,59413,Corcoran Solar 2,CA,Kings,C2CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.8,19.8,19.8,5,2015,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,36.141944,-119.581667,CISO
+56769,Consolidated Edison Development Inc.,59414,Atwell Island West Solar,CA,Tulare,AWCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2015,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.815,-119.459722,CISO
+59187,Anaheim Public Utilities,59416,Anaheim Solar Energy Plant,CA,Orange,PV1,OP,Solar Photovoltaic,PV,Electric Utility,1,2.1,2.0,1.2,8,2014,,,,Y,,,,,,,180.0,5.0,2.4,Y,,,,,,N, ,N, ,33.8025,-117.919722,CISO
+59139,SunEdison LLC,59421,SCE-Snowline-White Road (South),CA,San Bernardino,11111,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,Y,,,,,,,,,0.0,0.0,1.7,Y,,,,,,N, ,N, ,34.413056,-117.470833,CISO
+59139,SunEdison LLC,59422,SCE-Snowline-White Road (North),CA,San Bernardino,10401,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,Y,,,,,,,,,0.0,0.0,1.7,Y,,,,,,N, ,N, ,34.4175,-117.469722,CISO
+59139,SunEdison LLC,59423,SCE-Snowline-White Rd (Central),CA,San Bernardino,10402,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,11,2014,,Y,,,,,,,,,0.0,0.0,1.7,Y,,,,,,N, ,N, ,34.415278,-117.47,CISO
+58661,"Sustainable Power Group, LLC",59431,Sierra Solar Greenworks,CA,Los Angeles,SSG1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,18.0,18.0,11,2015,,,,Y,,,,,,,193.0,25.0,22.5,,Y,,,,,N, ,N, ,34.703611,-118.334167,CISO
+59212,"Adelanto Solar II, LLC",59440,"Adelanto Solar II, LLC",CA,San Bernardino,SAS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,7.0,7.0,7.0,7,2015,,Y,,,,,,,,,0.0,0.0,7.4,Y,,,,,,N, ,N, ,34.557222,-117.3775,CISO
+59211,"Adelanto Solar, LLC",59441,"Adelanto Solar, LLC",CA,San Bernardino,SAS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,9,2015,,Y,,,,,,,,,0.0,0.0,21.5,Y,,,,,,N, ,N, ,34.557222,-117.3775,CISO
+58468,Dominion Renewable Energy,59443,"TA-Acacia, LLC",CA,Los Angeles,WAS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,11,2014,,Y,,,,,,,,,180.0,60.0,28.4,Y,N,,,,,N, ,N, ,34.689167,-118.324722,CISO
+58468,Dominion Renewable Energy,59469,Alamo Solar,CA,San Bernardino,ALAMO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2015,,Y,,,,,,,,,180.0,45.0,23.7,Y,,,,,,N, ,N, ,34.682222,-117.3475,CISO
+57369,"Apple, Inc",59473,Apple Campus 2 PV,CA,Santa Clara,AC2PV,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,14.4,14.4,7.0,6,2017,,,,Y,,,,,,,210.0,5.0,15.8,Y,,,,,,Y,2.0,N, ,37.33,-122.01,CISO
+59257,"Giffen Solar Park, LLC",59522,Giffen Solar Park,CA,Fresno,FRGSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,18.0,6,2017,,Y,,,,,,,,,180.0, ,27.9,Y,,,,,,N, ,N, ,36.544722,-120.316111,CISO
+59258,"Five Points Solar Park, LLC",59523,Five Points Solar Park,CA,Fresno,FRFSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,60.0,60.0,50.0,9,2016,,Y,,,,,,,,,180.0, ,60.0,Y,,,,,,N, ,N, ,36.386944,-120.236667,CISO
+56769,Consolidated Edison Development Inc.,59524,Blackwell Solar Park,CA,Kern,FRBSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2019,,Y,,,,,,,,,0.0, ,25.0,Y,,,,,,N, ,N, ,35.612,-119.845,CISO
+59260,Wright Solar Park LLC,59525,Wright Solar Park,CA,Merced,FRWSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,200.0,200.0,180.0,12,2019,,Y,,,,,,,,,180.0, ,239.3,Y,,,,,,N, ,N, ,37.009444,-120.957222,CISO
+59262,"NRG Solar Oasis, LLC",59528,Solar Oasis LLC,CA,Los Angeles,OASIS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2016,,Y,,,,,,,,,90.0,45.0,27.8,,Y,,,,,N, ,N, ,34.648889,-118.076667,CISO
+59275,CF SBC Master Tenant One LLC,59536,Coronus Adelanto West 1,CA,San Bernardino,AWI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2015,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,34.548056,-117.464444,CISO
+59275,CF SBC Master Tenant One LLC,59537,Coronus Adelanto West 2,CA,San Bernardino,AW2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,1,2015,,N,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,N, ,N, ,34.548056,-117.464444,CISO
+59284,"Kona Solar, LLC",59539,Park Meridian #1,CA,Riverside,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,3,2015,,,,Y,,,,,,,180.0,11.0,1.8,Y,,,,,,N, ,N, ,33.896111,-117.283611,CISO
+59284,"Kona Solar, LLC",59540,Rancho Cucamonga Dist #1,CA,San Bernardino,2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.8,1.8,1.8,4,2015,,,,Y,,,,,,,180.0,5.0,2.2,Y,,,,,,N, ,N, ,34.100278,-117.552778,CISO
+59284,"Kona Solar, LLC",59541,Terra Francesco,CA,San Bernardino,3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,3,2015,,,,Y,,,,,,,180.0,11.0,1.8,Y,,,,,,N, ,N, ,34.039722,-117.606667,CISO
+59290,Solvida Energy Group/Blue Oak Energy,59550,Putah Creek Solar Farm,CA,Yolo,PCSF,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,12,2014,N,Y,,,,,,,,,0.0,0.0,2.6,Y,,,,,,N, ,N, ,38.521111,-121.993889,CISO
+59298,"Vega Solar, LLC",59555,Vega Solar,CA,Merced,VEGA1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,3,2015,,Y,,,,,,,,,90.0, ,25.9,Y,,,,,,N, ,N, ,36.925833,-120.82,CISO
+59345,"Colton Solar One, LLC",59597,"Colton Solar One, LLC",CA,San Bernardino,CS001,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.5,2.5,2.5,6,2015,N,,,Y,,,,,,,180.0,1.0,3.2,Y,,,,,,N, ,N, ,34.093333,-117.319444,CISO
+59346,"Colton Solar Two, LLC",59598,"Colton Solar Two, LLC",CA,San Bernardino,CS002,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,4,2015,N,Y,,,,,,,,,90.0, ,1.2,Y,,,,,,N, ,N, ,34.042222,-117.361667,CISO
+60184,"Tropico, LLC",59599,Tropico Solar PV Plant,CA,Tulare,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,14.0,13.0,11.0,9,2016,,Y,,,,,,,,,90.0, ,18.2,Y,,,,,,N, ,N, ,35.831944,-119.056111,CISO
+60185,"Nicolis, LLC",59600,Nicolis Solar PV Plant,CA,Tulare,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,16.0,9,2016,,Y,,,,,,,,,90.0, ,26.0,Y,,,,,,N, ,N, ,35.835833,-119.056111,CISO
+58468,Dominion Renewable Energy,59607,"Maricopa West Solar PV, LLC",CA,Kern,MWS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2015,,Y,,,,,,,,,180.0,45.0,28.2,Y,,,,,,N, ,N, ,35.115278,-119.317778,CISO
+59353,"AP North Lake I, LP",59610,"AP North Lake I, LP",CA,Riverside,APNLI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,8,2015,,Y,,,,,,,,,180.0,0.0,24.5,Y,,,,,,N, ,N, ,33.74,-117.010556,CISO
+59381,EE Kettleman California LLC,59633,Kettleman Solar -Centaurus,CA,Kings,KS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,18.0,7,2015,,Y,,,,,,,,,180.0, ,27.0,Y,,,,,N,N, ,N, ,36.050833,-119.9475,CISO
+59393,"Coronal Lost Hills, LLC",59638,Coronal Lost Hills,CA,Kern,CLH,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,5,2015,,Y,,,,,,,,,90.0, ,25.9,Y,,,,,,N, ,N, ,35.726667,-119.905833,CISO
+59457,"Sun Harvest Solar, LLC",59687,Sun Harvest Solar NDP1,CA,Merced,NDP1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,5,2015,,Y,,,,,,,,,0.0,0.0,2.0,Y,,,,,,N, ,N, ,37.05758,-120.653625,CISO
+58468,Dominion Renewable Energy,59703,"Cottonwood Solar, LLC Cottonwood Carport",CA,Marin,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,5,2016,,,,Y,,,,,,,180.0,5.0,1.1,Y,N,,,,,Y,1.1,N, ,38.129759,-122.568158,CISO
+58661,"Sustainable Power Group, LLC",59730,SEPV 18,CA,Los Angeles,SPV18,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,1,2016,,Y,,,,,,,,N,90.0, ,2.7,Y,,,,,,N, ,N, ,34.613602,-117.93439,CISO
+58661,"Sustainable Power Group, LLC",59737,Aspiration G,CA,Fresno,ASPRG,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,9.0,9.0,9.0,9,2017,,Y,,,,,,,,,90.0, ,11.7,Y,,,,,,N, ,N, ,36.552186,-120.352481,CISO
+58661,"Sustainable Power Group, LLC",59738,Citizen B,CA,Fresno,CSB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2015,,,,Y,,,,,,,180.0,25.0,7.1,Y,,,,,,N, ,N, ,36.723806,-120.432139,CISO
+58661,"Sustainable Power Group, LLC",59739,Lancaster WAD B,CA,Los Angeles,LWADB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,4,2017,,Y,,,,,,,,,90.0, ,3.9,Y,,,,,,N, ,N, ,34.780192,-118.19333,CISO
+58661,"Sustainable Power Group, LLC",59740,SEPV Mojave West,CA,Kern,SPVMW,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,6,2016,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,35.022903,-118.282694,CISO
+59512,"Team-Solar, Inc.",59746,DSH (CA) - Coalinga State Hospital,CA,Fresno,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.6,2.6,7,2014,,Y,,,,,,,,,0.0,0.0,2.6,Y,,,,,,N, ,N, ,36.13726,-120.218453,CISO
+59512,"Team-Solar, Inc.",59748,CDCR (CA) - Pleasant Valley State Prison,CA,Fresno,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.2,1.2,7,2014,,Y,,,,,,,,,0.0,0.0,1.6,Y,,,,,,N, ,N, ,36.137219,-120.224445,CISO
+56769,Consolidated Edison Development Inc.,59814,"Copper Mountain Solar 4, LLC",NV,Clark,PV01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,51.8,51.8,51.8,10,2016,,Y,,,,,,,,,0.0,0.0,69.2,Y,,,,,,N, ,N, ,35.78222,-114.975375,CISO
+56769,Consolidated Edison Development Inc.,59814,"Copper Mountain Solar 4, LLC",NV,Clark,PV02,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,41.8,41.8,41.8,9,2016,,Y,,,,,,,,,0.0,0.0,56.0,Y,,,,,,N, ,N, ,35.78222,-114.975375,CISO
+61785,EDP Renewables North America LLC,59826,Sunshine Valley Solar,NV,Nye,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,103.5,103.5,103.5,12,2019,,Y,,,,,,,,,90.0, ,126.0,,Y,,,,,N, ,N, ,36.518,-116.497,CISO
+61230,"CD Arevon USA, Inc.",59868,Kingbird A Solar LLC,CA,Kern,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,4,2016,,Y,,,,,,,,,180.0, ,25.3,,Y,,,,,N, ,N, ,34.819,-118.432,CISO
+59660,"Solar Star California XXXII, LLC",59872,UC Davis South Campus,CA,Yolo,UCD1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,13.0,13.0,13.0,3,2015,,Y,,N,,,,,,,180.0, ,16.3,Y,,,,,,N, ,N, ,38.55,-121.75,CISO
+61785,EDP Renewables North America LLC,59878,Windhub Solar A LLC,CA,Kern,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2019,,Y,,N,,,,,,,90.0, ,25.0,,Y,,,,,N, ,N, ,35.0199,-118.2879,CISO
+61943,"North Rosamond Solar, LLC",59879,North Rosamond Solar LLC,CA,Kern,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,151.1,151.1,151.1,6,2019,,Y,,,,,,,,,180.0, ,182.5,,Y,,,,,N, ,N, ,34.862,-118.38,CISO
+56769,Consolidated Edison Development Inc.,59900,Corcoran Solar 3,CA,Kings,C3CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,2,2016,,Y,,,,,,,,,0.0,0.0,28.0,Y,,,,,,N, ,N, ,36.15042,-119.58542,CISO
+56769,Consolidated Edison Development Inc.,59915,Oro Loma,CA,Fresno,ORCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,1,2017,,Y,,,,,,,,,0.0,0.0,27.5,Y,,,,,,N, ,N, ,36.876847,-120.667608,CISO
+59139,SunEdison LLC,59916,SunE- E Philadelphia Ontario,CA,San Bernardino,12307,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,3,2016,,,,Y,,,,,,,180.0,12.0,1.0,Y,,,,,,N, ,N, ,34.03527,-117.5341,CISO
+17650,Southern Power Co,59939,RE Tranquillity,CA,Fresno,TQ,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,205.3,200.0,200.0,7,2016,,Y,,,,,,,,,90.0, ,257.7,Y,,,,,,N, ,N, ,36.581365,-120.40447,CISO
+56769,Consolidated Edison Development Inc.,59940,"Great Valley Solar Portfolio Holdings, LLC",CA,Fresno,GVS2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,60.0,60.0,60.0,12,2017,,Y,,,,,,,,,0.0,0.0,84.8,Y,,,,,,N, ,N, ,36.581182,-120.37957,CISO
+56769,Consolidated Edison Development Inc.,59940,"Great Valley Solar Portfolio Holdings, LLC",CA,Fresno,GVS3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,0.0,0.0,28.1,Y,,,,,,N, ,N, ,36.581182,-120.37957,CISO
+56769,Consolidated Edison Development Inc.,59940,"Great Valley Solar Portfolio Holdings, LLC",CA,Fresno,GVS4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,0.0,0.0,27.9,Y,,,,,,N, ,N, ,36.581182,-120.37957,CISO
+56769,Consolidated Edison Development Inc.,59940,"Great Valley Solar Portfolio Holdings, LLC",CA,Fresno,TQ8,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,102.5,102.5,102.5,4,2018,,Y,,,,,,,,,0.0, ,141.0,Y,,,,,,N, ,N, ,36.581182,-120.37957,CISO
+63249,Terraform Arcadia,59942,Morgan Lancaster 1,CA,Los Angeles,ML1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,9,2015,,,Y,,,,,,,, , ,1.8,Y,,,,,N,Y,1.8,N, ,34.6608,-118.0836,CISO
+58661,"Sustainable Power Group, LLC",59961,Western Antelope Blue Sky B,CA,Los Angeles,WABSB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,19.0,12,2016,,Y,,,,,,,,,90.0, ,25.9,Y,,,,,,N, ,N, ,34.73206,-118.313573,CISO
+58661,"Sustainable Power Group, LLC",59962,North Lancaster Ranch,CA,Los Angeles,NLR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,18.0,17.0,12,2016,,,,Y,,,,,,,180.0,25.0,22.5,Y,,,,,,N, ,N, ,34.719538,-118.31301,CISO
+58661,"Sustainable Power Group, LLC",59963,Central Antelope Dry Ranch C,CA,Los Angeles,CADRC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,17.0,16.0,5,2016,,,,Y,,,,,,,180.0,25.0,22.5,Y,N,,,,,N, ,N, ,34.720499,-118.30046,CISO
+58661,"Sustainable Power Group, LLC",59964,Elevation Solar C,CA,Los Angeles,ELVSC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.0,39.0,37.0,12,2016,,Y,,,,,,,,,90.0, ,51.1,Y,,,,,,N, ,N, ,34.730263,-118.30425,CISO
+59727,RE Astoria LLC,59976,RE Astoria,CA,Kern,ASTR1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,100.0,100.0,100.0,12,2016,,Y,,,,,,,,,0.0,0.0,130.8,Y,,,,,,N, ,N, ,34.844226,-118.458466,CISO
+59728,RE Astoria 2 LLC,59977,RE Astoria 2,CA,Kern,ASTR2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,75.0,75.0,75.0,12,2016,,Y,,,,,,,,,0.0,0.0,94.9,Y,,,,,,N, ,N, ,34.836649,-118.480204,CISO
+59736,Columbia Solar Energy LLC,59979,"Columbia Solar Energy, LLC",CA,Contra Costa,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.2,19.2,19.2,10,2015,,,,Y,,,,,,,203.0,20.0,25.4,Y,,,,,,N, ,N, ,38.019671,-121.86506,CISO
+17650,Southern Power Co,60007,Morelos del Sol,CA,Kern,MORLS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,15.0,15.0,11,2015,,Y,,,,,,,,,90.0, ,18.7,,,,Y,,,N, ,N, ,35.731362,-119.818712,CISO
+58661,"Sustainable Power Group, LLC",60027,Adera Solar,CA,Madera,ADERA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,19.0,12,2015,,,,Y,,,,,,,180.0,25.0,26.5,Y,,,,,,N, ,N, ,37.120586,-120.32488,CISO
+59773,"SunE Solar XVI Lessor, LLC",60032,SunE Rochester,CA,San Bernardino,RCHTR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,8,2016,,,,Y,,,,,,,180.0,11.0,1.1,Y,,,,,,N, ,N, ,34.097728,-117.544529,CISO
+61423,"California Flats Solar 130, LLC",60033,"CA Flats Solar 130, LLC",CA,San Luis Obispo,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,130.0,130.0,130.0,11,2017,,Y,,,,,,,,,180.0, ,172.6,,Y,,,,,N, ,N, ,35.615573,-120.404352,CISO
+61230,"CD Arevon USA, Inc.",60034,"CA Flats Solar 150, LLC",CA,San Luis Obispo,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,150.0,150.0,150.0,2,2019,,Y,,,,,,,,,180.0, ,201.0,,Y,,,,,N, ,N, ,35.615573,-120.404352,CISO
+59775,"Solar Star California XXXI, LLC",60035,Tequesquite Landfill Solar PV Project,CA,Riverside,RPU1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,7.3,7.3,7.3,10,2015,,Y,,N,,,,,,,180.0, ,9.4,Y,,,,,,N, ,N, ,33.97819,-117.38514,CISO
+59776,"Frontier Solar, LLC",60039,Frontier Solar LLC,CA,Stanislaus,FTRS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,18.0,6,2016,,Y,,,,,,,,,180.0, ,20.0,Y,,,,,,N, ,N, ,37.379919,-121.130661,CISO
+61112,"Cuyama Solar, LLC",60043,"Cuyama Solar, LLC",CA,Santa Barbara,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,40.0,40.0,40.0,11,2017,,Y,,,,,,,,,90.0, ,56.1,Y,,,,,,N, ,N, ,34.901,-119.596,CISO
+59791,Lindberg Field Solar I LLC,60060,Lindberg FIeld Solar,CA,San Diego,SDIA2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.1,1.7,1.7,2,2016,,,,Y,,,,,,,185.0,10.0,2.1,Y,,,,,,N, ,N, ,32.729238,-117.207718,CISO
+59791,Lindberg Field Solar I LLC,60060,Lindberg FIeld Solar,CA,San Diego,SDIAA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.6,0.5,0.5,9,2015,,,,Y,,,,,,,181.0,10.0,0.6,Y,,,,,,N, ,N, ,32.729238,-117.207718,CISO
+59791,Lindberg Field Solar I LLC,60060,Lindberg FIeld Solar,CA,San Diego,SDIAB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,12,2015,,,,Y,,,,,,,181.0,10.0,0.5,Y,,,,,,N, ,N, ,32.729238,-117.207718,CISO
+56769,Consolidated Edison Development Inc.,60077,CED Avenal,CA,Kings,AVCA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.8,15.8,15.8,1,2017,,Y,,,,,,,,,0.0,0.0,21.4,Y,,,,,,N, ,N, ,35.996324,-120.15146,CISO
+56769,Consolidated Edison Development Inc.,60078,CED Ducor 1,CA,Tulare,DU1CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2016,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.856278,-119.068414,CISO
+56769,Consolidated Edison Development Inc.,60079,CED Ducor 2,CA,Tulare,DU2CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2016,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.844167,-119.068069,CISO
+56769,Consolidated Edison Development Inc.,60080,CED Ducor 3,CA,Tulare,DU3CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,15.0,15.0,15.0,12,2016,,Y,,,,,,,,,0.0,0.0,20.0,Y,,,,,,N, ,N, ,35.845378,-119.056992,CISO
+56769,Consolidated Edison Development Inc.,60081,CED Ducor 4,CA,Tulare,DU4CA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2016,,Y,,,,,,,,,0.0,0.0,26.0,Y,,,,,,N, ,N, ,35.850403,-119.026992,CISO
+20323,"Wellhead Energy, LLC",60083,Fresno Solar,CA,Fresno,PV-S,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,10,2015,,Y,,,,,,,,N,90.0, ,1.6,Y,,,,,,N, ,N, ,36.616846,-120.105144,CISO
+20323,"Wellhead Energy, LLC",60083,Fresno Solar,CA,Fresno,PV-W,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,10,2015,,Y,,,,,,,,,90.0, ,1.6,Y,,,,,,N, ,N, ,36.616846,-120.105144,CISO
+60947,Tesla Inc.,60085,AVS Lancaster 1,CA,Los Angeles,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.7,3.7,3.7,12,2016,,,,Y,,,,,,,180.0,20.0,5.0,Y,,,,,,Y,5.0,N, ,34.748894,-117.973571,CISO
+60947,Tesla Inc.,60086,US-TOPCO (Soccer Center),CA,Los Angeles,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,12,2016,,,,Y,,,,,,,180.0,20.0,3.7,Y,,,,,,Y,3.7,N, ,34.66072,-118.081152,CISO
+61230,"CD Arevon USA, Inc.",60091,"Kingbird B Solar, LLC",CA,Kern,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,4,2016,,Y,,,,,,,,,180.0, ,25.3,,Y,,,,,N, ,N, ,34.824206,-118.438547,CISO
+59843,"Blythe Solar II, LLC",60092,"Blythe Solar II, LLC",CA,Riverside,BLCK4,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,33.2,33.2,33.2,7,2016,,Y,,,,,,,,,0.0,0.0,41.0,Y,,,,,,N, ,N, ,33.68,-114.73,CISO
+59843,"Blythe Solar II, LLC",60092,"Blythe Solar II, LLC",CA,Riverside,BLCK5,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,33.9,33.9,33.9,8,2016,,Y,,,,,,,,,0.0,0.0,41.5,Y,,,,,,N, ,N, ,33.68,-114.73,CISO
+59843,"Blythe Solar II, LLC",60092,"Blythe Solar II, LLC",CA,Riverside,BLCK6,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,32.0,32.0,32.0,9,2016,,Y,,,,,,,,,0.0,0.0,39.5,Y,,,,,,N, ,N, ,33.68,-114.73,CISO
+59843,"Blythe Solar II, LLC",60092,"Blythe Solar II, LLC",CA,Riverside,BLCK7,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,32.1,32.1,32.1,10,2016,,Y,,,,,,,,,0.0,0.0,39.5,Y,,,,,,N, ,N, ,33.68,-114.73,CISO
+59842,"Blythe Solar 110, LLC",60093,"Blythe Solar 110, LLC",CA,Riverside,BLCK1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,38.7,38.7,38.7,3,2016,,Y,,,,,,,,,0.0,0.0,54.0,Y,,,,,,N, ,N, ,33.68,-114.742,CISO
+59842,"Blythe Solar 110, LLC",60093,"Blythe Solar 110, LLC",CA,Riverside,BLCK2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,36.3,36.3,36.3,4,2016,,Y,,,,,,,,,0.0,0.0,51.0,Y,,,,,,N, ,N, ,33.68,-114.742,CISO
+59842,"Blythe Solar 110, LLC",60093,"Blythe Solar 110, LLC",CA,Riverside,BLCK3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,34.8,34.8,34.8,4,2016,,Y,,,,,,,,,0.0,0.0,49.0,Y,,,,,,N, ,N, ,33.68,-114.742,CISO
+59937,"Lemoore PV1, LLC",60142,Lemoore 1,CA,Kings,LEPV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,2,2016,,Y,,,,,,,,,90.0, ,2.0,Y,,,,,,N, ,N, ,36.257938,-119.798139,CISO
+57104,Golden Springs Development Company LLC,60151,Building F,CA,Los Angeles,BLDGF,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,11,2016,,,,Y,,,,,,,180.0,10.0,1.8,Y,,,,,,N, ,N, ,33.914356,-118.050189,CISO
+57104,Golden Springs Development Company LLC,60153,Building G,CA,Los Angeles,BLDGG,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.2,1.2,9,2016,,,,Y,,,,,,,180.0,10.0,1.7,Y,,,,,,N, ,N, ,33.912917,-118.050561,CISO
+57104,Golden Springs Development Company LLC,60154,Buidling L,CA,Los Angeles,BLDG1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,11,2016,,,,Y,,,,,,,180.0,10.0,1.2,Y,,,,,,N, ,N, ,33.912917,-118.041944,CISO
+57104,Golden Springs Development Company LLC,60182,Dulles,CA,Riverside,DULLE,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,9,2016,,,,Y,,,,,,,180.0,10.0,2.4,Y,,,,,,N, ,N, ,34.030119,-117.517753,CISO
+57104,Golden Springs Development Company LLC,60183,Freeway Springs,CA,Los Angeles,FSPRI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,10,2016,,,,Y,,,,,,,180.0,10.0,2.8,Y,,,,,,N, ,N, ,33.892614,-118.037564,CISO
+58661,"Sustainable Power Group, LLC",60185,Solverde 1,CA,Los Angeles,SOLV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,85.0,81.0,78.0,12,2016,,Y,,,,,,,,,90.0, ,106.3,Y,,,,,,N, ,N, ,34.655694,-118.298166,CISO
+58661,"Sustainable Power Group, LLC",60186,Antelope DSR 1,CA,Los Angeles,DSR1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,50.0,48.0,46.0,12,2016,,Y,,,,,,,,,90.0, ,62.1,Y,,,,,,N, ,N, ,34.655556,-118.280722,CISO
+58661,"Sustainable Power Group, LLC",60187,Antelope DSR 2,CA,Los Angeles,DSR2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2016,,Y,,,,,,,,,90.0, ,6.3,Y,,,,,,N, ,N, ,34.686944,-118.311722,CISO
+59969,Whitethorn Solar LLC,60193,Whitethorn Solar LLC,CA,Alameda,GEN1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.3,3.3,3.3,2,2016,,,,Y,,,,,,,180.0,15.0,3.9,Y,,,,,,N, ,N, ,37.691,-121.717,CISO
+60947,Tesla Inc.,60231,Genentech-Oceanside Hybrid,CA,San Diego,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.5,4.5,4.5,4,2016,,Y,,,,,,,,,180.0,25.0,4.8,Y,,,,,,Y,4.8,N, ,33.211095,-117.299593,CISO
+17650,Southern Power Co,60233,RE Garland,CA,Kern,PV2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,185.1,185.0,185.0,11,2016,,Y,,,,,,,,,90.0, ,245.6,Y,,,,,,N, ,N, ,34.825267,-118.524989,CISO
+59050,Algonquin Power Co,60242,"Algonquin SKIC 10 Solar, LLC",CA,Kern,SKI10,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.0,10.0,10.0,1,2017,,Y,,,,,,,,,180.0, ,11.9,Y,,,,,,N, ,N, ,35.126111,-119.243361,CISO
+12397,Metropolitan Water District of S CA,60255,Weymouth Solar Plant,CA,Los Angeles,1,OP,Solar Photovoltaic,PV,Electric Utility,1,2.0,2.0,2.0,6,2016,,Y,,,,,,,,,90.0, ,2.2,Y,,,,,,N, ,N, ,34.108618,-117.782246,CISO
+12397,Metropolitan Water District of S CA,60255,Weymouth Solar Plant,CA,Los Angeles,2,OP,Solar Photovoltaic,PV,Electric Utility,1,1.0,1.0,1.0,6,2016,,Y,,,,,,,,,90.0, ,1.1,Y,,,,,,N, ,N, ,34.108618,-117.782246,CISO
+60067,Westside Assets LLC,60275,Westside Solar Power PV1,CA,Kings,WSPV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,5,2016,,Y,,,,,,,,,180.0,0.0,2.5,Y,,,,,,N, ,N, ,36.219,-119.907,CISO
+60059,ZGlobal Inc,60277,Castor Solar,CA,Kern,CASTR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,4,2016,,,,Y,,,,,,,180.0,25.0,1.9,Y,,,,,,N, ,N, ,35.211044,-119.387258,CISO
+58661,"Sustainable Power Group, LLC",60279,Antelope Big Sky Ranch,CA,Los Angeles,ABSR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,19.0,8,2016,,Y,,,,,,,,,90.0, ,26.0,Y,,,,,,N, ,N, ,34.694839,-118.28769,CISO
+58661,"Sustainable Power Group, LLC",60280,Summer Solar LLC,CA,Los Angeles,SUMSL,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,19.0,19.0,7,2016,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,34.714703,-118.311006,CISO
+63250,Central Antelope Dry Ranch B LLC,60281,Central Antelope Dry Ranch B LLC,CA,Los Angeles,CADRB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,9,2017,,Y,,,,,,,,,90.0, ,3.0,Y,,,,,,N, ,N, ,34.705549,-118.301417,CISO
+56769,Consolidated Edison Development Inc.,60307,"Mesquite Solar 2, LLC",AZ,Maricopa,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,100.0,100.0,100.0,12,2016,,Y,,,,,,,,,90.0,52.0,136.5,Y,,,,,,N, ,N, ,33.332777,-112.911388,CISO
+56769,Consolidated Edison Development Inc.,60308,"Mesquite Solar 3, LLC",AZ,Maricopa,1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,150.0,150.0,150.0,12,2016,,Y,,,,,,,,,90.0,52.0,210.0,Y,,,,,,N, ,N, ,33.347583,-112.936805,CISO
+60412,"Portal Ridge Solar, LLC",60310,"Portal Ridge Solar B, LLC",CA,Los Angeles,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,2,2017,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,34.71647,-118.2821,CISO
+60412,"Portal Ridge Solar, LLC",60311,"Portal Ridge Solar C, LLC",CA,Los Angeles,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,11.4,11.4,11.4,2,2017,,Y,,,,,,,,,90.0, ,13.8,Y,,,,,,N, ,N, ,34.71412,-118.2739,CISO
+61672,Willow Spring Solar LLC,60324,"Willow Spring Solar, LLC",CA,Kern,GEN01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,107.9,107.9,107.9,1,2019,,,,,,,,,,Y, , ,125.7,Y,,,,,,N, ,N, ,34.826697,-118.335211,CISO
+17650,Southern Power Co,60386,RE Garland A,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.2,20.0,20.0,9,2016,,Y,,,,,,,,,90.0, ,26.5,Y,,,,,,N, ,N, ,34.821453,-118.497406,CISO
+58135,Ecos Energy LLC,60412,Munro Valley Solar,CA,Inyo,MUN,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,10,2016,,,,Y,,,,,,,180.0,25.0,6.8,Y,,,,,,N, ,N, ,36.2647,-117.9955,CISO
+60206,"Solar Star California XL, LLC",60426,RCWD PV Project,CA,Riverside,RCWD,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,4.1,2.7,6,2016,,Y,,,,,,,,,0.0,0.0,5.0,Y,,,,,,Y,5.0,N, ,33.5226,-117.1815,CISO
+58540,California PV Energy LLC,60428,CA Dept of Public Health at Richmond,CA,Contra Costa,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.2,2.2,2.2,1,2017,,,,Y,,,,,,,179.0,12.0,2.7,Y,,,,,,Y,2.7,N, ,37.92,-122.344,CISO
+63249,Terraform Arcadia,60446,E&B Resources,CA,Kern,PVEB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2013,,Y,,,,,,,,,0.0,0.0,1.1,Y,,,,,,Y,1.1,N, ,35.534584,-119.060029,CISO
+63249,Terraform Arcadia,60450,Corcoran,CA,Kings,PVCR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,1,2014,,,,Y,,,,,,,180.0,30.0,1.3,Y,,,,,,Y,1.3,N, ,36.102307,-119.566516,CISO
+58661,"Sustainable Power Group, LLC",60474,"Bayshore Solar B, LLC",CA,Los Angeles,BSHRB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,34.678305,-118.302649,CISO
+58661,"Sustainable Power Group, LLC",60475,"Bayshore Solar C, LLC",CA,Los Angeles,BSHRC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,34.681338,-118.314087,CISO
+58661,"Sustainable Power Group, LLC",60481,"Bayshore Solar A, LLC",CA,Los Angeles,BSHRA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,90.0, ,25.0,Y,,,,,,N, ,N, ,34.667817,-118.298089,CISO
+60271,"Longboat Solar, LLC",60485,"Longboat Solar, LLC",CA,San Bernardino,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2016,,Y,,,,,,,,,180.0, ,26.0,Y,,,,,,N, ,N, ,34.541,-117.061,CISO
+60277,54 KR 8me LLC,60490,Redwood 4 Solar Farm,CA,Kern,RW4SF,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,12,2017,,Y,,,,,,,,,0.0,0.0,26.5,Y,,,,,,N, ,N, ,35.314198,-118.81192,CISO
+59462,"Heelstone Energy Holdings, LLC",60509,Valley Center,CA,San Diego,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,2.3,2.3,12,2016,,Y,,,,,,,,,0.0,0.0,3.0,Y,,,,,,N, ,N, ,33.2503,-117.0226,CISO
+59462,"Heelstone Energy Holdings, LLC",60516,Granger,CA,San Diego,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,9,2016,,Y,,,,,,,,,0.0,0.0,3.9,Y,,,,,,N, ,N, ,33.2704,-117.0588,CISO
+60307,NRG Solar Blythe II LLC,60558,Solar Blythe 2,CA,Riverside,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,4,2017,,Y,,N,,,,,,,180.0, ,20.0,Y,,,,,,N, ,N, ,33.618678,-114.696182,CISO
+60352,"Golden Fields Solar I, LLC",60590,"Golden Fields Solar I, LLC",CA,Kern,RS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.0,54.0,54.0,12,2016,,Y,,,,,,,,,0.0,0.0,67.4,Y,,,,,,N, ,N, ,34.839012,-118.386843,CISO
+60353,"Solar Star California, XLI, LLC",60591,"Solar Star California, XLI, LLC",CA,Kern,RS1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,54.0,54.0,54.0,12,2016,,Y,,,,,,,,,0.0,0.0,67.4,Y,,,,,,N, ,N, ,34.839012,-118.386843,CISO
+60399,"GASNA 6P, LLC",60678,San Joaquin Solar,CA,Fresno,SJ1A,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,19.8,18.5,18.5,10,2018,,Y,,,,,,,,,180.0, ,23.4,,Y,,,,,N, ,N, ,36.527,-120.149,CISO
+60399,"GASNA 6P, LLC",60678,San Joaquin Solar,CA,Fresno,SJ1B,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,7,2019,,Y,,,,,,,,,180.0, ,1.8,,Y,,,,,N, ,N, ,36.527,-120.149,CISO
+60455,"PVN Milliken, LLC",60790,"PVN Milliken, LLC",CA,San Bernardino,PV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,6,2017,,,,Y,,,,,,,180.0,22.0,3.2,Y,,,,,,N, ,N, ,34.038433,-117.565802,CISO
+796,Arizona Electric Pwr Coop Inc,60791,SunAnza,CA,Riverside,ANZA1,OP,Solar Photovoltaic,PV,Electric Utility,1,2.0,2.0,2.0,9,2017,,N,,Y,,,,,,,180.0,27.0,2.8,Y,,,,,,N, ,N, ,33.555267,-116.639647,CISO
+60496,Enerparc Inc.,60813,Cloverdale Solar Center,CA,Sonoma,ECA02,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,5,2019,,Y,,,,,,,,,180.0,20.0,1.3,Y,,,,,,N, ,N, ,38.769581,-123.020724,CISO
+60947,Tesla Inc.,60844,Genentech Vacaville Meter #1,CA,Solano,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.8,3.8,3.8,5,2017,,N,,Y,,,,,,,180.0,25.0,5.0,Y,,,,,,Y,5.0,N, ,38.390756,-121.94777,CISO
+60947,Tesla Inc.,60844,Genentech Vacaville Meter #1,CA,Solano,PV2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.3,2.3,2.3,5,2017,,N,,Y,,,,,,,180.0,25.0,4.0,Y,,,,,,Y,4.0,N, ,38.390756,-121.94777,CISO
+60947,Tesla Inc.,60846,US GSA - Sacramento,CA,Sacramento,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,3,2018,,,,Y,,,,,,,180.0,7.0,1.6,Y,,,,,,Y,1.6,N, ,38.601354,-121.397929,CISO
+60525,"Solar Star California, XLIV, LLC",60869,"Solar Star California, XLIV, LLC",CA,Los Angeles,PB1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,9.5,9.5,9.5,12,2016,,Y,,,,,,,,,0.0,0.0,11.9,Y,,,,,,N, ,N, ,34.511889,-117.922819,CISO
+60639,AEP Renewables,60947,Jacumba Solar Farm,CA,San Diego,Q644A,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,7,2017,,,,Y,,,,,,,180.0,25.0,20.0,Y,,,,,,N, ,N, ,32.6212,-116.12896,CISO
+60619,"Whitney Point Solar, LLC",60975,Whitney Point Solar,CA,Fresno,WS532,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,3,2017,,Y,,,,,,,,,0.0,0.0,20.0,Y,,,,,,N, ,N, ,36.376889,-120.138472,CISO
+60630,"Solar Star California XLVIII, LLC",60978,CSUF State College,CA,Orange,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2016,,,,Y,,,,,,,180.0,10.0,1.1,Y,,,,,,N, ,N, ,33.87912,-117.8887,CISO
+60630,"Solar Star California XLVIII, LLC",60979,CSUF Nutwood Solar,CA,Orange,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.9,1.9,1.9,12,2016,,,,Y,,,,,,,180.0,10.0,2.2,Y,,,,,,N, ,N, ,33.87912,-117.8887,CISO
+60614,"Westside Solar, LLC",60981,NextEra Westside PV,CA,Fresno,WS526,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,3,2017,,Y,,,,,,,,,0.0,0.0,20.0,Y,,,,,,N, ,N, ,36.381775,-120.134486,CISO
+60618,"Lindberg Field Solar 2, LLC",60984,Lindberg Field Solar 2,CA,San Diego,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.9,1.9,1.9,2,2017,,,,Y,,,,,,,207.0,7.5,2.2,Y,,,,,,N, ,N, ,32.729444,-117.205083,CISO
+16609,San Diego Gas & Electric Co,60995,Ramona Solar Energy,CA,San Diego,1,OP,Solar Photovoltaic,PV,Electric Utility,1,4.3,3.7,3.6,4,2017,,,,Y,,,,,,,180.0,20.0,4.9,Y,,,,,,N, ,N, ,33.018486,-116.860713,CISO
+60648,"SCDA Solar 1, LLC",61006,SCDA Solar 1,CA,Sacramento,SCAIR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,7.0,7.0,7.0,10,2017,,Y,,,,,,,,,180.0, ,7.9,Y,,,,,,Y,7.9,N, ,38.690186,-121.586514,CISO
+58661,"Sustainable Power Group, LLC",61013,Marin Clean Energy Solar One,CA,Contra Costa,MCES1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,10.5,10.5,10.5,12,2017,N,Y,,Y,,,,,,,180.0,15.0,13.0,Y,,,,,,N, ,N, ,37.945296,-122.377202,CISO
+60727,"Manteca Land PV, LLC",61115,Manteca Land PV,CA,San Joaquin,MANT1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2017,,,,Y,,,,,,,180.0,20.0,1.3,Y,,,,,,N, ,N, ,37.84013,-121.216191,CISO
+60728,"Delano Land 1, LLC",61116,Delano Land 1,CA,Kern,DELA1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2017,,Y,,N,,,,,,,90.0, ,1.3,Y,,,,,,N, ,N, ,35.761217,-119.344408,CISO
+60729,"Bakersfield PV 1, LLC",61117,Bakersfield PV 1,CA,Kern,BAKE1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.3,5.3,5.3,12,2017,,Y,,,,,,,,,90.0, ,7.0,Y,,,,,,N, ,N, ,35.324982,-118.981522,CISO
+60730,"Bakersfield Industrial PV 1, LLC",61118,Bakersfield Industrial PV 1,CA,Kern,BIND1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,12,2017,,N,,Y,,,,,,,180.0,20.0,1.5,Y,,,,,,N, ,N, ,35.330032,-118.993119,CISO
+60947,Tesla Inc.,61152,Intel Folsom Phase 3,CA,Sacramento,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.2,5.2,5.2,4,2016,,Y,,,,,,,,,272.0,5.0,6.5,Y,,,,,,Y,6.5,N, ,38.645961,-121.162623,CISO
+63447,"Imperial Valley Solar 3, LLC",61202,Mount Signal Solar Farm V,CA,Imperial,MTSG3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,252.3,252.3,252.3,11,2018,,Y,,,,,,,,,180.0, ,328.1,,Y,,,,,N, ,N, ,32.678805,-115.56721,CISO
+58661,"Sustainable Power Group, LLC",61215,Green Beanworks C PV,CA,Los Angeles,GBWXC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,8,2018,,Y,,,,,,,,,180.0, ,3.7,Y,,,,,,N, ,N, ,34.597,-117.931,CISO
+58661,"Sustainable Power Group, LLC",61216,Green Beanworks D PV,CA,Los Angeles,GBWXD,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,8,2018,,Y,,,,,,,,,180.0,0.0,3.7,Y,,,,,,N, ,N, ,34.654976,-118.08215,CISO
+60950,USPS LA Solar FiT A & B,61250,USPS PV,CA,Los Angeles,USPS1,OP,Solar Photovoltaic,PV,Electric Utility,1,10.7,10.7,10.7,7,2017,,,,Y,,,,,,,225.0,10.0,10.7,Y,,,,,,N, ,N, ,33.977922,-118.2587,CISO
+58661,"Sustainable Power Group, LLC",61264,Antelope Expansion 2,CA,Los Angeles,ANTX2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,105.0,105.0,105.0,12,2018,,Y,,,,,,,,,180.0,0.0,130.0,Y,,,,,,N, ,N, ,34.744977,-118.309153,CISO
+58661,"Sustainable Power Group, LLC",61265,Antelope DSR 3,CA,Los Angeles,ADSR3,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,9,2019,,Y,,,,,,,,,0.0,0.0,25.0,Y,,,,,,N, ,N, ,34.736859,-118.304071,CISO
+58661,"Sustainable Power Group, LLC",61339,Green Beanworks B PV,CA,Los Angeles,GBWXB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,12,2018,,Y,,,,,,,,,180.0, ,3.7,Y,,,,,,N, ,N, ,34.688042,-117.989541,CISO
+61058,"One Ten Partners, LLC",61419,One Ten Partners PV,CA,Los Angeles,OTP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,9,2017,,Y,,,,,,,,,0.0,0.0,2.7,Y,,,,,,N, ,N, ,34.615622,-117.936594,CISO
+60059,ZGlobal Inc,61420,Merced 1 PV,CA,Merced,MRCD1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,4,2018,,Y,,,,,,,,,180.0,0.0,4.1,Y,,,,,,N, ,N, ,36.989475,-120.878081,CISO
+60059,ZGlobal Inc,61421,Madera 1 PV,CA,Madera,MDRA1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2017,,Y,,,,,,,,,180.0,0.0,2.1,Y,,,,,,N, ,N, ,37.056468,-120.167021,CISO
+17650,Southern Power Co,61445,Gaskell West 1 Solar Facility,CA,Kern,PV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,20.0,20.0,20.0,3,2018,,Y,,,,,,,,,90.0, ,28.0,Y,,,,,,N, ,N, ,34.832786,-118.563578,CISO
+61082,"Vandenberg Solar I, LLC",61463,Vandenberg Solar Project,CA,Santa Barbara,VBERG,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,22.5,20.6,15.2,12,2017,,Y,,,,,,,,,0.0,0.0,28.0,Y,,,,,,N, ,N, ,34.749708,-120.509982,CISO
+61210,Stenner Creek Solar LLC,61607,Stenner Creek Solar,CA,San Luis Obispo,CPOLY,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,4.5,4.5,4.5,5,2018,,Y,,,,,,,,,180.0, ,5.6,Y,,,,,,N, ,N, ,35.32,-120.691,CISO
+61224,"SunE Solano SP Owner, LLC",61619,CDCR (CA) - Solano State Prison,CA,Solano,SOLSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,1.1,12,2013,,Y,,,,,,,,,180.0,0.0,1.4,Y,,,,,,Y,1.4,N, ,38.32272,-121.97062,CISO
+61225,"SunE Corcoran SP Owner, LLC",61620,CDCR (CA) - Corcoran State Prison,CA,Kings,CORSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,5.0,5.0,5.0,12,2013,,Y,,,,,,,,,180.0,0.0,5.9,Y,,,,,,Y,5.9,N, ,36.06502,-119.55756,CISO
+61226,"SunE Wasco SP Owner, LLC",61621,CDCR (CA) - Wasco State Prison,CA,Kern,WASCO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.5,1.5,1.5,12,2013,,Y,,,,,,,,,180.0,0.0,1.9,Y,,,,,,Y,1.9,N, ,35.60053,-119.40366,CISO
+61227,Nautilus Solar Solutions,61628,Kilroy Solar,CA,San Diego,KILRO,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.1,1.1,0.9,1,2018,,,,Y,,,,,,,177.0,3.0,1.3,Y,,,,,,N, ,N, ,32.936137,-117.234157,CISO
+56769,Consolidated Edison Development Inc.,61750,Wistaria Ranch Solar,CA,Imperial,WICA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,106.7,100.0,100.0,12,2018,,Y,,,,,,,,,0.0, ,141.0,Y,,,,,,N, ,N, ,32.676,-115.619,CISO
+61418,"Stage Gulch Solar, LLC",61791,Stage Gulch Solar,CA,Sonoma,5001,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,0.8,0.7,4,2018,,,,Y,,,,,,,180.0,25.0,1.1,Y,,,,,,N, ,N, ,38.216841,-122.542866,CISO
+61417,"Lavio Solar, LLC",61792,Lavio Solar,CA,Sonoma,5002,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,0.5,4,2018,,N,,Y,,,,,,,180.0,25.0,1.3,Y,,,,,,N, ,N, ,38.194599,-122.663388,CISO
+61443,"Good Fellow Solar 1 PH1, LLC",61824,Target Shafter,CA,San Bernardino,RPU2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,6,2018,,Y,,,,,,,,,0.0,0.0,3.8,Y,,,,,,Y,2.5,N, ,34.11193,-117.27326,CISO
+61453,Soboba Band of Luiseno Indians,61834,Soboba Community Solar Project,CA,Riverside,SCSP1,OP,Solar Photovoltaic,PV,Electric Utility,1,1.0,0.9,0.8,8,2016,,,,Y,,,,,,,200.0,25.0,1.3,Y,,,,,,N, ,Y,1.0,33.767061,-116.905874,CISO
+60584,Onyx Asset Services Group,61843,SeaWorld Aquatica,CA,San Diego,10276,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,5,2018,,,,Y,,,,,,,181.0,7.0,1.0,Y,,,,,,Y,1.0,N, ,32.586536,-117.004884,CISO
+61510,National Raisin,61894,National Raisin,CA,Fresno,CR1,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,1.0,0.9,0.6,10,2015,,Y,,,,,,,,,180.0, ,1.1,Y,,,,,,Y,1.1,N, ,36.624512,-119.673088,CISO
+61510,National Raisin,61894,National Raisin,CA,Fresno,CR2,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,1.0,0.8,0.4,6,2015,,,,Y,,,,,,,225.0,5.0,1.1,Y,,,,,,Y,1.1,N, ,36.624512,-119.673088,CISO
+61510,National Raisin,61894,National Raisin,CA,Fresno,CR3,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,0.6,0.5,0.3,10,2015,,Y,,,,,,,,,180.0, ,0.7,Y,,,,,,Y,0.7,N, ,36.624512,-119.673088,CISO
+61510,National Raisin,61894,National Raisin,CA,Fresno,CR4,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,0.3,0.3,0.1,6,2015,,,,Y,,,,,,,225.0,5.0,0.4,Y,,,,,,Y,0.4,N, ,36.624512,-119.673088,CISO
+61575,Pacific Ethanol Madera,61989,Pacific Ethanol Madera Solar Array,CA,Madera,PV,OP,Solar Photovoltaic,PV,Industrial Non-CHP,6,4.3,3.9,2.4,8,2018,,Y,,N,,N,,,,,180.0,52.0,5.0,Y,,,,,,Y,4.0,N, ,36.916111,-119.97138,CISO
+61872,Gavilan District College Solar Project,61993,Gavilan District College Solar Project,CA,Santa Clara,GDCPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.4,1.2,0.4,12,2018,,,,Y,,,,,,,240.0,10.0,1.4,Y,,,,,,Y,1.4,N, ,37.003832,-121.593567,CISO
+61591,"Solar University, LLC",61995,UC Merced Solar Hybrid,CA,Merced,UCMPV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.5,4.3,1.8,12,2018,,,,Y,,,,,,,48.0,10.0,5.4,Y,,,,,,Y,4.3,N, ,37.365688,-120.432228,CISO
+58661,"Sustainable Power Group, LLC",62004,San Pablo Raceway,CA,Los Angeles,SPRWY,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,100.0,100.0,100.0,8,2019,,Y,,N,,,,,,,0.0,0.0,132.0,Y,,,,,,N, ,N, ,34.723748,-118.280345,CISO
+61600,"Solar Star California LXVI, LLC",62016,UC Riverside Lots 30 & 32,CA,Riverside,UCRIV,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,3.5,2.0,12,2017,,,,Y,,,,,,,180.0,10.0,4.3,Y,,,,,,N, ,N, ,33.97036,-117.33099,CISO
+61602,"Solar Star California XLII, LLC",62020,Stanford Campus Solar,CA,Santa Clara,STANF,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.4,3.3,1.6,3,2017,,,,Y,,,,,,,215.0,5.0,4.5,Y,,,,,,N, ,N, ,37.43434,-122.16077,CISO
+61601,"Solar Star California XLVII, LLC",62028,CSU Long Beach Lots 7 & 14,CA,Los Angeles,CSULB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.5,3.3,1.8,12,2017,,,,Y,,,,,,,180.0,10.0,4.8,Y,,,,,,N, ,N, ,33.78104,-118.11357,CISO
+61987,Sonoma County Junior College District,62039,Santa Rosa Junior College Petaluma Solar,CA,Sonoma,SRJCP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.1,0.6,7,2018,,,,Y,,,,,,,262.0,10.0,1.3,Y,,,,,,Y,1.3,N, ,38.46905,-122.72188,CISO
+61633,AVS Phase 2 LLC,62056,Lancaster,CA,Los Angeles,LANC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,11,2018,,Y,,,,,,,,,0.0, ,3.0,Y,,,,,,N, ,N, ,34.743383,-117.972222,CISO
+61686,Chaffey Community College District,62150,Chaffey College Rancho Cucamonga Campus,CA,San Bernardino,SOLAR,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,4.0,4.0,4.0,2,2017,,,,Y,,,,,,,180.0,7.0,4.4,Y,,,,,,Y,4.0,N, ,34.148139,-117.570404,CISO
+61766,"Solar Star California LXIII, LLC",62242,County of San Diego SBRC,CA,San Diego,SBRC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,12,2018,,Y,,,,,,,,,0.0,10.0,1.4,Y,,,,,,Y,1.3,N, ,32.63266,-117.07775,CISO
+61443,"Good Fellow Solar 1 PH1, LLC",62246,Target Woodland Solar Project,CA,Yolo,TWSP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.3,1.8,2.0,12,2018,,N,,Y,,,,,,,181.0,10.0,2.5,Y,,,,,,Y,2.5,N, ,38.682746,-121.723451,CISO
+61798,"Kern Highschool District Solar,LLC",62274,Liberty HS Solar Project,CA,Kern,LHSSP,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.5,1.2,0.2,12,2018,,Y,,,,,,,,,0.0,0.0,1.6,Y,,,,,,Y,1.6,N, ,35.364408,-119.127496,CISO
+61798,"Kern Highschool District Solar,LLC",62275,Frontier HS Solar Project,CA,Kern,FHSSP,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.4,1.4,1.4,12,2018,,Y,,,,,,,,,0.0,0.0,1.5,Y,,,,,,Y,1.5,N, ,35.41824,-119.14888,CISO
+57170,"EDF Renewable Asset Holdings, Inc.",62288,"Valentine Solar, LLC",CA,Kern,VAL01,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,111.2,111.2,111.2,11,2019,,Y,,,,,,,,,0.0, ,135.0,N,Y,,,,,N, ,N, ,34.90422,-118.384341,CISO
+62067,EnterSolar,62578,Preferred Freezer San Leandro,CA,Alameda,SLPV1,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,2.0,2.0,2.0,7,2017,,,,Y,,,,,,,228.0,5.0,2.6,Y,,,,,,Y,2.6,N, ,37.711995,-122.150665,CISO
+62028,PFMG Solar Grossmont Helix LLC,62611,PFMG Solar Grossmont Helix LLC,CA,San Diego,HELIX,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.2,1.2,5,2018,,,,Y,,,,,,,236.0,5.0,1.4,Y,,,,,,N, ,N, ,32.753281,-117.035241,CISO
+58661,"Sustainable Power Group, LLC",62649,SFDK Solar,CA,Solano,SFDK,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,6.3,6.3,6.3,12,2019,,,,Y,,,,,,,9.0,5.0,7.7,Y,,,,,,Y,6.3,N, ,38.132245,-122.231965,CISO
+62131,HL Solar LLC,62655,HL Solar,CA,Lassen,HLS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,7.6,7.6,7.6,6,2019,,Y,,,,,,,,,180.0, ,7.6,Y,,,,,,N, ,N, ,40.373,-120.262,CISO
+62162,"RP Napa Solar 1, LLC",62687,American Canyon Solar,CA,Napa,RPNPA,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,9,2019,,Y,,,,,,,,,180.0,52.0,1.3,Y,,,,,,N, ,N, ,38.160858,-122.214014,CISO
+62162,"RP Napa Solar 1, LLC",62687,American Canyon Solar,CA,Napa,RPNPB,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,9,2019,,Y,,,,,,,,,180.0,52.0,1.3,Y,,,,,,N, ,N, ,38.160858,-122.214014,CISO
+62162,"RP Napa Solar 1, LLC",62687,American Canyon Solar,CA,Napa,RPNPC,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,9,2019,,Y,,,,,,,,,180.0,52.0,1.3,Y,,,,,,N, ,N, ,38.160858,-122.214014,CISO
+62628,County of Santa Clara (CA),62688,Malech Solar Farm,CA,Santa Clara,MFARM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.1,3.1,2.0,10,2017,,,,Y,,,,,,,180.0,10.0,3.9,Y,,,,,,N, ,Y,3.9,37.228736,-121.738616,CISO
+62628,County of Santa Clara (CA),62689,Hellyer Solar Farm,CA,Santa Clara,HFARM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.2,2.2,1.5,8,2017,,,,Y,,,,,,,180.0,10.0,2.7,Y,,,,,,N, ,Y,2.7,37.286958,-121.81508,CISO
+62628,County of Santa Clara (CA),62690,Guadalupe Solar Farm,CA,Santa Clara,GFARM,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.7,1.7,1.1,9,2018,,,,Y,,,,,,,180.0,10.0,2.1,Y,,,,,,N, ,Y,2.1,37.269039,-121.861079,CISO
+62648,"DG 1 Acquisition Co., LLC",62732,"Solar Star Palo Alto I, LLC",CA,Santa Clara,SSPAI,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,8,2019,,,,Y,,,,,,,85.0,10.0,1.5,Y,,,,,,N, ,Y,1.5,37.411011,-122.148864,CISO
+62854,"Solar Star California LXXVIII, LLC",62987,Grossmont HS Solar Project,CA,San Diego,GHSP,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.4,1.3,0.8,12,2018,,,,Y,,,,,,,219.0,10.0,1.5,Y,,,,,,Y,1.5,N, ,32.816542,-116.999589,CISO
+62856,"Forefront Power, LLC",63021,SCCCD - Clovis Community College,CA,Fresno,232,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.3,1.3,1.3,12,2018,,,,Y,,,,,,,268.0,7.0,1.3,Y,,,,,,Y,1.3,N, ,36.885463,-119.731899,CISO
+62885,"CalCity Solar 1 , LLC",63054,CalCity Solar 1,CA,Kern,CALTR,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,11,2019,,Y,,,,,,,,, , ,3.0,Y,,,,,,N, ,N, ,35.141374,-117.965748,CISO
+62856,"Forefront Power, LLC",63068,SCCCD - Fresno Community College,CA,Fresno,231,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.2,2.2,2.2,10,2018,,,,Y,,,,,,,90.0,7.0,2.4,Y,,,,,,Y,2.4,N, ,36.76655,-119.79858,CISO
+62856,"Forefront Power, LLC",63074,Reedley Community College Solar,CA,Fresno,234,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.6,2.6,2.6,12,2018,,,,Y,,,,,,,90.0,7.0,2.8,Y,,,,,,Y,2.8,N, ,36.60563,-119.4577,CISO
+60059,ZGlobal Inc,63078,Eagle Creek,CA,Kern,EGCRK,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.0,3.0,3.0,12,2019,,Y,,,,,,,,,180.0,0.0,4.1,Y,,,,,,N, ,N, ,35.214023,-119.39522,CISO
+62988,DG California Solar LLC,63204,CID Solar (CA),CA,Kings,HLS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,2.0,2.0,2.0,9,2019,,Y,,,,,,,,,180.0, ,2.3,Y,,,,,,Y,2.3,N, ,36.140764,-119.566896,CISO
+63091,"Solar Star California LXIV, LLC",63303,Alticor Inc - Solar Project,CA,Orange,AISP,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.1,0.7,12,2017,,,,Y,,,,,,,180.0,10.0,1.4,Y,,,,,,N, ,N, ,33.878585,-117.99608,CISO
+62067,EnterSolar,63361,Medline Ind. Phase 2 Tracy,CA,San Joaquin,MIP2T,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,4,2018,,,,Y,,,,,,,180.0,10.0,1.4,Y,,,,,,Y,1.4,N, ,37.734761,-121.508945,CISO
+62067,EnterSolar,63363,Niagara Bottling Stockton,CA,San Joaquin,NBS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.0,1.0,1.0,1,2018,,,,Y,,,,,,,222.0,5.0,1.2,Y,,,,,,Y,1.2,N, ,37.894817,-121.24891,CISO
+63125,Phelan Pinon Hills Community Services District,63376,Phelan Pinon Hills CSD Solar,CA,San Bernardino,PPHS,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.2,1.1,0.8,11,2015,,Y,,Y,,,,,,,180.0,10.0,1.5,Y,,,,,,Y,1.5,N, ,34.57654,-117.58281,CISO
+63142,"Solar Star California XXVIII, LLC",63385,Castaic Lake Phase II,CA,Los Angeles,CA135,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,3.5,3.5,3.5,12,2014,,Y,,,,,,,,,90.0,60.0,4.4,Y,,,,,,Y,4.4,N, ,34.433332,-118.510837,CISO
+63198,RE-VFO LLC,63455,RE-VFO LLC,CA,Tulare,INV1,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,5,2009,,Y,,,,,,,,,90.0,45.0,0.6,Y,,,,,,Y,0.6,N, ,36.353675,-119.400823,CISO
+63198,RE-VFO LLC,63455,RE-VFO LLC,CA,Tulare,INV2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,0.5,0.5,0.5,5,2009,,Y,,,,,,,,,90.0,45.0,0.6,Y,,,,,,Y,0.6,N, ,36.353675,-119.400823,CISO
+63226,CalCom Energy,63486,D'Arrigo Brothers - Phase 4,CA,Monterey,DA04,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.7,1.7,1.2,3,2019,,Y,,,,,,,,,180.0,20.0,2.2,Y,,,,,,Y,1.7,N, ,36.616,-121.636,CISO
+57353,Plumas Sierra Rural Electric Coop,63493,PSREC/SIAD Solar,CA,Lassen,SIAD,OP,Solar Photovoltaic,PV,Electric Utility,1,2.5,2.4,1.6,9,2018,,Y,,,,,,,,,0.0,0.0,3.3,Y,,,,,,N, ,N, ,40.15006,-120.123352,CISO
+63226,CalCom Energy,63514,Moonlight Packing - Phase 2,CA,Fresno,MLO2,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.4,1.4,1.0,6,2019,,,,Y,,,,,,,180.0,20.0,1.8,Y,,,,,,Y,1.4,N, ,36.585794,-119.469986,CISO
+61944,GSRP,63516,California City,CA,Kern,CACTY,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,1.9,1.9,1.9,7,2018,,Y,,,,,,,,, , ,2.5,Y,,,,,,N, ,Y,2.5,35.157,-117.981,CISO
+62715,Westbound Solar LLC,63630,Pleasanton - Amador Valley High School,CA,Alameda,AVHS,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.1,1.1,1.1,11,2019,,,,Y,,,,,,,8.0,5.0,1.1,Y,,,,,,Y,1.0,N, ,37.662431,-121.874678,CISO
+63344,"SunE P11L Holdings, LLC",63651,North Kern State Prison Phase II,CA,Kern,5812,OP,Solar Photovoltaic,PV,IPP Non-CHP,2,4.0,4.0,4.0,9,2012,,Y,,,,,,,,,180.0,0.0,4.7,Y,,,,,,Y,4.7,N, ,35.780407,-119.30875,CISO
+56476,Ameresco,63928,Vacaville Hospital,CA,Solano,6701,OP,Solar Photovoltaic,PV,Commercial Non-CHP,4,1.5,1.4,0.7,12,2019,,,,Y,,,,,,,269.0,5.0,2.1,Y,,,,,,Y,2.1,N, ,38.38867,-121.93864,CISO
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
