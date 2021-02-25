@@ -2,7 +2,11 @@ dt_rtd = 5; % min
 dt_rtpd = 15; % min
 
 %% Load CAISO data RTD
-T_rtd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtd.csv', 'Delimiter',',');
+if ispc
+    T_rtd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtd.csv', 'Delimiter',',');
+elseif isunix
+    T_rtd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd.csv', 'Delimiter',',');
+end
 T_rtd.TIME = datetime(T_rtd.Var1, 'InputFormat', 'yyyy-MM-dd'' ''HH:mm:ssXXX', 'TimeZone', 'UTC'); % This is the time of the end of an interval
 T_rtd.TIME_START = T_rtd.TIME - duration(0, dt_rtd, 0); % This is the time of the start of an interval
 T_rtd.HOUR_START = datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, T_rtd.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
@@ -20,7 +24,11 @@ T_rtd.FORECAST_ERROR_Brtd_Artd_solar = (-T_rtd.Solar_NP15_B_RTD-T_rtd.Solar_ZP26
 % linkaxes([ax1(1), ax2],'x');
 
 %% Load CAISO data RTPD
-T_rtpd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtpd.csv', 'Delimiter',',');
+if ispc
+    T_rtpd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtpd.csv', 'Delimiter',',');
+elseif isunix
+    T_rtpd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd.csv', 'Delimiter',',');
+end
 T_rtpd.TIME = datetime(T_rtpd.Var1, 'InputFormat', 'yyyy-MM-dd'' ''HH:mm:ssXXX', 'TimeZone', 'UTC');
 T_rtpd.TIME_START = T_rtpd.TIME - duration(0, dt_rtpd, 0); % This is the time of the start of an interval
 T_rtpd.HOUR_START = datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, T_rtpd.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
