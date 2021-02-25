@@ -268,6 +268,28 @@ if false
 end
 %% Load CAISO data RTD and RTPD
 load_caiso_data;
+ar_datetime_hour = datetime(ar_datetime.Year, ar_datetime.Month, ar_datetime.Day, ar_datetime.Hour, 0, 0, 'TimeZone', 'UTC');
+T_rtpd = T_rtpd((T_rtpd{:, 'HOUR_START'}>=min(ar_datetime))&(T_rtpd{:, 'HOUR_START'}<=max(ar_datetime)), :); % Only look at the hours with raster forecast
+
+%% Save csv files for Cong
+dir_cong = 'Cong';
+if ~isfolder(dir_cong)
+    mkdir(dir_cong);
+end
+dirhome = pwd;
+cd(dir_cong);
+% for i = 1: length(cell_pvcellghi)
+%     T_ghi_forcong = [array2table(ar_datetime, 'VariableNames', {'TIME'}) array2table(cell_pvcellghi{i}, 'VariableNames', cellstr(num2str(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'})))];
+%     writetable(T_ghi_forcong, strcat(num2str(i), '.csv'));
+% end
+T_rtpd_forcong = T_rtpd(:, {'HOUR_START', 'error_max', 'error_min'});
+T_rtpd_forcong = grpstats(T_rtpd_forcong, 'HOUR_START', {'max', 'min'}, 'DataVars', {'error_max', 'error_min'});
+T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_min'});
+T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
+T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';
+writetable(T_rtpd_forcong, 'rtpd.csv');
+writetable(T_pvcell, 'T_pvcell.csv');
+cd(dirhome);
 
 %% Clear-sky GHI calculation
 add_pvlib();
