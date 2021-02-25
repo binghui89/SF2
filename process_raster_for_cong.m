@@ -1,14 +1,19 @@
 dirhome = pwd;
 if ispc
-    cell_dircontent = {'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202002\content', 'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202003\content'};
+    cell_dircontent = {...
+        'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202002\content', ...
+        'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202003\content', ...
+        'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202004\content' ...
+        };
 elseif isunix
     cell_dircontent = {...
         '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202002/content', ...
-        '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202003/content' ...
+        '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202003/content', ...
+        '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202004/content' ...
         };
 end
 
-cell_datetime = cell(2, 1);
+cell_datetime = cell(3, 1);
 deltat = duration(0, 10, 0);
 
 % All timestamps in Feb 2020
@@ -30,6 +35,16 @@ for d = 1:31
     ar_datetime = [ar_datetime; time_per_day];
 end
 cell_datetime{2} = ar_datetime;
+
+% All time stamps in April 2020
+ar_datetime = [];
+for d = 1:30
+    datetime_start = datetime(2020, 4, d, 9, 0, 0, 'TimeZone', 'UTC');
+    datetime_end = datetime(2020, 4, d, 2, 50, 0, 'TimeZone', 'UTC') + duration(24, 0, 0);
+    time_per_day = [datetime_start: deltat: datetime_end]';
+    ar_datetime = [ar_datetime; time_per_day];
+end
+cell_datetime{3} = ar_datetime;
 
 % Prepare file paths from all months
 ar_quantiles = [5, 25, 50, 75, 95];
@@ -53,7 +68,7 @@ for m = 1:numel(cell_datetime)
     end
 end
 toc;
-ar_datetime = [cell_datetime{1}; cell_datetime{2}];
+ar_datetime = [cell_datetime{1}; cell_datetime{2}; cell_datetime{3}];
 ar_datetime_local = ar_datetime;
 ar_datetime_local.TimeZone = 'America/Los_Angeles';
 disp('File names ready!');
@@ -328,3 +343,23 @@ h5write('sites340.h5', '/cell_capacity', tmp);
 
 cd(dirhome);
 
+%% IV. Load and write FRP requirements in hourly resolution
+load_caiso_data;
+ar_datetime_hour = datetime(ar_datetime.Year, ar_datetime.Month, ar_datetime.Day, ar_datetime.Hour, 0, 0, 'TimeZone', 'UTC');
+T_rtpd = T_rtpd((T_rtpd{:, 'HOUR_START'}>=min(ar_datetime))&(T_rtpd{:, 'HOUR_START'}<=max(ar_datetime)), :); % Only look at the hours with raster forecast
+%%
+dirhome = pwd;
+cd('/home/bxl180002/scratch/SF2/');
+
+% for i = 1: length(cell_pvcellghi)
+%     T_ghi_forcong = [array2table(ar_datetime, 'VariableNames', {'TIME'}) array2table(cell_pvcellghi{i}, 'VariableNames', cellstr(num2str(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'})))];
+%     writetable(T_ghi_forcong, strcat(num2str(i), '.csv'));
+% end
+T_rtpd_forcong = T_rtpd(:, {'HOUR_START', 'error_max', 'error_min'});
+T_rtpd_forcong = grpstats(T_rtpd_forcong, 'HOUR_START', {'max', 'min'}, 'DataVars', {'error_max', 'error_min'});
+T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_min'});
+T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
+T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';
+writetable(T_rtpd_forcong, 'rtpd.csv');
+writetable(T_pvcell, 'T_pvcell.csv');
+cd(dirhome);

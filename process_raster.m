@@ -25,7 +25,7 @@ dirhome = pwd;
 if ispc
     dirwork = 'C:\Users\bxl180002\Downloads\RampSolar\IBM\CA_square_daily_202002\content';
 elseif isunix
-    dirwork = '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202002/content/'; % Path on Ganymede
+    dirwork = '/home/bxl180002/scratch/SF2/IBM/CA_square_daily_202004/content/'; % Path on Ganymede
 end
 
 % datetime_start = datetime(2020, 2, 1, 9, 0, 0, 'TimeZone', 'UTC');
@@ -34,9 +34,9 @@ deltat = duration(0, 10, 0);
 ar_quantiles = [5, 25, 50, 75, 95];
 ar_datetime = [];
 
-for d = 1:27
-    datetime_start = datetime(2020, 2, d, 9, 0, 0, 'TimeZone', 'UTC');
-    datetime_end = datetime(2020, 2, d+1, 2, 50, 0, 'TimeZone', 'UTC');
+for d = 1:30
+    datetime_start = datetime(2020, 4, d, 9, 0, 0, 'TimeZone', 'UTC');
+    datetime_end = datetime(2020, 4, d+1, 2, 50, 0, 'TimeZone', 'UTC');
     time_per_day = [datetime_start: deltat: datetime_end]';
     ar_datetime = [ar_datetime; time_per_day];
 end
@@ -99,8 +99,8 @@ for i = 1: numel(ar_datetime)
         sprintf('%02d_%02d_%4dT%02d_%02d_%02d', ar_datetime(i).Month, ar_datetime(i).Day, ar_datetime(i).Year, ar_datetime(i).Hour, ar_datetime(i).Minute, ar_datetime(i).Second), ...
         '.tiff');
         if isfile(tiff_name_1)&&isfile(tiff_name_2)
-            [A1, R1] = readgeoraster(tiff_name_1); % Example
-            [A2, R2] = readgeoraster(tiff_name_2);
+            [A1, ~] = readgeoraster(tiff_name_1); % Example
+            [A2, ~] = readgeoraster(tiff_name_2);
             info1 = georasterinfo(tiff_name_1);
             m1 = info1.MissingDataIndicator;
             A1 = standardizeMissing(A1,m1);
@@ -270,26 +270,6 @@ end
 load_caiso_data;
 ar_datetime_hour = datetime(ar_datetime.Year, ar_datetime.Month, ar_datetime.Day, ar_datetime.Hour, 0, 0, 'TimeZone', 'UTC');
 T_rtpd = T_rtpd((T_rtpd{:, 'HOUR_START'}>=min(ar_datetime))&(T_rtpd{:, 'HOUR_START'}<=max(ar_datetime)), :); % Only look at the hours with raster forecast
-
-%% Save csv files for Cong
-dir_cong = 'Cong';
-if ~isfolder(dir_cong)
-    mkdir(dir_cong);
-end
-dirhome = pwd;
-cd(dir_cong);
-% for i = 1: length(cell_pvcellghi)
-%     T_ghi_forcong = [array2table(ar_datetime, 'VariableNames', {'TIME'}) array2table(cell_pvcellghi{i}, 'VariableNames', cellstr(num2str(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'})))];
-%     writetable(T_ghi_forcong, strcat(num2str(i), '.csv'));
-% end
-T_rtpd_forcong = T_rtpd(:, {'HOUR_START', 'error_max', 'error_min'});
-T_rtpd_forcong = grpstats(T_rtpd_forcong, 'HOUR_START', {'max', 'min'}, 'DataVars', {'error_max', 'error_min'});
-T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_min'});
-T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
-T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';
-writetable(T_rtpd_forcong, 'rtpd.csv');
-writetable(T_pvcell, 'T_pvcell.csv');
-cd(dirhome);
 
 %% Clear-sky GHI calculation
 add_pvlib();
