@@ -1,3 +1,4 @@
+write_flag = input('Permission to write? (1 - Yes/0 - No): ');
 dirhome = pwd;
 if ispc
     cell_dircontent = {...
@@ -100,6 +101,7 @@ for i = 1: numel(ar_datetime)
 end
 toc;
 
+%%
 % Calculate clear-sky GHI
 add_pvlib();
 
@@ -111,6 +113,8 @@ lat_edge = flipud(lat_edge(:)); % Flip because MATLAB array points downward whil
 lon_edge = lon_edge(:);
 lat_center = (lat_edge(1:end-1) + lat_edge(2:end))/2;
 lon_center = (lon_edge(1:end-1) + lon_edge(2:end))/2;
+
+save('temp.mat', 'ar_datetime', 'ar_istiff', 'ar_quantiles', 'cell_rawdata', 'lat_center', 'lon_center', '-v7.3');
 
 Time.UTCOffset = zeros(size(ar_datetime, 1), 1); % Because IBM uses UTC time, so utc offset is zero
 Time.year   = ar_datetime.Year;
@@ -160,26 +164,28 @@ dirhome = pwd;
 
 cd('/home/bxl180002/scratch/SF2/');
 
-h5create('full_square.h5','/kcs_mean',size(ar_kcs_mean));
-h5write('full_square.h5', '/kcs_mean', ar_kcs_mean);
+if write_flag
+    h5create('full_square.h5','/kcs_mean',size(ar_kcs_mean));
+    h5write('full_square.h5', '/kcs_mean', ar_kcs_mean);
 
-h5create('full_square.h5','/kcs_std',size(ar_kcs_std));
-h5write('full_square.h5', '/kcs_std', ar_kcs_std);
+    h5create('full_square.h5','/kcs_std',size(ar_kcs_std));
+    h5write('full_square.h5', '/kcs_std', ar_kcs_std);
 
-h5create('full_square.h5','/kcs_vrb',size(ar_kcs_vrb));
-h5write('full_square.h5', '/kcs_vrb', ar_kcs_vrb);
+    h5create('full_square.h5','/kcs_vrb',size(ar_kcs_vrb));
+    h5write('full_square.h5', '/kcs_vrb', ar_kcs_vrb);
 
-h5create('full_square.h5','/kcs_wmean',size(ar_kcs_wmean));
-h5write('full_square.h5', '/kcs_wmean', ar_kcs_wmean);
+    h5create('full_square.h5','/kcs_wmean',size(ar_kcs_wmean));
+    h5write('full_square.h5', '/kcs_wmean', ar_kcs_wmean);
 
-h5create('full_square.h5','/timeutc_posix',size(ar_hourstart_posix));
-h5write('full_square.h5', '/timeutc_posix', ar_hourstart_posix);
+    h5create('full_square.h5','/timeutc_posix',size(ar_hourstart_posix));
+    h5write('full_square.h5', '/timeutc_posix', ar_hourstart_posix);
 
-h5create('full_square.h5','/lat_center',size(lat_center));
-h5write('full_square.h5', '/lat_center', lat_center);
+    h5create('full_square.h5','/lat_center',size(lat_center));
+    h5write('full_square.h5', '/lat_center', lat_center);
 
-h5create('full_square.h5','/lon_center',size(lon_center));
-h5write('full_square.h5', '/lon_center', lon_center);
+    h5create('full_square.h5','/lon_center',size(lon_center));
+    h5write('full_square.h5', '/lon_center', lon_center);
+end
 
 cd(dirhome);
 
@@ -232,26 +238,28 @@ colormap jet;
 %% II. Now, write the cropped square
 cd('/home/bxl180002/scratch/SF2/');
 
-h5create('cropped_square.h5','/kcs_mean',size(ar_kcs_mean(cropped_lat, cropped_lon, :)));
-h5write('cropped_square.h5', '/kcs_mean', ar_kcs_mean(cropped_lat, cropped_lon, :));
+if write_flag
+    h5create('cropped_square.h5','/kcs_mean',size(ar_kcs_mean(cropped_lat, cropped_lon, :)));
+    h5write('cropped_square.h5', '/kcs_mean', ar_kcs_mean(cropped_lat, cropped_lon, :));
 
-h5create('cropped_square.h5','/kcs_std',size(ar_kcs_std(cropped_lat, cropped_lon, :)));
-h5write('cropped_square.h5', '/kcs_std', ar_kcs_std(cropped_lat, cropped_lon, :));
+    h5create('cropped_square.h5','/kcs_std',size(ar_kcs_std(cropped_lat, cropped_lon, :)));
+    h5write('cropped_square.h5', '/kcs_std', ar_kcs_std(cropped_lat, cropped_lon, :));
 
-h5create('cropped_square.h5','/kcs_vrb',size(ar_kcs_vrb(cropped_lat, cropped_lon, :)));
-h5write('cropped_square.h5', '/kcs_vrb', ar_kcs_vrb(cropped_lat, cropped_lon, :));
+    h5create('cropped_square.h5','/kcs_vrb',size(ar_kcs_vrb(cropped_lat, cropped_lon, :)));
+    h5write('cropped_square.h5', '/kcs_vrb', ar_kcs_vrb(cropped_lat, cropped_lon, :));
 
-h5create('cropped_square.h5','/kcs_wmean',size(ar_kcs_wmean(cropped_lat, cropped_lon, :)));
-h5write('cropped_square.h5', '/kcs_wmean', ar_kcs_wmean(cropped_lat, cropped_lon, :));
+    h5create('cropped_square.h5','/kcs_wmean',size(ar_kcs_wmean(cropped_lat, cropped_lon, :)));
+    h5write('cropped_square.h5', '/kcs_wmean', ar_kcs_wmean(cropped_lat, cropped_lon, :));
 
-h5create('cropped_square.h5','/timeutc_posix',size(ar_hourstart_posix));
-h5write('cropped_square.h5', '/timeutc_posix', ar_hourstart_posix);
+    h5create('cropped_square.h5','/timeutc_posix',size(ar_hourstart_posix));
+    h5write('cropped_square.h5', '/timeutc_posix', ar_hourstart_posix);
 
-h5create('cropped_square.h5','/lat_center',size(lat_center(cropped_lat)));
-h5write('cropped_square.h5', '/lat_center', lat_center(cropped_lat));
+    h5create('cropped_square.h5','/lat_center',size(lat_center(cropped_lat)));
+    h5write('cropped_square.h5', '/lat_center', lat_center(cropped_lat));
 
-h5create('cropped_square.h5','/lon_center',size(lon_center(cropped_lon)));
-h5write('cropped_square.h5', '/lon_center', lon_center(cropped_lon));
+    h5create('cropped_square.h5','/lon_center',size(lon_center(cropped_lon)));
+    h5write('cropped_square.h5', '/lon_center', lon_center(cropped_lon));
+end
 
 cd(dirhome);
 
@@ -306,40 +314,42 @@ cd('/home/bxl180002/scratch/SF2/');
 
 ind_sites340 = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'};
 
-tmp = reshape(ar_kcs_mean, size(ar_kcs_mean, 1)*size(ar_kcs_mean, 2), size(ar_kcs_mean, 3));
-tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
-h5create('sites340.h5','/kcs_mean',size(tmp));
-h5write('sites340.h5', '/kcs_mean', tmp);
+if write_flag
+    tmp = reshape(ar_kcs_mean, size(ar_kcs_mean, 1)*size(ar_kcs_mean, 2), size(ar_kcs_mean, 3));
+    tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+    h5create('sites340.h5','/kcs_mean',size(tmp));
+    h5write('sites340.h5', '/kcs_mean', tmp);
 
-tmp = reshape(ar_kcs_std, size(ar_kcs_std, 1)*size(ar_kcs_std, 2), size(ar_kcs_std, 3));
-tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
-h5create('sites340.h5','/kcs_std',size(tmp));
-h5write('sites340.h5', '/kcs_std', tmp);
+    tmp = reshape(ar_kcs_std, size(ar_kcs_std, 1)*size(ar_kcs_std, 2), size(ar_kcs_std, 3));
+    tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+    h5create('sites340.h5','/kcs_std',size(tmp));
+    h5write('sites340.h5', '/kcs_std', tmp);
 
-tmp = reshape(ar_kcs_vrb, size(ar_kcs_vrb, 1)*size(ar_kcs_vrb, 2), size(ar_kcs_vrb, 3));
-tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
-h5create('sites340.h5','/kcs_vrb',size(tmp));
-h5write('sites340.h5', '/kcs_vrb', tmp);
+    tmp = reshape(ar_kcs_vrb, size(ar_kcs_vrb, 1)*size(ar_kcs_vrb, 2), size(ar_kcs_vrb, 3));
+    tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+    h5create('sites340.h5','/kcs_vrb',size(tmp));
+    h5write('sites340.h5', '/kcs_vrb', tmp);
 
-tmp = reshape(ar_kcs_wmean, size(ar_kcs_wmean, 1)*size(ar_kcs_wmean, 2), size(ar_kcs_wmean, 3));
-tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
-h5create('sites340.h5','/kcs_wmean',size(tmp));
-h5write('sites340.h5', '/kcs_wmean', tmp);
+    tmp = reshape(ar_kcs_wmean, size(ar_kcs_wmean, 1)*size(ar_kcs_wmean, 2), size(ar_kcs_wmean, 3));
+    tmp = tmp(ind_sites340, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+    h5create('sites340.h5','/kcs_wmean',size(tmp));
+    h5write('sites340.h5', '/kcs_wmean', tmp);
 
-h5create('sites340.h5','/timeutc_posix',size(ar_hourstart_posix));
-h5write('sites340.h5', '/timeutc_posix', ar_hourstart_posix);
+    h5create('sites340.h5','/timeutc_posix',size(ar_hourstart_posix));
+    h5write('sites340.h5', '/timeutc_posix', ar_hourstart_posix);
 
-tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'cell_lat'};
-h5create('sites340.h5','/lat_center',size(tmp));
-h5write('sites340.h5', '/lat_center', tmp);
+    tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'cell_lat'};
+    h5create('sites340.h5','/lat_center',size(tmp));
+    h5write('sites340.h5', '/lat_center', tmp);
 
-tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'cell_lon'};
-h5create('sites340.h5','/lon_center',size(tmp));
-h5write('sites340.h5', '/lon_center', tmp);
+    tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'cell_lon'};
+    h5create('sites340.h5','/lon_center',size(tmp));
+    h5write('sites340.h5', '/lon_center', tmp);
 
-tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'TotalCapacity'};
-h5create('sites340.h5','/cell_capacity',size(tmp));
-h5write('sites340.h5', '/cell_capacity', tmp);
+    tmp = T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'TotalCapacity'};
+    h5create('sites340.h5','/cell_capacity',size(tmp));
+    h5write('sites340.h5', '/cell_capacity', tmp);
+end
 
 cd(dirhome);
 
@@ -360,6 +370,184 @@ T_rtpd_forcong = grpstats(T_rtpd_forcong, 'HOUR_START', {'max', 'min'}, 'DataVar
 T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_min'});
 T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
 T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';
-writetable(T_rtpd_forcong, 'rtpd.csv');
-writetable(T_pvcell, 'T_pvcell.csv');
+
+if write_flag
+    writetable(T_rtpd_forcong, 'rtpd.csv');
+    writetable(T_pvcell, 'T_pvcell.csv');
+end
 cd(dirhome);
+
+
+%% V. Calculate PV power generation of each of the 340 cells
+
+% Save GHI of the 340 cells
+cell_pvcellghi = cell(5, 1);
+for j = 1: 5
+    tmp = reshape(cell_rawdata{j}, size(cell_rawdata{j}, 1)*size(cell_rawdata{j}, 2), size(cell_rawdata{j}, 3));
+    cell_pvcellghi{j} = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+end
+
+% Save clear-sky GHI of the 340 cells
+tmp = reshape(ghi_cs, size(ghi_cs, 1)*size(ghi_cs, 2), size(ghi_cs, 3));
+ghi_cs_cell = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+
+% Save temp file
+cd('/home/bxl180002/scratch/SF2/');
+if write_flag
+    save('tmp2.mat', 'cell_pvcellghi', 'ghi_cs_csll', 'T_eia860_caiso', 'T_pv', 'T_pvcell', 'ar_datetime');
+end
+cd(dirhome);
+
+% Find the locations of all PV plant
+T_pv{:, 'ind'} = sub2ind([size(A, 1), size(A, 2)], T_pv{:, 'ny'}, T_pv{:, 'nx'}); % Sub to index
+T_eia860_caiso{:, 'nx'} = nan;
+T_eia860_caiso{:, 'ny'} = nan;
+for i = 1: height(T_eia860_caiso)
+    ar_nx = find(abs(lon_center - T_eia860_caiso{i, 'Longitude'}) < R1.CellExtentInLongitude/2);
+    if numel(ar_nx) == 1
+        T_eia860_caiso{i, 'nx'} = ar_nx;
+    else
+        disp('WARNING: CANNOT LOCATE THIS PV PLANT: LONGITUDE!');
+    end
+    ar_ny = find(abs(lat_center(:) - T_eia860_caiso{i, 'Latitude'}) < R1.CellExtentInLatitude/2); 
+    if numel(ar_ny) == 1
+        T_eia860_caiso{i, 'ny'} = ar_ny;
+    else
+        disp('WARNING: CANNOT LOCATE THIS PV PLANT: LATITUDE!');
+    end
+end
+T_eia860_caiso{:, 'ind'} = sub2ind([size(A, 1), size(A, 2)], T_eia860_caiso{:, 'ny'}, T_eia860_caiso{:, 'nx'}); % Sub to index
+T_eia860_caiso{:, 'within_boundary'} = (T_eia860_caiso{:, 'Longitude'}>=BOUNDARY.WEST) & (T_eia860_caiso{:, 'Longitude'}<=BOUNDARY.EAST) & (T_eia860_caiso{:, 'Latitude'}>=BOUNDARY.SOUTH) & (T_eia860_caiso{:, 'Latitude'}<=BOUNDARY.NORTH);
+
+%% Calculate PV power generation
+dayofyear = pvl_date2doy(Time.year, Time.month, Time.day);
+nT = size(ar_datetime, 1);
+p_solar = nan(nT, height(T_eia860_caiso), 5); % Power output
+p_solar_cs = nan(nT, height(T_eia860_caiso)); % Clear-sky power output
+
+%Other parameters
+SF=0.98;
+%Weather
+PresPa=101325;
+WIND=0;
+dryT=10;
+Albedo = 0.2;
+
+modulepv=134; %Topaz uses first solar panels (FS272 is probably the oldest they have)
+inverterid=759; 
+modules_Series=11;
+modules_parallel=2360;
+ninvert=149;
+
+tic;
+for i = 1: height(T_eia860_caiso)
+
+    Location = pvl_makelocationstruct(T_eia860_caiso.Latitude(i), T_eia860_caiso.Longitude(i));
+    %--- SOLAR FARM SPECS---
+    %Define module
+    ModuleParameters = pvl_sapmmoduledb(modulepv,'SandiaModuleDatabase_20120925.xlsx');
+    %Define the inverter
+    load('SandiaInverterDatabaseSAM2014.1.14.mat')
+    Inverter = SNLInverterDB(inverterid);
+    %Topaz uses power one inverters
+    clear InverterNames SNLInverterDB
+
+    %Define the array configuration
+    if isnan(T_eia860_caiso.TiltAngle(i))
+        Array.Tilt = 0;
+    else
+        Array.Tilt = T_eia860_caiso.TiltAngle(i); % Array tilt angle (deg)
+    end
+    if isnan(T_eia860_caiso.AzimuthAngle(i))
+        Array.Azimuth = 180;
+    else
+        Array.Azimuth = T_eia860_caiso.AzimuthAngle(i); %Array azimuth (180 deg indicates array faces South)
+    end
+    Array.Ms = modules_Series; %Number of modules in series
+    Array.Mp = modules_parallel; %Number of paralell strings  
+    %Location of site
+    Array.a = -3.56;
+    Array.b = -0.075;
+
+    [SunAz, SunEl, AppSunEl, SolarTime] = pvl_ephemeris(Time,Location);
+    if strcmp(T_eia860_caiso.Single_AxisTracking_(i), 'Y')
+        % Fixed tilt
+        MaxAngle = 90;
+        [~, AOI, ~, ~] = pvl_singleaxis(90-AppSunEl, SunAz, Location.latitude, Array.Tilt, Array.Azimuth, MaxAngle);
+    else
+        AOI = pvl_getaoi(Array.Tilt, Array.Azimuth, 90-AppSunEl, SunAz);
+    end
+
+    Wspd=WIND.*ones(nT, 1);
+    Drybulb=dryT.*ones(nT, 1);
+    AMa = pvl_absoluteairmass(pvl_relativeairmass(90-AppSunEl),PresPa);
+    F1 = max(0,polyval(ModuleParameters.a,AMa)); %Spectral loss function
+    F2 = max(0,polyval(ModuleParameters.b,AOI)); % Angle of incidence loss function
+
+    for k = 1: 5
+        if ~T_eia860_caiso{i, 'within_boundary'}
+            p_solar(:, i, k) = 0;
+            continue;
+        else
+            ghi = squeeze(cell_rawdata{k}(T_eia860_caiso{i, 'ny'}, T_eia860_caiso{i, 'nx'}, :)); % ny is the first dimension, nx is the second
+            i_ghi_notnan = ~isnan(ghi);
+            EdiffGround = nan(nT, 1);
+            EdiffGround(i_ghi_notnan) = pvl_grounddiffuse(Array.Tilt, ghi(i_ghi_notnan), Albedo);
+            DNI_model = nan(nT, 1);
+            DNI_model(i_ghi_notnan) = pvl_disc(ghi(i_ghi_notnan),90-SunEl(i_ghi_notnan), dayofyear(i_ghi_notnan),PresPa);
+            DHI_model = nan(nT, 1);
+            DHI_model(i_ghi_notnan) = ghi(i_ghi_notnan) - cosd(90-SunEl(i_ghi_notnan)).*DNI_model(i_ghi_notnan);
+            Eb = 0*AOI; %Initiallize variable
+            Eb(AOI<90) = DNI_model(AOI<90).*cosd(AOI(AOI<90)); %Only calculate when sun is in view of the plane of array
+            EdiffSky = nan(nT, 1);
+            EdiffSky(i_ghi_notnan) = pvl_isotropicsky(Array.Tilt,DHI_model(i_ghi_notnan));
+            E = Eb + EdiffSky + EdiffGround; % Total incident irradiance (W/m^2)
+            E0 = 1000; %Reference irradiance (1000 W/m^2)
+            celltemp = nan(nT, 1);
+            celltemp(i_ghi_notnan) = pvl_sapmcelltemp(E(i_ghi_notnan), E0, Array.a, Array.b,Wspd((i_ghi_notnan),1), Drybulb((i_ghi_notnan),1), ModuleParameters.delT);
+            Ediff = EdiffSky + EdiffGround; % Total diffuse incident irradiance (W/m^2)
+            Ee = F1.*((Eb.*F2+ModuleParameters.fd.*Ediff)/E0)*SF; %Effective irradiance
+            % Ee(isnan(Ee))=0; % Set any NaNs to zero
+            mSAPMResults = pvl_sapm(ModuleParameters, Ee(i_ghi_notnan), celltemp(i_ghi_notnan));
+            aSAPMResults.Vmp = nan(nT, 1);
+            aSAPMResults.Imp = nan(nT ,1); 
+            aSAPMResults.Pmp = nan(nT, 1);
+            aSAPMResults.Vmp(i_ghi_notnan) = Array.Ms  *mSAPMResults.Vmp;
+            aSAPMResults.Imp(i_ghi_notnan) = Array.Mp  *mSAPMResults.Imp;
+            aSAPMResults.Pmp = aSAPMResults.Vmp .* aSAPMResults.Imp;
+            % clear temp
+            % temp=find(ghi~=10000);
+            % ACPower(1:size(Time.hour,1), 7) =10000;
+            ACPower = nan(nT, 1);
+            ACPower(i_ghi_notnan)= pvl_snlinverter(Inverter, mSAPMResults.Vmp*Array.Ms, mSAPMResults.Pmp*Array.Ms*Array.Mp)*ninvert/1000000; % MW
+            ACPower(ACPower<0, end)=0;
+            p_solar(:, i, k) = ACPower;
+        end
+    end
+
+    % Now the clear-sky power
+    ghi = squeeze(ghi_cs(T_eia860_caiso{i, 'ny'}, T_eia860_caiso{i, 'nx'}, :)); % ny is the first dimension, nx is the second
+    EdiffGround = pvl_grounddiffuse(Array.Tilt, ghi, Albedo);
+    DNI_model = pvl_disc(ghi,90-SunEl, dayofyear,PresPa);
+    DHI_model = ghi - cosd(90-SunEl).*DNI_model;
+    Eb = 0*AOI; %Initiallize variable
+    Eb(AOI<90) = DNI_model(AOI<90).*cosd(AOI(AOI<90)); %Only calculate when sun is in view of the plane of array
+    EdiffSky = pvl_isotropicsky(Array.Tilt,DHI_model);
+    E = Eb + EdiffSky + EdiffGround; % Total incident irradiance (W/m^2)
+    E0 = 1000; %Reference irradiance (1000 W/m^2)
+    celltemp = pvl_sapmcelltemp(E, E0, Array.a, Array.b,Wspd(:,1), Drybulb(:,1), ModuleParameters.delT);
+    Ediff = EdiffSky + EdiffGround; % Total diffuse incident irradiance (W/m^2)
+    Ee = F1.*((Eb.*F2+ModuleParameters.fd.*Ediff)/E0)*SF; %Effective irradiance
+    Ee(isnan(Ee))=0; % Set any NaNs to zero
+    mSAPMResults = pvl_sapm(ModuleParameters, Ee, celltemp);
+    aSAPMResults.Vmp = Array.Ms  *mSAPMResults.Vmp;
+    aSAPMResults.Imp = Array.Mp  *mSAPMResults.Imp;
+    aSAPMResults.Pmp = aSAPMResults.Vmp .* aSAPMResults.Imp;
+    clear temp
+    temp=find(ghi~=10000);
+    % ACPower(1:size(Time.hour,1), 7) =10000;
+    ACPower= pvl_snlinverter(Inverter, mSAPMResults.Vmp(temp)*Array.Ms, mSAPMResults.Pmp(temp)*Array.Ms*Array.Mp)*ninvert/1000000; % MW
+    ACPower(ACPower<0, end)=0;
+    p_solar_cs(:, i) = ACPower;
+end
+toc;
