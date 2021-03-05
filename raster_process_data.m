@@ -109,7 +109,7 @@ ghi_cs = nan(320, 480, numel(ar_datetime));
 
 lat_edge = R.LatitudeLimits(1): R.CellExtentInLatitude: R.LatitudeLimits(2);
 lon_edge = R.LongitudeLimits(1): R.CellExtentInLongitude: R.LongitudeLimits(2);
-lat_edge = flipud(lat_edge(:)); % Flip because MATLAB array points downward while Cartecian coordinate points upward
+lat_edge = lat_edge(:);
 lon_edge = lon_edge(:);
 lat_center = (lat_edge(1:end-1) + lat_edge(2:end))/2;
 lon_center = (lon_edge(1:end-1) + lon_edge(2:end))/2;
@@ -166,7 +166,7 @@ dirhome = pwd;
 
 cd('/home/bxl180002/scratch/SF2/');
 
-if write_flag
+if false
     h5create('full_square.h5','/kcs_mean',size(ar_kcs_mean));
     h5write('full_square.h5', '/kcs_mean', ar_kcs_mean);
 
@@ -194,27 +194,36 @@ cd(dirhome);
 %% CA poly, find out the coordinates of the boundary of the the minimum square 
 fname = 'Solar forecast (PAIRS Team) (select sites)-GHI Quantile Forecast-horizon_60_quantile_50[solar_forecast_median]-02_15_2020T20_00_00.tiff';
 [A1, R1] = readgeoraster(fname); % Example
+A1 = flipud(A1); % I think IBM has use the CA polygon upside down
 info = georasterinfo(fname);
 m = info.MissingDataIndicator;
-A1 = standardizeMissing(A1,m);
+A1 = standardizeMissing(A1,m); 
 figure();
-imagesc(R1.LongitudeLimits(:), flipud(R1.LatitudeLimits(:)), A1); % Flip because MATLAB array y axis points downward
+imagesc(R1.LongitudeLimits(:), R1.LatitudeLimits(:), A1);
 set(gca,'YDir', 'normal'); % Set origin to the bottom left corner
 colormap jet;
+title('Note the GHI forecast is upside down. Time: 12pm PST 2/15/20');
 
 lat_edge_1 = R1.LatitudeLimits(1): R1.CellExtentInLatitude: R1.LatitudeLimits(2);
 lon_edge_1 = R1.LongitudeLimits(1): R1.CellExtentInLongitude: R1.LongitudeLimits(2);
-lat_edge_1 = flipud(lat_edge_1(:)); % Flip because MATLAB array points downward while Cartecian coordinate points upward
+lat_edge_1 = lat_edge_1(:); 
 lon_edge_1 = lon_edge_1(:);
 lat_center_1 = (lat_edge_1(1:end-1) + lat_edge_1(2:end))/2;
 lon_center_1 = (lon_edge_1(1:end-1) + lon_edge_1(2:end))/2;
 
 % The boundary of the smallest square that contains CA 
 BOUNDARY_CA = struct('WEST', nan, 'EAST', nan, 'SOUTH', nan, 'NORTH', nan); 
-BOUNDARY_CA.NORTH = lat_center_1(find(any(~isnan(A1), 2), 1, 'first'));
-BOUNDARY_CA.SOUTH = lat_center_1(find(any(~isnan(A1), 2), 1, 'last')); 
+BOUNDARY_CA.NORTH = lat_center_1(find(any(~isnan(A1), 2), 1, 'last'));
+BOUNDARY_CA.SOUTH = lat_center_1(find(any(~isnan(A1), 2), 1, 'first')); 
 BOUNDARY_CA.WEST  = lon_center_1(find(any(~isnan(A1), 1), 1, 'first'));
 BOUNDARY_CA.EAST  = lon_center_1(find(any(~isnan(A1), 1), 1, 'last'));
+
+% The boundary of the minimum non-nan square
+BOUNDARY = struct('WEST', nan, 'EAST', nan, 'SOUTH', nan, 'NORTH', nan); 
+BOUNDARY.NORTH = lat_center(find(any(~isnan(A), 2), 1, 'last'));
+BOUNDARY.SOUTH = lat_center(find(any(~isnan(A), 2), 1, 'first')); 
+BOUNDARY.WEST  = lon_center(find(any(~isnan(A), 1), 1, 'first'));
+BOUNDARY.EAST  = lon_center(find(any(~isnan(A), 1), 1, 'last'));
 
 % Show the cropped CA picture
 figure();
@@ -222,22 +231,48 @@ imagesc(...
     lon_center_1((lon_center_1<=BOUNDARY_CA.EAST)&(lon_center_1>=BOUNDARY_CA.WEST)), ...
     lat_center_1((lat_center_1<=BOUNDARY_CA.NORTH)&(lat_center_1>=BOUNDARY_CA.SOUTH)), ...
     A1((lat_center_1<=BOUNDARY_CA.NORTH)&(lat_center_1>=BOUNDARY_CA.SOUTH), (lon_center_1<=BOUNDARY_CA.EAST)&(lon_center_1>=BOUNDARY_CA.WEST)) ...
-    ); % Flip because MATLAB array y axis points downward
+    ); 
 set(gca,'YDir', 'normal'); % Set origin to the bottom left corner
 colormap jet;
+title('Note the GHI forecast is upside down. Time: 12pm PST 2/15/20');
 
-% Now, apply the boundary to the full square
-cropped_lat = (lat_center<=BOUNDARY_CA.NORTH)&(lat_center>=BOUNDARY_CA.SOUTH);
-cropped_lon = (lon_center<=BOUNDARY_CA.EAST)&(lon_center>=BOUNDARY_CA.WEST);
+% Now, apply both the CA and the non-nan boundary to the full square
+cropped_lat = (lat_center<=BOUNDARY_CA.NORTH)&(lat_center>=BOUNDARY_CA.SOUTH)&(lat_center<=BOUNDARY.NORTH)&(lat_center>=BOUNDARY.SOUTH);
+cropped_lon = (lon_center<=BOUNDARY_CA.EAST)&(lon_center>=BOUNDARY_CA.WEST)&(lon_center<=BOUNDARY.EAST)&(lon_center>=BOUNDARY.WEST);
 
 % Show the cropped full picture for visual inspection
 figure();
 A_tmp = squeeze(cell_rawdata{3}(:, :, 67)); % 67 is 12pm PST 2020-02-01
-imagesc(lon_center(cropped_lon), lat_center(cropped_lat), A_tmp(cropped_lat, cropped_lon, :)); % Flip because MATLAB array y axis points downward
+imagesc(lon_center(cropped_lon), lat_center(cropped_lat), A_tmp(cropped_lat, cropped_lon, :)); 
 set(gca,'YDir', 'normal'); % Set origin to the bottom left corner
 colormap jet;
 
-%% II. Now, write the cropped square
+% Extract the non-nan CA polygon and represent it using a matrix of logical values
+is_california_A1 = A1;
+is_california_A1(isnan(A1(:))) = 0;
+is_california_A1(~isnan(A1(:))) = 1;
+is_california_A = [is_california_A1 zeros(size(is_california_A1,  1), size(A, 2) - size(is_california_A1, 2))];
+is_nonnan_A = zeros(size(A));
+is_nonnan_A(cropped_lat, cropped_lon) = 1;
+is_nonnan_ca_A = is_nonnan_A.*is_california_A;
+
+% Show the non-nan CA polygon and compare it with Matlab's built-in CA
+% polygon
+figure();
+axesm('mercator','Grid', 'on', 'MapLonLimit',[-125 -113], 'MapLatLimit',[32 43], 'GLineStyle', '.', 'Gcolor', [.5, .5, .5]);
+alabamahi = shaperead('usastatehi', 'UseGeoCoords', true,...
+'Selector',{@(name) strcmpi(name,'California'), 'Name'});
+tmp = R;
+tmp.ColumnsStartFrom = 'south';
+latlim = tmp.LatitudeLimits;
+lonlim = tmp.LongitudeLimits;
+usamap(latlim, lonlim);
+geoshow(is_nonnan_ca_A, tmp, 'DisplayType', 'surface', 'FaceAlpha', 0.5);
+geoshow(alabamahi, 'FaceColor', [1, 0, 0]);
+tightmap;
+
+
+%% II. Now, write the cropped square 
 cd('/home/bxl180002/scratch/SF2/');
 
 if write_flag
@@ -264,6 +299,61 @@ if write_flag
 end
 
 cd(dirhome);
+%% II.2 Write the cropped square, only keep CA region as non-nan
+cd('/home/bxl180002/scratch/SF2/');
+
+if write_flag
+    ar_kcs_mean_croppedca = nan(size(ar_kcs_mean));
+    for i = 1: size(ar_kcs_mean_croppedca, 3)
+        layer = ar_kcs_mean(:, :, i);
+        layer(is_nonnan_ca_A == 0) = nan;
+        ar_kcs_mean_croppedca(:, :, i) = layer;
+    end
+    ar_kcs_mean_croppedca = ar_kcs_mean_croppedca(cropped_lat, cropped_lon, :);
+    h5create('cropped_ca.h5','/kcs_mean',ar_kcs_mean_croppedca);
+    h5write('cropped_ca.h5', '/kcs_mean', ar_kcs_mean_croppedca);
+
+    ar_kcs_std_croppedca = nan(size(ar_kcs_std));
+    for i = 1: size(ar_kcs_std_croppedca, 3)
+        layer = ar_kcs_std(:, :, i);
+        layer(is_nonnan_ca_A == 0) = nan;
+        ar_kcs_std_croppedca(:, :, i) = layer;
+    end
+    ar_kcs_std_croppedca = ar_kcs_std_croppedca(cropped_lat, cropped_lon, :);
+    h5create('cropped_ca.h5','/kcs_std',ar_kcs_std_croppedca);
+    h5write('cropped_ca.h5', '/kcs_std', ar_kcs_std_croppedca);
+
+    ar_kcs_vrb_croppedca = nan(size(ar_kcs_vrb));
+    for i = 1: size(ar_kcs_vrb_croppedca, 3)
+        layer = ar_kcs_vrb(:, :, i);
+        layer(is_nonnan_ca_A == 0) = nan;
+        ar_kcs_vrb_croppedca(:, :, i) = layer;
+    end
+    ar_kcs_vrb_croppedca = ar_kcs_vrb_croppedca(cropped_lat, cropped_lon, :);
+    h5create('cropped_ca.h5','/kcs_vrb',size(ar_kcs_vrb_croppedca));
+    h5write('cropped_ca.h5', '/kcs_vrb', ar_kcs_vrb_croppedca);
+
+    ar_kcs_wmean_croppedca = nan(size(ar_kcs_wmean));
+    for i = 1: size(ar_kcs_wmean_croppedca, 3)
+        layer = ar_kcs_wmean(:, :, i);
+        layer(is_nonnan_ca_A == 0) = nan;
+        ar_kcs_wmean_croppedca(:, :, i) = layer;
+    end
+    ar_kcs_wmean_croppedca = ar_kcs_wmean_croppedca(cropped_lat, cropped_lon, :);
+    h5create('cropped_ca.h5','/kcs_wmean',size(ar_kcs_wmean_croppedca));
+    h5write('cropped_ca.h5', '/kcs_wmean', ar_kcs_wmean_croppedca);
+
+    h5create('cropped_ca.h5','/timeutc_posix',size(ar_hourstart_posix));
+    h5write('cropped_ca.h5', '/timeutc_posix', ar_hourstart_posix);
+
+    h5create('cropped_ca.h5','/lat_center',size(lat_center(cropped_lat)));
+    h5write('cropped_ca.h5', '/lat_center', lat_center(cropped_lat));
+
+    h5create('cropped_ca.h5','/lon_center',size(lon_center(cropped_lon)));
+    h5write('cropped_ca.h5', '/lon_center', lon_center(cropped_lon));
+end
+
+cd(dirhome);
 
 %% Find the coordinates of the cells with PV plants in CAISO
 
@@ -277,13 +367,6 @@ grpstats(T_eia860_caiso, 'PlantCode', {'sum', 'mean'}, 'DataVars', {'NameplateCa
 T_pv.Properties.VariableNames{'sum_NameplateCapacity_MW_'} = 'TotalCapacity';
 T_pv.Properties.VariableNames{'mean_Latitude'} = 'Latitude';
 T_pv.Properties.VariableNames{'mean_Longitude'} = 'Longitude';
-
-% The boundary of available IBM raster, i.e., not nan
-BOUNDARY = struct('WEST', nan, 'EAST', nan, 'SOUTH', nan, 'NORTH', nan); 
-BOUNDARY.NORTH = lat_center(find(any(~isnan(A), 2), 1, 'first'));
-BOUNDARY.SOUTH = lat_center(find(any(~isnan(A), 2), 1, 'last')); 
-BOUNDARY.WEST  = lon_center(find(any(~isnan(A), 1), 1, 'first'));
-BOUNDARY.EAST  = lon_center(find(any(~isnan(A), 1), 1, 'last'));
 
 % Group PV plant capacities by cell locations in IBM raster forecast
 T_pv{:, 'nx'} = nan;
