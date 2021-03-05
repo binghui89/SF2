@@ -310,7 +310,7 @@ if write_flag
         ar_kcs_mean_croppedca(:, :, i) = layer;
     end
     ar_kcs_mean_croppedca = ar_kcs_mean_croppedca(cropped_lat, cropped_lon, :);
-    h5create('cropped_ca.h5','/kcs_mean',ar_kcs_mean_croppedca);
+    h5create('cropped_ca.h5','/kcs_mean',size(ar_kcs_mean_croppedca));
     h5write('cropped_ca.h5', '/kcs_mean', ar_kcs_mean_croppedca);
 
     ar_kcs_std_croppedca = nan(size(ar_kcs_std));
@@ -320,7 +320,7 @@ if write_flag
         ar_kcs_std_croppedca(:, :, i) = layer;
     end
     ar_kcs_std_croppedca = ar_kcs_std_croppedca(cropped_lat, cropped_lon, :);
-    h5create('cropped_ca.h5','/kcs_std',ar_kcs_std_croppedca);
+    h5create('cropped_ca.h5','/kcs_std',size(ar_kcs_std_croppedca));
     h5write('cropped_ca.h5', '/kcs_std', ar_kcs_std_croppedca);
 
     ar_kcs_vrb_croppedca = nan(size(ar_kcs_vrb));
@@ -632,7 +632,7 @@ toc;
 % Save breakpoint file
 cd('/home/bxl180002/scratch/SF2/');
 if write_flag
-    save('breakpoint.mat', 'cell_pvcellghi', 'ghi_cs_cell', 'T_eia860_caiso', 'T_pv', 'T_pvcell', 'ar_datetime', 'A', 'A1', 'R', 'R1', 'lat_center', 'lon_center', 'lat_edge', 'p_solar', 'p_solar_cs');
+    save('breakpoint.mat', 'cell_pvcellghi', 'ghi_cs_cell', 'T_eia860_caiso', 'T_pv', 'T_pvcell', 'ar_datetime', 'A', 'A1', 'R', 'R1', 'lat_center', 'lon_center', 'lat_edge', 'p_solar', 'p_solar_cs', 'is_nonnan_ca_A');
 end
 cd(dirhome);
 
