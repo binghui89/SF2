@@ -51,7 +51,7 @@ for k = karray
     for i = 1: size(T_baseline_rtpd, 1)
         this_date = datetime(T_baseline_rtpd.HOUR_START.Year(i), T_baseline_rtpd.HOUR_START.Month(i), T_baseline_rtpd.HOUR_START.Day(i), 'TimeZone', 'UTC');
         this_hour = T_baseline_rtpd.HOUR_START.Hour(i);
-        selected_days = (T_rtpd.TIME_START<this_date)&(T_rtpd.TIME_START>=this_date-days(k))&(T_rtpd.HOUR_START.Hour==this_hour); % We use 30 previous days
+        selected_days = (T_rtpd.TIME_START<this_date)&(T_rtpd.TIME_START>=this_date-days(k))&(T_rtpd.HOUR_START.Hour==this_hour); % We use k previous days
         sample_error_max = T_rtpd{selected_days, 'error_max'};
         sample_error_min = T_rtpd{selected_days, 'error_min'};
         [f,x] = ecdf(sample_error_max(:));
@@ -82,7 +82,7 @@ else
     for q = 1:5
         sigma_psolar(:, q) = sum(squeeze(p_solar(:, :, 3)*diag(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'TotalCapacity'})), 2);
     end
-    sigma_psolarcs = sum(p_solar_cs*diag(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'within_boundary'}), 2);
+    sigma_psolarcs = sum(p_solar_cs*diag(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'TotalCapacity'}), 2);
 end
 
 kpv = sigma_psolar./repmat(sigma_psolarcs, 1, 5);
@@ -104,6 +104,13 @@ for i = 1: height(T_classifier_kpv)
 end
 T_classifier_kpv.DATE = datetime(T_classifier_kpv.HOUR_START.Year, T_classifier_kpv.HOUR_START.Month, T_classifier_kpv.HOUR_START.Day, 'TimeZone', 'UTC');
 
+% Normalize all classifiers
+T_classifier_kpv_norm = T_classifier_kpv(:, {'HOUR_START', 'mean_kpv', 'std_kpv', 'vrb_kpv', 'DATE'});
+T_classifier_kpv_norm{:, 'mean_kpv'} = T_classifier_kpv{:, 'mean_kpv'}./max(T_classifier_kpv{:, 'mean_kpv'});
+T_classifier_kpv_norm{:, 'std_kpv'} = T_classifier_kpv{:, 'std_kpv'}./max(T_classifier_kpv{:, 'std_kpv'});
+T_classifier_kpv_norm{:, 'vrb_kpv'} = T_classifier_kpv{:, 'vrb_kpv'}./max(T_classifier_kpv{:, 'vrb_kpv'});
+
+%% kNN 1-dim
 fprintf('kNN\n');
 cell_knnkpv_rtpd = cell(4, 1);
 for c = 1:4
@@ -138,7 +145,7 @@ for c = 1:4
                 T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(k), :); % We use 30 previous days, i.e., baseline, if data is nan
                 selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); % 30 the nearest days for baseline
             else
-                T_sample.dist = sqrt(sum((T_sample{:, 'c'}-T_knnkpv_rtpd{i, 'c'}).^2, 2)); % Euclidean distance
+                T_sample.dist = sqrt(sum((T_sample{:, 'c'}-T_knnkpv_rtpd{i, 'c'}).^2, 2)); % Manhattan distance
                 T_sample_sorted = sortrows(T_sample, 'dist');
                 selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); 
             end
@@ -155,6 +162,59 @@ for c = 1:4
     cell_knnkpv_rtpd{c} = T_knnkpv_rtpd;
 end
 
+%% knn 3-dim
+fprintf('kNN (n-dim)\n');
+
+w = []; % Weight, increment of 0.1 at each dimension
+for i = 0: 10
+    for j = 0:10-i
+        k=10-i-j;
+        w = [w, [i/10; j/10; k/10]];
+    end
+end
+
+cell_knnkpv_rtpd_ndim = cell(size(w, 2), 1);
+name_classifiers = {'mean_kpv', 'std_kpv', 'vrb_kpv'};
+for j = 1: size(w, 2)
+    w_this = w(:, j);
+    lw_this = true(size(w_this));
+    lw_this(w_this==0) = false;
+    T_knnkpv_rtpd_ndim = T_classifier_kpv_norm((ar_datetime_hour_unique>=testhour_start)&(ar_datetime_hour_unique<=testhour_end), :); % Result container
+    for k = karray
+        T_knnkpv_rtpd_ndim{:, strcat('FRU_k', num2str(k))} = nan;
+        T_knnkpv_rtpd_ndim{:, strcat('FRD_k', num2str(k))} = nan;
+
+        for i = 1: size(T_knnkpv_rtpd_ndim, 1)
+            this_date = datetime(T_knnkpv_rtpd_ndim.HOUR_START.Year(i), T_knnkpv_rtpd_ndim.HOUR_START.Month(i), T_knnkpv_rtpd_ndim.HOUR_START.Day(i), 'TimeZone', 'UTC');
+            this_hour = T_knnkpv_rtpd_ndim.HOUR_START.Hour(i);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % Can use the days AFTER this_date if results are not ideal
+            T_sample = T_classifier_kpv_norm((T_classifier_kpv_norm.HOUR_START.Hour==this_hour), :);
+    %             T_sample = T_classifier_kpv((T_classifier_kpv.DATE<this_date)&(T_classifier_kpv.HOUR_START.Hour==this_hour), :);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             if any(isnan(T_knnkpv_rtpd_ndim{i, {'mean_kpv', 'std_kpv', 'vrb_kpv'}}), 2)
+            if any(isnan(T_knnkpv_rtpd_ndim{i, name_classifiers(lw_this)}), 2)
+                T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(k), :); % We use 30 previous days, i.e., baseline, if data is nan
+                selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); % 30 the nearest days for baseline
+            else
+                T_sample.dist = abs(T_sample{:, name_classifiers(lw_this)}-T_knnkpv_rtpd_ndim{i, name_classifiers(lw_this)})*w(lw_this, j); % Manhattan distance
+%                 T_sample.dist = abs(T_sample{:, {'mean_kpv', 'std_kpv', 'vrb_kpv'}}-T_knnkpv_rtpd_ndim{i, {'mean_kpv', 'std_kpv', 'vrb_kpv'}})*w(:, j); % Manhattan distance
+                T_sample_sorted = sortrows(T_sample, 'dist');
+                selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); 
+            end
+
+            sample_error_max = T_rtpd{selected_days&(T_rtpd.TIME_START.Hour==this_hour), 'error_max'};
+            sample_error_min = T_rtpd{selected_days&(T_rtpd.TIME_START.Hour==this_hour), 'error_min'};
+            [f,x] = ecdf(sample_error_max(:));
+            T_knnkpv_rtpd_ndim{i, strcat('FRU_k', num2str(k))} = interp1(f, x, 0.975);
+            [f,x] = ecdf(sample_error_min(:));
+            T_knnkpv_rtpd_ndim{i, strcat('FRD_k', num2str(k))} = interp1(f, x, 0.025);
+        end
+        fprintf('j = %g, k = %g\n', j, k);
+    end
+    cell_knnkpv_rtpd_ndim{j, 1} = T_knnkpv_rtpd_ndim;
+end
+
 %% Process results and visualize
 f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
 f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min
@@ -164,13 +224,43 @@ T_actual_error = [T_baseline_rtpd(:, 'HOUR_START') T_errormax_rtpd T_errormin_rt
 ar_actual_error_fru = T_actual_error{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}};
 ar_actual_error_frd = T_actual_error{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}};
 
+% Calculate sum of absolute errors: unfloor
+ar_actual_fru_unfloor = max(ar_actual_error_fru, [], 2);
+ar_actual_frd_unfloor = min(ar_actual_error_frd, [], 2);
+ar_sae_fru_unfloor = nan(size(w, 2), numel(karray));
+ar_sae_frd_unfloor = nan(size(w, 2), numel(karray));
+
+for j = 1: size(w, 2)
+    T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+    for k = karray
+        ar_sae_fru_unfloor(j, karray==k) = sum(abs(ar_actual_fru_unfloor - T_knnkpv_rtpd_ndim{:, strcat('FRU_k', num2str(k))}));
+        ar_sae_frd_unfloor(j, karray==k) = sum(abs(ar_actual_frd_unfloor - T_knnkpv_rtpd_ndim{:, strcat('FRD_k', num2str(k))}));
+    end
+end
+
+% Calculate sum of absolute errors: floored
+ar_actual_fru_floor = max(0, max(ar_actual_error_fru, [], 2));
+ar_actual_frd_floor = min(0, min(ar_actual_error_frd, [], 2));
+ar_sae_fru_floor = nan(size(w, 2), numel(karray));
+ar_sae_frd_floor = nan(size(w, 2), numel(karray));
+
+for j = 1: size(w, 2)
+    T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+    for k = karray
+        ar_sae_fru_floor(j, karray==k) = sum(abs(ar_actual_fru_floor - max(0, T_knnkpv_rtpd_ndim{:, strcat('FRU_k', num2str(k))})));
+        ar_sae_frd_floor(j, karray==k) = sum(abs(ar_actual_frd_floor - min(0, T_knnkpv_rtpd_ndim{:, strcat('FRD_k', num2str(k))})));
+    end
+end
+
+
+%% Process results and visualize: Calculate oversupply and p_shortage
 % Baseline
 for k = karray
     [oversupply_baseline_fru(karray==k), pshort_baseline_fru(karray==k)] = calculate_oversupply_and_pshort(ar_actual_error_fru, T_baseline_rtpd{:, strcat('FRU_k', num2str(k))});
     [oversupply_baseline_frd(karray==k), pshort_baseline_frd(karray==k)] = calculate_oversupply_and_pshort(-ar_actual_error_frd, -T_baseline_rtpd{:, strcat('FRD_k', num2str(k))});
 end
 
-% kNN
+% kNN, 1-dim
 for c = 1:4
     T_knnkpv_rtpd = cell_knnkpv_rtpd{c};
     for k = karray
@@ -179,7 +269,24 @@ for c = 1:4
     end
 end
 
-%% Produce figures
+% kNN, 3-dim
+% for k = karray
+%     [oversupply_knnkpvndim_fru(karray==k), pshort_knnkpvndim_fru(karray==k)] = calculate_oversupply_and_pshort(ar_actual_error_fru, T_knnkpv_rtpd_ndim{:, strcat('FRU_k', num2str(k))});
+%     [oversupply_knnkpvndim_frd(karray==k), pshort_knnkpvndim_frd(karray==k)] = calculate_oversupply_and_pshort(-ar_actual_error_frd, -T_knnkpv_rtpd_ndim{:, strcat('FRD_k', num2str(k))});
+% end
+
+% kNN, 3-dim
+% Calculate kNN exhaustive search oversupply and pshort 
+for j = 1: size(w, 2)
+    T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+    for k = karray
+        [oversupply_knnkpvndimopt_fru(j, karray==k), pshort_knnkpvndimopt_fru(j, karray==k)] = calculate_oversupply_and_pshort(ar_actual_error_fru, T_knnkpv_rtpd_ndim{:, strcat('FRU_k', num2str(k))});
+        [oversupply_knnkpvndimopt_frd(j, karray==k), pshort_knnkpvndimopt_frd(j, karray==k)] = calculate_oversupply_and_pshort(-ar_actual_error_frd, -T_knnkpv_rtpd_ndim{:, strcat('FRD_k', num2str(k))});
+    end
+end
+
+
+%% Produce figures: Trends as a function of K
 figure(); 
 h = plot(karray, oversupply_knnkpv_frd./1E3, karray, oversupply_baseline_frd./1E3, 'k');
 set(h(1), 'Color', 'r');
@@ -228,18 +335,20 @@ xlabel('K');
 ylabel('Probability of shortage');
 legend('\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
 
-% Pareto frontier
+%% Produce figures: Pareto frontier, 1-dim
 figure(); 
 h(5)= scatter(pshort_baseline_fru, oversupply_baseline_fru./1E3, 60, 'ko');
 hold on;
 for c = 1: 4
     h(c) = scatter(pshort_knnkpv_fru(:, c), oversupply_knnkpv_fru(:, c)./1E3, 30, '^');
 end
+% h(6) = scatter(pshort_knnkpvndim_fru(:), oversupply_knnkpvndim_fru(:)./1E3, 30, '^');
 set(h(1), 'MarkerFaceColor', 'r');
 set(h(2), 'MarkerFaceColor', 'g');
 set(h(3), 'MarkerFaceColor', 'm');
 set(h(4), 'MarkerFaceColor', 'b');
 set(h(5), 'MarkerFaceColor', 'k');
+% set(h(6), 'MarkerFaceColor', 'y');
 xline(pshort_baseline_fru(karray==30), 'Color', 'r', 'LineStyle', '--');
 yline(oversupply_baseline_fru(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
 title('FRU');
@@ -254,11 +363,13 @@ hold on;
 for c = 1: 4
     h(c) = scatter(pshort_knnkpv_frd(:, c), oversupply_knnkpv_frd(:, c)./1E3, 30, '^');
 end
+% h(6) = scatter(pshort_knnkpvndim_frd(:), oversupply_knnkpvndim_frd(:)./1E3, 30, '^');
 set(h(1), 'MarkerFaceColor', 'r');
 set(h(2), 'MarkerFaceColor', 'g');
 set(h(3), 'MarkerFaceColor', 'm');
 set(h(4), 'MarkerFaceColor', 'b');
 set(h(5), 'MarkerFaceColor', 'k');
+% set(h(6), 'MarkerFaceColor', 'y');
 xline(pshort_baseline_frd(karray==30), 'Color', 'r', 'LineStyle', '--');
 yline(oversupply_baseline_frd(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
 title('FRD');
@@ -266,3 +377,41 @@ xlabel('Probability of shortage');
 ylabel('Oversupply (GWh)');
 legend(h, '\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
 box on;
+
+
+%% Color by dimension of classifiers
+figure();
+hold on;
+h = [];
+for ndim = 1:3
+    pshort_frd_tmp = pshort_knnkpvndimopt_frd(sum(w==0, 1)==3-ndim, :);
+    oversupply_frd_tmp = oversupply_knnkpvndimopt_frd(sum(w==0, 1)==3-ndim, :);
+    h(ndim) = scatter(pshort_frd_tmp(:), oversupply_frd_tmp(:)./1e3, 'o');
+end
+h(numel(h)+1)= scatter(pshort_baseline_frd, oversupply_baseline_frd./1E3, 60, 'ko');
+set(h(1), 'MarkerFaceColor', 'r', 'Marker', '^');
+set(h(2), 'MarkerEdgeColor', 'b', 'Marker', '+');
+set(h(3), 'MarkerFaceColor', 'm', 'Marker', '.');
+set(h(4), 'MarkerFaceColor', 'k');
+xline(pshort_baseline_frd(karray==30), 'Color', 'r', 'LineStyle', '--');
+yline(oversupply_baseline_frd(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
+legend(h, '1-dim', '2-dim', '3-dim', 'Baseline');
+title('FRD');
+
+figure();
+hold on;
+h = [];
+for ndim = 1:3
+    pshort_fru_tmp = pshort_knnkpvndimopt_fru(sum(w==0, 1)==3-ndim, :);
+    oversupply_fru_tmp = oversupply_knnkpvndimopt_fru(sum(w==0, 1)==3-ndim, :);
+    h(ndim) = scatter(pshort_fru_tmp(:), oversupply_fru_tmp(:)./1e3);
+end
+h(numel(h)+1)= scatter(pshort_baseline_fru, oversupply_baseline_fru./1E3, 60, 'ko');
+xline(pshort_baseline_fru(karray==30), 'Color', 'r', 'LineStyle', '--');
+yline(oversupply_baseline_fru(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
+legend(h, '1-dim', '2-dim', '3-dim', 'Baseline');
+set(h(1), 'MarkerFaceColor', 'r', 'Marker', '^');
+set(h(2), 'MarkerEdgeColor', 'b', 'Marker', '+');
+set(h(3), 'MarkerFaceColor', 'm', 'Marker', '.');
+set(h(4), 'MarkerFaceColor', 'k');
+title('FRU');
