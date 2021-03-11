@@ -1,7 +1,7 @@
 % Load data and pre-processing
 add_pvlib();
 
-load breakpoint;
+load breakpoint; % Output from raster_process_data.m
 Time.UTCOffset = zeros(size(ar_datetime, 1), 1); % Because IBM uses UTC time, so utc offset is zero
 Time.year   = ar_datetime.Year;
 Time.month  = ar_datetime.Month;

@@ -18,7 +18,7 @@ else
     need_hourly(need_hourly<0) = 0;
     oversupply_hourly = forecast - need_hourly;
     oversupply_hourly(oversupply_hourly<0) = 0;
-    oversupply = sum(oversupply_hourly);
+    oversupply = sum(oversupply_hourly, 'omitnan');
 end
 
 
