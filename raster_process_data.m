@@ -106,6 +106,7 @@ toc;
 add_pvlib();
 
 ghi_cs = nan(320, 480, numel(ar_datetime));
+appsunel = nan(320, 480, numel(ar_datetime));
 
 lat_edge = R.LatitudeLimits(1): R.CellExtentInLatitude: R.LatitudeLimits(2);
 lon_edge = R.LongitudeLimits(1): R.CellExtentInLongitude: R.LongitudeLimits(2);
@@ -132,6 +133,7 @@ for i = 1: length(lat_center)
         Location = pvl_makelocationstruct(lat_center(i), lon_center(j));
         [~, ~, AppSunEl, ~] = pvl_ephemeris(Time, Location);
         ghi_cs(i, j, :) = pvl_clearsky_haurwitz(90-AppSunEl);
+        appsunel(i, j, :) = AppSunEl;
     end
 end
 toc;
@@ -470,9 +472,11 @@ for j = 1: 5
     cell_pvcellghi{j} = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
 end
 
-% Save clear-sky GHI of the 340 cells
+% Save clear-sky GHI and apparent sun elevation of the 340 cells
 tmp = reshape(ghi_cs, size(ghi_cs, 1)*size(ghi_cs, 2), size(ghi_cs, 3));
 ghi_cs_cell = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
+tmp = reshape(appsunel, size(appsunel, 1)*size(appsunel, 2), size(appsunel, 3));
+appsunel_cell = tmp(T_pvcell{T_pvcell{:, 'within_boundary'}==1, 'ind'}, :)'; % First dimension: Time, second dimension: Number of cells that include PV plants
 
 % Find the locations of all PV plant
 T_pv{:, 'ind'} = sub2ind([size(A, 1), size(A, 2)], T_pv{:, 'ny'}, T_pv{:, 'nx'}); % Sub to index
@@ -632,7 +636,7 @@ toc;
 % Save breakpoint file
 cd('/home/bxl180002/scratch/SF2/');
 if write_flag
-    save('breakpoint.mat', 'cell_pvcellghi', 'ghi_cs_cell', 'T_eia860_caiso', 'T_pv', 'T_pvcell', 'ar_datetime', 'A', 'A1', 'R', 'R1', 'lat_center', 'lon_center', 'lat_edge', 'p_solar', 'p_solar_cs', 'is_nonnan_ca_A');
+    save('breakpoint.mat', 'cell_pvcellghi', 'ghi_cs_cell', 'appsunel_cell', 'T_eia860_caiso', 'T_pv', 'T_pvcell', 'ar_datetime', 'A', 'A1', 'R', 'R1', 'lat_center', 'lon_center', 'lat_edge', 'p_solar', 'p_solar_cs', 'is_nonnan_ca_A');
 end
 cd(dirhome);
 
