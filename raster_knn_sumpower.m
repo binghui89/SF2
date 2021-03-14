@@ -38,7 +38,7 @@ end
 karray = 5:5:40; % the number of nearest neighbors
 ar_datetime_hour_unique = unique(ar_datetime_hour);
 testhour_end = datetime(2020, 4, 1, 2, 0, 0, 'TimeZone', 'UTC');
-testhour_start = datetime(2020, 3, 25, 9, 0, 0, 'TimeZone', 'UTC');
+testhour_start = datetime(2020, 3, 4, 9, 0, 0, 'TimeZone', 'UTC');
 T_baseline_rtpd = array2table(...
     ar_datetime_hour_unique((ar_datetime_hour_unique>=testhour_start)&(ar_datetime_hour_unique<=testhour_end)), ...
     'VariableNames', ...
@@ -356,6 +356,27 @@ xlabel('Probability of shortage');
 ylabel('Oversupply (GWh)');
 legend(h, '\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
 box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the same figure with lines, not scatter plots
+% figure();
+% h(5)= line(pshort_baseline_fru, oversupply_baseline_fru./1E3);
+% hold on;
+% for c = 1: 4
+%     h(c) = line(pshort_knnkpv_fru(:, c), oversupply_knnkpv_fru(:, c)./1E3);
+% end
+% set(h(1), 'Color', 'r', 'MarkerFaceColor', 'r', 'Marker', '^', 'MarkerSize', 6);
+% set(h(2), 'Color', 'g', 'MarkerFaceColor', 'g', 'Marker', '^', 'MarkerSize', 6);
+% set(h(3), 'Color', 'm', 'MarkerFaceColor', 'm', 'Marker', '^', 'MarkerSize', 6);
+% set(h(4), 'Color', 'b', 'MarkerFaceColor', 'b', 'Marker', '^', 'MarkerSize', 6);
+% set(h(5), 'Color', 'k', 'MarkerFaceColor', 'k', 'Marker', 'o', 'MarkerSize', 6);
+% xline(pshort_baseline_fru(karray==30), 'Color', 'r', 'LineStyle', '--');
+% yline(oversupply_baseline_fru(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
+% title('FRU');
+% xlabel('Probability of shortage');
+% ylabel('Oversupply (GWh)');
+% legend(h, '\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
+% box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(); 
 h(5)= scatter(pshort_baseline_frd, oversupply_baseline_frd./1E3, 60, 'ko');
@@ -377,7 +398,27 @@ xlabel('Probability of shortage');
 ylabel('Oversupply (GWh)');
 legend(h, '\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
 box on;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the same figure with lines, not scatter plots
+% figure();
+% h(5)= line(pshort_baseline_frd, oversupply_baseline_frd./1E3);
+% hold on;
+% for c = 1: 4
+%     h(c) = line(pshort_knnkpv_frd(:, c), oversupply_knnkpv_frd(:, c)./1E3);
+% end
+% set(h(1), 'Color', 'r', 'MarkerFaceColor', 'r', 'Marker', '^', 'MarkerSize', 6);
+% set(h(2), 'Color', 'g', 'MarkerFaceColor', 'g', 'Marker', '^', 'MarkerSize', 6);
+% set(h(3), 'Color', 'm', 'MarkerFaceColor', 'm', 'Marker', '^', 'MarkerSize', 6);
+% set(h(4), 'Color', 'b', 'MarkerFaceColor', 'b', 'Marker', '^', 'MarkerSize', 6);
+% set(h(5), 'Color', 'k', 'MarkerFaceColor', 'k', 'Marker', 'o', 'MarkerSize', 6);
+% xline(pshort_baseline_frd(karray==30), 'Color', 'r', 'LineStyle', '--');
+% yline(oversupply_baseline_frd(karray==30)./1E3, 'Color', 'r', 'LineStyle', '--');
+% title('FRD');
+% xlabel('Probability of shortage');
+% ylabel('Oversupply (GWh)');
+% legend(h, '\mu(k_{pv})', '\sigma(k_{pv})', 'v(k_{pv})', 'w(k_{pv})' ,'Baseline');
+% box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Color by dimension of classifiers
 figure();
@@ -415,3 +456,168 @@ set(h(2), 'MarkerEdgeColor', 'b', 'Marker', '+');
 set(h(3), 'MarkerFaceColor', 'm', 'Marker', '.');
 set(h(4), 'MarkerFaceColor', 'k');
 title('FRU');
+
+trainhour_end = datetime(2020, 3, 25, 2, 0, 0, 'TimeZone', 'UTC');
+trainhour_start = datetime(2020, 3, 4, 9, 0, 0, 'TimeZone', 'UTC');
+
+T_actual_error{:, 'istrain'} = 0;
+T_actual_error{(T_actual_error.HOUR_START<=trainhour_end)&(T_actual_error.HOUR_START>=trainhour_start), 'istrain'} = 1;
+
+for j = 1: size(w, 2)
+    T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+    T_knnkpv_rtpd_ndim{:, 'istrain'} = 0;
+    T_knnkpv_rtpd_ndim{(T_knnkpv_rtpd_ndim.HOUR_START<=trainhour_end)&(T_knnkpv_rtpd_ndim.HOUR_START>=trainhour_start), 'istrain'} = 1;
+    cell_knnkpv_rtpd_ndim{j, 1} = T_knnkpv_rtpd_ndim;
+end
+
+all_h_local = 5:1:18; % Hourly knn: UTC 1300 to 0200 (+1), or PST 5am to 6pm
+all_h_utc = all_h_local + 8;
+all_h_utc(all_h_utc >=24) = all_h_utc(all_h_utc >=24) - 24;
+
+
+%% Multi-objective optimization
+
+% Step I: Calculate evaluating metrics of the training dataset by hour
+o_knnkpvnd_byh_fru_train = nan(size(w, 2), numel(karray), numel(all_h_local));
+o_knnkpvnd_byh_frd_train = nan(size(w, 2), numel(karray), numel(all_h_local));
+pr_knnkpvnd_byh_fru_train = nan(size(w, 2), numel(karray), numel(all_h_local));
+pr_knnkpvnd_byh_frd_train = nan(size(w, 2), numel(karray), numel(all_h_local));
+
+for ih = 1:length(all_h_local)
+    h_utc = all_h_utc(ih);
+    h_local = all_h_local(ih);
+    for j = 1: size(w, 2)
+        T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+        for k = karray
+            [o_knnkpvnd_byh_fru_train(j, karray==k, all_h_local==h_local), pr_knnkpvnd_byh_fru_train(j, karray==k, all_h_local==h_local)] = calculate_oversupply_and_pshort(...
+                ar_actual_error_fru((T_actual_error.HOUR_START.Hour==h_utc)&(T_actual_error.istrain==1)), ...
+                T_knnkpv_rtpd_ndim{(T_knnkpv_rtpd_ndim.HOUR_START.Hour==h_utc)&(T_knnkpv_rtpd_ndim.istrain==1), strcat('FRU_k', num2str(k))} ...
+                );
+            [o_knnkpvnd_byh_frd_train(j, karray==k, all_h_local==h_local), pr_knnkpvnd_byh_frd_train(j, karray==k, all_h_local==h_local)] = calculate_oversupply_and_pshort(...
+                -ar_actual_error_frd((T_actual_error.HOUR_START.Hour==h_utc)&(T_actual_error.istrain==1)), ...
+                -T_knnkpv_rtpd_ndim{(T_knnkpv_rtpd_ndim.HOUR_START.Hour==h_utc)&(T_knnkpv_rtpd_ndim.istrain==1), strcat('FRD_k', num2str(k))} ...
+                );
+        end
+    end
+end
+
+% Calculate the evaluating metrics of the test dataset by hour
+o_knnkpvnd_byh_fru_test = nan(size(w, 2), numel(karray), numel(all_h_local));
+o_knnkpvnd_byh_frd_test = nan(size(w, 2), numel(karray), numel(all_h_local));
+pr_knnkpvnd_byh_fru_test = nan(size(w, 2), numel(karray), numel(all_h_local));
+pr_knnkpvnd_byh_frd_test = nan(size(w, 2), numel(karray), numel(all_h_local));
+
+% Calculate
+for ih = 1:length(all_h_local)
+    h_utc = all_h_utc(ih);
+    h_local = all_h_local(ih);
+    for j = 1: size(w, 2)
+        T_knnkpv_rtpd_ndim = cell_knnkpv_rtpd_ndim{j, 1};
+        for k = karray
+            [o_knnkpvnd_byh_fru_test(j, karray==k, all_h_local==h_local), pr_knnkpvnd_byh_fru_test(j, karray==k, all_h_local==h_local)] = calculate_oversupply_and_pshort(...
+                ar_actual_error_fru((T_actual_error.HOUR_START.Hour==h_utc)&(T_actual_error.istrain==0)), ...
+                T_knnkpv_rtpd_ndim{(T_knnkpv_rtpd_ndim.HOUR_START.Hour==h_utc)&(T_knnkpv_rtpd_ndim.istrain==0), strcat('FRU_k', num2str(k))} ...
+                );
+            [o_knnkpvnd_byh_frd_test(j, karray==k, all_h_local==h_local), pr_knnkpvnd_byh_frd_test(j, karray==k, all_h_local==h_local)] = calculate_oversupply_and_pshort(...
+                -ar_actual_error_frd((T_actual_error.HOUR_START.Hour==h_utc)&(T_actual_error.istrain==0)), ...
+                -T_knnkpv_rtpd_ndim{(T_knnkpv_rtpd_ndim.HOUR_START.Hour==h_utc)&(T_knnkpv_rtpd_ndim.istrain==0), strcat('FRD_k', num2str(k))} ...
+                );
+        end
+    end
+end
+
+%% Start Multi-objective optimization
+
+% The kNN optimal
+T_knnkpv_rtpd_ndimopt_ = T_actual_error(T_actual_error.istrain==0, {'HOUR_START'});
+T_knnkpv_rtpd_ndimopt_{:, 'FRU'} = 0;
+T_knnkpv_rtpd_ndimopt_{:, 'FRD'} = 0;
+
+% THe real optimal
+T_knnkpv_rtpd_ndimopt = T_actual_error(T_actual_error.istrain==0, {'HOUR_START'});
+T_knnkpv_rtpd_ndimopt{:, 'FRU'} = 0;
+T_knnkpv_rtpd_ndimopt{:, 'FRD'} = 0;
+
+% Reliability first
+% FRD
+for ih = 1:length(all_h_local)
+
+%     ih = 13;
+    % Minimum using training data
+    [min_pr_, ~] = min(pr_knnkpvnd_byh_frd_train(:,:, ih), [], 'all','linear');
+    imin_all_ = find((pr_knnkpvnd_byh_frd_train(:,:, ih)-min_pr_)<=0.0001);
+    tmp = o_knnkpvnd_byh_frd_train(:, :, ih);
+    [min_o_c_minpr_, ~] = min(tmp(imin_all_));
+    imin_o_c_minpr_ = find(abs((o_knnkpvnd_byh_frd_train(:,:, ih)-min_o_c_minpr_))<=0.0001);
+    if isempty(imin_o_c_minpr_)
+        error('No optimal value found!');
+    else
+        [r_frdopt_(ih), c_frdopt_(ih)] = ind2sub(size(tmp), imin_o_c_minpr_(1));
+    end
+
+    % Real minimum
+    [min_pr, ~] = min(pr_knnkpvnd_byh_frd_test(:,:, ih), [], 'all','linear');
+    imin_all = find((pr_knnkpvnd_byh_frd_test(:,:, ih)-min_pr)<=0.0001);
+    tmp = o_knnkpvnd_byh_frd_test(:, :, ih);
+    [min_o_c_minpr, ~] = min(tmp(imin_all));
+    imin_o_c_minpr = find(abs((o_knnkpvnd_byh_frd_test(:,:, ih)-min_o_c_minpr))<=0.0001);
+    if isempty(imin_o_c_minpr)
+        error('No optimal value found!');
+    else
+        [r_frdopt(ih), c_frdopt(ih)] = ind2sub(size(tmp), imin_o_c_minpr(1));
+    end
+
+    error_frd_pr(ih) = pr_knnkpvnd_byh_frd_test(r_frdopt_(ih), c_frdopt_(ih), ih) - pr_knnkpvnd_byh_frd_test(r_frdopt(ih), c_frdopt(ih), ih);
+    error_frd_o(ih)  = o_knnkpvnd_byh_frd_test(r_frdopt_(ih), c_frdopt_(ih), ih) - o_knnkpvnd_byh_frd_test(r_frdopt(ih), c_frdopt(ih), ih);
+    
+    % Get the optimal FRD and FRU
+    tmp = cell_knnkpv_rtpd_ndim{r_frdopt_(ih)};
+    T_knnkpv_rtpd_ndimopt_{T_knnkpv_rtpd_ndimopt_.HOUR_START.Hour==all_h_utc(ih), 'FRD'} = tmp{(tmp.HOUR_START.Hour==all_h_utc(ih))&(tmp.istrain==0), strcat( 'FRD_k', num2str(karray( c_frdopt_(ih) )) )};
+    
+    tmp = cell_knnkpv_rtpd_ndim{r_frdopt(ih)};
+    T_knnkpv_rtpd_ndimopt{T_knnkpv_rtpd_ndimopt.HOUR_START.Hour==all_h_utc(ih), 'FRD'} = tmp{(tmp.HOUR_START.Hour==all_h_utc(ih))&(tmp.istrain==0), strcat( 'FRD_k', num2str(karray( c_frdopt(ih) )) )};    
+end
+
+% FRU
+for ih = 1:length(all_h_local)
+    % Minimum using training data
+    [min_pr_, ~] = min(pr_knnkpvnd_byh_fru_train(:,:, ih), [], 'all','linear');
+    imin_all_ = find((pr_knnkpvnd_byh_fru_train(:,:, ih)-min_pr_)<=0.0001);
+    tmp = o_knnkpvnd_byh_fru_train(:, :, ih);
+    [min_o_c_minpr_, ~] = min(tmp(imin_all_));
+    imin_o_c_minpr_ = find(abs((o_knnkpvnd_byh_fru_train(:,:, ih)-min_o_c_minpr_))<=0.0001);
+    if isempty(imin_o_c_minpr_)
+        error('No optimal value found!');
+    else
+        [r_fruopt_(ih), c_fruopt_(ih)] = ind2sub(size(tmp), imin_o_c_minpr_(1));
+    end
+
+    % Real minimum
+    [min_pr, ~] = min(pr_knnkpvnd_byh_fru_test(:,:, ih), [], 'all','linear');
+    imin_all = find((pr_knnkpvnd_byh_fru_test(:,:, ih)-min_pr)<=0.0001);
+    tmp = o_knnkpvnd_byh_fru_test(:, :, ih);
+    [min_o_c_minpr, ~] = min(tmp(imin_all));
+    imin_o_c_minpr = find(abs((o_knnkpvnd_byh_fru_test(:,:, ih)-min_o_c_minpr))<=0.0001);
+    if isempty(imin_o_c_minpr)
+        error('No optimal value found!');
+    else
+        [r_fruopt(ih), c_fruopt(ih)] = ind2sub(size(tmp), imin_o_c_minpr(1));
+    end
+
+    error_fru_pr(ih) = pr_knnkpvnd_byh_fru_test(r_fruopt_(ih), c_fruopt_(ih), ih) - pr_knnkpvnd_byh_fru_test(r_fruopt(ih), c_fruopt(ih), ih);
+    error_fru_o(ih)  = o_knnkpvnd_byh_fru_test(r_fruopt_(ih), c_fruopt_(ih), ih) - o_knnkpvnd_byh_fru_test(r_fruopt(ih), c_fruopt(ih), ih);
+    
+    % Get the optimal FRD and FRU
+    tmp = cell_knnkpv_rtpd_ndim{r_fruopt_(ih)};
+    T_knnkpv_rtpd_ndimopt_{T_knnkpv_rtpd_ndimopt_.HOUR_START.Hour==all_h_utc(ih), 'FRU'} = tmp{(tmp.HOUR_START.Hour==all_h_utc(ih))&(tmp.istrain==0), strcat( 'FRU_k', num2str(karray( c_fruopt_(ih) )) )};
+    
+    tmp = cell_knnkpv_rtpd_ndim{r_fruopt(ih)};
+    T_knnkpv_rtpd_ndimopt{T_knnkpv_rtpd_ndimopt.HOUR_START.Hour==all_h_utc(ih), 'FRU'} = tmp{(tmp.HOUR_START.Hour==all_h_utc(ih))&(tmp.istrain==0), strcat( 'FRU_k', num2str(karray( c_fruopt(ih) )) )};
+end
+
+%% Calculate oversupply and pshortage of the optimal kNN requirements
+[o_knnkpvnd_opt_fru_, pr_knnkpvnd_opt_fru_] = calculate_oversupply_and_pshort(ar_actual_error_fru((T_actual_error.istrain==0)), T_knnkpv_rtpd_ndimopt_{:, 'FRU'});
+[o_knnkpvnd_opt_frd_, pr_knnkpvnd_opt_frd_] = calculate_oversupply_and_pshort(-ar_actual_error_frd((T_actual_error.istrain==0)), -T_knnkpv_rtpd_ndimopt_{:, 'FRD'});
+
+[o_knnkpvnd_opt_fru, pr_knnkpvnd_opt_fru] = calculate_oversupply_and_pshort(ar_actual_error_fru((T_actual_error.istrain==0)), T_knnkpv_rtpd_ndimopt{:, 'FRU'});
+[o_knnkpvnd_opt_frd, pr_knnkpvnd_opt_frd] = calculate_oversupply_and_pshort(-ar_actual_error_frd((T_actual_error.istrain==0)), -T_knnkpv_rtpd_ndimopt{:, 'FRD'});
