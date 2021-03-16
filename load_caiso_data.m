@@ -3,7 +3,7 @@ dt_rtpd = 15; % min
 
 %% Load CAISO data RTD
 if ispc
-    T_rtd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtd.csv', 'Delimiter',',');
+    T_rtd = readtable('.\tmp_excels\df_rtd.csv', 'Delimiter',',');
 elseif isunix
     T_rtd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd.csv', 'Delimiter',',');
 end
@@ -25,7 +25,7 @@ T_rtd.FORECAST_ERROR_Brtd_Artd_solar = (-T_rtd.Solar_NP15_B_RTD-T_rtd.Solar_ZP26
 
 %% Load CAISO data RTPD
 if ispc
-    T_rtpd = readtable('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\tmp_excels\df_rtpd.csv', 'Delimiter',',');
+    T_rtpd = readtable('.\tmp_excels\df_rtpd.csv', 'Delimiter',',');
 elseif isunix
     T_rtpd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd.csv', 'Delimiter',',');
 end
