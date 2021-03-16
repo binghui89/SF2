@@ -1,7 +1,7 @@
 %% Load CAISO data RTD and RTPD
 load_caiso_data;
 
-%% Load IBM data, forecast 15-min
+%% Load IBM data, forecast 15-min, can be replaced by load_ibm_5sites;
 month_ibm = [
     201908;
     201909;
