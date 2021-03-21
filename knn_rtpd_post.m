@@ -203,7 +203,7 @@ end
 %% Plot
 figure();
 hold on;
-for s = 1:5
+for s = 1:ns
     fprintf('s=%g\n', s);
     for i = 1 : 6
         T_optimal_rtpd = cell_optimalknn_rtpd{i, s};
@@ -225,16 +225,16 @@ for s = 1:5
         % Calculate evaluation metrics: Total oversupply
         fru_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRU_error(T_optimal_rtpd.FRU_error>=0)));
         frd_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRD_error(T_optimal_rtpd.FRD_error<=0)));
-        frp_rtpd_over_dknn(i) = fru_rtpd_over_knn + frd_rtpd_over_knn;
+        frp_rtpd_over_knn(i) = fru_rtpd_over_knn + frd_rtpd_over_knn;
 
         tmp = T_optimal_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
         fru_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
         tmp = T_optimal_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
         frd_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
-        frp_rtpd_freqshort_dknn_hd(i) = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
-        fprintf('n=%g, reliability=%.2f, over=%.2f\n', 5*i, frp_rtpd_freqshort_dknn_hd(i), frp_rtpd_over_dknn(i));
+        frp_rtpd_freqshort_knn_hd(i) = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
+        fprintf('n=%g, reliability=%.2f, over=%.2f\n', 5*i, frp_rtpd_freqshort_knn_hd(i), frp_rtpd_over_knn(i));
     end
-    plot(frp_rtpd_freqshort_dknn_hd, frp_rtpd_over_dknn./1E3, '-^');
+    plot(frp_rtpd_freqshort_knn_hd, frp_rtpd_over_knn./1E3, '-^');
 end
 
 %% Calculate evaluation metric for the optimal kNN
