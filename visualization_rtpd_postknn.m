@@ -115,10 +115,10 @@ for i = 1 : 6
     frp_rtpd_freqshort_dknn_hd(i) = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
     fprintf('n=%g, reliability=%.2f, over=%.2f\n', 5*i, frp_rtpd_freqshort_dknn_hd(i), frp_rtpd_over_dknn(i));
 end
-h_mean = plot(frp_rtpd_freqshort_dknn_hd, frp_rtpd_over_dknn./1E3, '-k^');
+% h_mean = plot(frp_rtpd_freqshort_dknn_hd, frp_rtpd_over_dknn./1E3, '-k^');
 
-xlim([0.05, 0.12]);
-ylim([220, 360]);
+xlim([0.05, 0.16]);
+ylim([180, 360]);
 box on;
 grid on;
 set(findall(gcf,'-property','FontSize'),'FontSize',22);
@@ -126,4 +126,5 @@ text(frp_rtpd_freqshort_dknn_hd(1), frp_rtpd_over_dknn(1)./1E3, 'N=5', 'FontSize
 text(frp_rtpd_freqshort_dknn_hd(end), frp_rtpd_over_dknn(end)./1E3, 'N=30', 'FontSize', 18, 'Color', 'k');
 xlabel('Frequency of reserve shortage', 'FontSize', 22);
 ylabel('Oversupply (GWh)', 'FontSize', 22);
-legend([h; h_mean; h_baseline], {'Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Mean', 'Baseline'}, 'FontSize', 14);
+legend([h; h_baseline], {'Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Baseline'}, 'FontSize', 14);
+legend boxon;
