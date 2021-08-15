@@ -16,13 +16,12 @@ add_pvlib();
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p095'});
 
 
-dirwork = 'C:\Users\bxl180002\git\SF2\IBM\June.more_quantiles.5min\ghi_frcst';
-dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\June.more_quantiles.5min\power_frcst';
-deltat = 5; % min
-allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
-[allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
-identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
-
+% dirwork = 'C:\Users\bxl180002\git\SF2\IBM\June.more_quantiles.5min\ghi_frcst';
+% dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\June.more_quantiles.5min\power_frcst';
+% deltat = 5; % min
+% allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
+% identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
 
 % dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\ghi_frcst';
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\power_frcst';
@@ -38,6 +37,19 @@ identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'gh
 % [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
 
+dirwork = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_ghi.201908.15min';
+dirwrite = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_pwr.201908.15min';
+% alltime = {'201909','201910','201911','201912','202001'};
+alltime = {'202002','202003','202004'};
+deltat = 5; % min
+allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
+for i = 1: length(alltime)
+    dirwork  = strcat('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_ghi.', alltime{i}, '.15min');
+    dirwrite = strcat('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_pwr.', alltime{i}, '.15min');
+    [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite);
+    identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
+    close all;
+end
 
 % ghi2power_frcst_morequantiles(4, 0);
 % ghi2power_actual_hourly(4);
@@ -83,8 +95,9 @@ for i = 1: length(allgen)
     g = allgen{i};
     s = allsite{i};
     
-    dirghi = fullfile(fileparts(dirwork), 'ghi_frcst');
-    cd(dirghi);
+%     dirghi = fullfile(fileparts(dirwork), 'ghi_frcst');
+%     cd(dirghi);
+    cd(dirwork);
     csvname = strcat('IBM_processed_', s, '.csv');
     T = readtable(csvname);
     cd(dirhome);
@@ -173,6 +186,9 @@ for i = 1: length(allgen)
 end
 
 if write_flag
+    if ~isdir(dirwrite)
+        mkdir(dirwrite);
+    end
     cd(dirwrite);
     for i = 1: length(cell_frcst)
         g = allgen{i};
