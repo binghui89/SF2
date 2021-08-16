@@ -1,18 +1,30 @@
-function lab_ghi2power()
+function lab_ghi2power(arg)
 add_pvlib();
 
+% ghi2power_frcst_morequantiles(4, 0);
+% ghi2power_actual_hourly(4);
+
+if arg == 1
+    process_rui(); % used for the March 2021 submission
+elseif arg == 2
+    process_carlo(); % used for the August 2021 resubmission
+end
+
+end
+
+function process_rui()
 % dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April\ghi_frcst';
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\April\power_frcst';
 % deltat = 15; % min
 % allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
-% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite);
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0, dirwrite);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p095'});
 % 
 % dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May\ghi_frcst';
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\May\power_frcst';
 % deltat = 15; % min
 % allp = {'p005', 'mean', 'p095'}; % All percentiles, order should follow csv header
-% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite);
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0, dirwrite);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p095'});
 
 
@@ -20,21 +32,21 @@ add_pvlib();
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\June.more_quantiles.5min\power_frcst';
 % deltat = 5; % min
 % allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
-% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
 
 % dirwork = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\ghi_frcst';
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\May.more_quantiles.5min\power_frcst';
 % deltat = 5; % min
 % allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
-% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
 
 % dirwork = 'C:\Users\bxl180002\git\SF2\IBM\April.more_quantiles.5min\ghi_frcst';
 % dirwrite = 'C:\Users\bxl180002\git\SF2\IBM\April.more_quantiles.5min\power_frcst';
 % deltat = 5; % min
 % allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, order should follow csv header
-% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp);
+% [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0);
 % identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
 
 dirwork = 'C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_ghi.201908.15min';
@@ -46,19 +58,77 @@ allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'mean'}; % All percentiles, orde
 for i = 1: length(alltime)
     dirwork  = strcat('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_ghi.', alltime{i}, '.15min');
     dirwrite = strcat('C:\Users\bxl180002\OneDrive\Tmp_RampSolar\Code\IBM\F_pwr.', alltime{i}, '.15min');
-    [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite);
+    [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, 0); % Put dirwirte after allp if you want to write
     identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
     close all;
 end
-
-% ghi2power_frcst_morequantiles(4, 0);
-% ghi2power_actual_hourly(4);
 end
 
-function [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, dirwrite)
-if nargin == 3
+function process_carlo()
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Note we offset it by 30 min by visual inspecting the degree of alignment
+% between the observed GHI and the clear-sky GHI.
+offset = 30; % Unit: min, move left
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% First, load the IBM 5-site forecasts produced by Carlo and save it to our
+% format
+uniquegen     = {'gen55', 'gen56', 'gen59', 'gen60', 'gen61'};
+uniquegensite = {'MNCC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz'};
+uniquegenlat  = [34.31, 34.12, 37.41, 35.53, 35.38]; 
+uniquegenlon  = [-117.50,-117.94,-119.74,-118.63,-120.18];
+
+cell_rawghi = cell(length(uniquegen), 1);
+dirraw = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions';
+dirghi = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_ghi.15min';
+dirpwr  = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_pwr.15min';
+for i = 1: length(uniquegen)
+    csvname = strcat(dirraw, '\', uniquegensite{i}, '_n4000.csv');
+    T = readtable('C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\DEMC1_n4000.csv');
+    T.time = datetime(T.validTS, 'ConvertFrom', 'posixtime', 'TimeZone', 'UTC'); % IBM's using UTC time
+    T.time_local = T.time;
+    T.time_local.TimeZone = 'America/Los_Angeles';
+    cell_rawghi{i} = T;
+end
+
+% Validate no missing timestamp, 00:00:00 indicates no missing timestamp
+for i = 1: size(cell_rawghi, 1)
+    T = cell_rawghi{i};
+    array_dt = T.time_local - [min(T.time_local): (T.time_local(2) - T.time_local(1)):max(T.time_local)]';
+    fprintf('Site: %s, sum of dt: %s\n', uniquegensite{i}, sum(array_dt));
+end
+
+% Convert Carlo's format into lab_ghi2power.m format, and write
+if ~isdir(dirghi)
+    mkdir(dirghi);
+end
+for i = 1: size(cell_rawghi, 1)
+    T_new = array2table([T.time.Year, T.time.Month, T.time.Day, T.time.Hour, T.time.Minute], 'VariableNames', {'Year', 'Month', 'Day', 'Hour', 'Minute'});
+    T_new.p5 = T.q05;
+    T_new.p25 = T.q25;
+    T_new.p50 = T.q50;
+    T_new.p75 = T.q75;
+    T_new.p95 = T.q95;
+    T_new.obs = T.Y;
+    
+    s = uniquegensite{i};
+    csvname_write = strcat(dirghi, '\', 'IBM_processed_', s, '.csv');
+    writetable(T_new, csvname_write);
+    fprintf('File %s write!\n', csvname_write);
+end
+
+% Now, follow previous script and convert it to power
+deltat = 15; % min
+allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'obs'}; % All percentiles, order should follow csv header, note Carlo has no mean, but observation
+[allgen, cell_frcst] = ghi2power_frcst(dirghi, deltat, allp, offset, dirpwr); % Put dirwirte after allp if you want to write
+identify_violations(allgen, cell_frcst, {'ghi_p005', 'ghi_p025', 'ghi_p050', 'ghi_p075', 'ghi_p095'});
+close all;
+end
+
+function [allgen, cell_frcst] = ghi2power_frcst(dirwork, deltat, allp, offset, dirwrite)
+if nargin == 4
     write_flag = false;
-elseif nargin == 4
+elseif nargin == 5
     write_flag = true;
 end
 
@@ -104,6 +174,8 @@ for i = 1: length(allgen)
     T.Properties.VariableNames(end-length(allp)+1: end) = strghi; % We know the last length(allp) columns are the GHI data
     
     tarray = datetime(T.Year, T.Month, T.Day, T.Hour, T.Minute, zeros(size(T, 1), 1), 'TimeZone', 'UTC');
+    tarray_offseted = tarray - duration(0, offset, 0); %%%%%%%%% OFFSET BY A VALUE
+    tarray = tarray_offseted; 
     Location = pvl_makelocationstruct(alllat(strcmp(allgen, g)),alllon(strcmp(allgen, g)));
         
     tarray_formean = repmat(tarray(:)', deltat, 1) - datenum(repmat([deltat:-1:1]'./24/60, 1, numel(tarray))); % All minutes during the past period, can be 15 or 5 min
@@ -127,13 +199,31 @@ for i = 1: length(allgen)
         col = strghi{ip};
         ghi = T.(col);
         k_cs = ghi./ghi_cs_mean; % Clear-sky index
-        ghi_formean = reshape( reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray))*diag(k_cs), numel(ghi_cs_formean), 1);
+%         ghi_formean = reshape( reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray))*diag(k_cs), numel(ghi_cs_formean), 1);
+        if numel(k_cs)>1E4 % Too large of a matrix
+            ghi_cs_formean_reshaped = reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray));
+            ghi_formean = nan(size(ghi_cs_formean_reshaped));
+            for in = 1: size(ghi_cs_formean_reshaped, 2)
+                ghi_formean(:, in) = ghi_cs_formean_reshaped(:, in).*k_cs(in);
+            end
+            ghi_formean = ghi_formean(:);
+        else
+            % Small matrix we can directly multiply
+            ghi_formean = reshape( reshape(ghi_cs_formean, numel(ghi_cs_formean)/numel(tarray), numel(tarray))*diag(k_cs), numel(ghi_cs_formean), 1);
+        end
         ghi_formean(isnan(ghi_formean)) = 0; % nan means GHI_CS_mean is zero
         power_formean = ghi_to_ac_power(g, Time_formean.year, Time_formean.month, Time_formean.day, Time_formean.hour, Time_formean.minute, Time_formean.second, ghi_formean);
         power_mean = mean(reshape(power_formean(:, end), numel(power_formean(:, end))/numel(tarray), numel(tarray)), 1)';
         power_mean_allp(:, ip) = power_mean;
     end
     Tnew = [T array2table([ghi_cs_mean, power_mean_allp, power_cs_mean], 'VariableNames', [{'ghi_cs'} strpwr {'pwr_cs'}])];
+    %%%%%%%%%%%%%%%%%%%%% Update Tnew, columns Year, Month, Day, etc.
+    Tnew.Year   = tarray.Year;
+    Tnew.Month  = tarray.Month;
+    Tnew.Day    = tarray.Day;
+    Tnew.Hour   = tarray.Hour;
+    Tnew.Minute = tarray.Minute;
+    %%%%%%%%%%%%%%%%%%%%% 
     cell_frcst{i} = Tnew;
 
     x = (tarray(1)-duration(1, 0, 0)): datenum(1/24/60): (tarray(end)+datenum(1/24));
@@ -152,20 +242,27 @@ for i = 1: length(allgen)
     ax1 = subplot(2, 1, 1);
     plot(x, xghi_cs, '-k');
     hold on; 
-    stairs(tarray-duration(0, deltat, 0), Tnew{:, strghi});
+%     stairs(tarray-duration(0, deltat, 0), Tnew{:, strghi});
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, 'ghi_obs'});
     stairs(tarray-duration(0, deltat, 0), Tnew{:, 'ghi_cs'}, 'k');
     hold off;
     ylabel('GHI');
+%     legend([{'ghi_cs'} strghi {'ghi_cs'}]);
+    legend([{'ghi_cs', 'ghi_obs', 'ghi_cs'}]);
 
     ax2 = subplot(2, 1, 2);
     plot(x, xpwr_cs(:, end), '-k');
     hold on; 
-    stairs(tarray-duration(0, deltat, 0), Tnew{:, strpwr});
+%     stairs(tarray-duration(0, deltat, 0), Tnew{:, strpwr});
+    stairs(tarray-duration(0, deltat, 0), Tnew{:, 'pwr_obs'});
     stairs(tarray-duration(0, deltat, 0), Tnew{:, 'pwr_cs'}, 'k');
     hold off;
     ylabel('Power');
+%     legend([{'pwr_cs'} strpwr {'pwr_cs'}]);
+    legend([{'pwr_cs', 'pwr_obs', 'pwr_cs'}]);
 
-    suptitle(strcat(g, '-', s));
+%     suptitle(strcat(g, '-', s));
+    title(strcat(g, '-', s));
     linkaxes([ax1, ax2],'x');
 
 
@@ -174,13 +271,16 @@ for i = 1: length(allgen)
     plot(tarray, Tnew{:, strghi}./Tnew{:, 'ghi_cs'});
     ylim([0, 2]);
     ylabel('Clear-sky index');
+    legend(strghi);
 
     ax2 = subplot(2, 1, 2);
     plot(tarray, Tnew{:, strpwr}./Tnew{:, 'pwr_cs'});
     ylim([0, 2]);
     ylabel('Normalized power');
+    legend(strpwr);
 
-    suptitle(strcat(g, '-', s));
+%     suptitle(strcat(g, '-', s));
+    title(strcat(g, '-', s));
     linkaxes([ax1, ax2],'x');
 
 end
@@ -713,5 +813,26 @@ for h = -10:2
 %     ylabel('DNI (W/m^s)');
 %     hold on;
 end
+
+end
+
+function examine_carlo()
+% Carlo's data seems have time shift issue
+dirraw = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions';
+dirghi = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_ghi.15min';
+dirpwr  = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_pwr.15min';
+
+% Note need to convert Carlo's raw data into IBM_processed_xxx.csv
+deltat = 15; % min
+allp = {'p005', 'p025', 'p050', 'p075', 'p095', 'obs'}; % All percentiles, order should follow csv header, note Carlo has no mean, but observation
+% [allgen, cell_frcst] = ghi2power_frcst(dirghi, deltat, allp, dirpwr); % Put dirwirte after allp if you want to write
+% close all;
+
+dirhome = pwd;
+
+allgen  = {'gen55', 'gen56', 'gen57', 'gen58', 'gen59', 'gen60', 'gen61',    'gen62', 'gen63', 'gen64'};
+allsite = {'MNCC1', 'STFC1', 'STFC1', 'STFC1', 'MIAC1', 'DEMC1', 'CA_Topaz', 'MNCC1', 'MNCC1', 'DEMC1'};
+alllat=[34.31,34.12,34.12,34.12,37.41,35.53,35.38,34.31,34.31,35.53];
+alllon=[-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-117.5,-118.63];
 
 end

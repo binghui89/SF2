@@ -232,8 +232,17 @@ stairs(T_rtd.TIME-duration(0, dt_rtd, 0), T_rtd.FORECAST_ERROR_Brtd_Artd, '-r')
 stairs(T_baseline_rtd.TIME-duration(1, 0, 0), T_baseline_rtd.FRU, '-k');
 stairs(T_baseline_rtd.TIME-duration(1, 0, 0), T_baseline_rtd.FRD, '-k');
 
-
-
+figure();
+h1 = plot(T_rtd.local_time, T_rtd.UP_RTD, '-b', T_rtd.local_time, -1.*T_rtd.DOWN_RTD, '-b', T_rtd.local_time, T_rtd.FORECAST_ERROR_Brtd_Artd, '-r');
+ylabel('FRP (MW)');
+yyaxis right;
+h2 = plot(T_rtd.local_time, sum(T_rtd{:, {'Solar_NP15_B_RTD', 'Solar_SP15_B_RTD', 'Solar_ZP26_B_RTD'}}./1E3, 2));
+ylabel('Solar power (GW)')
+yyaxis left;
+ylim([-500, 500]);
+legend([h1(1), h1(3), h2], {'FRP', 'NL error', 'Solar power'});
+legend boxoff
+set(findall(gcf,'-property','FontSize'),'FontSize',18);
 %% Load IBM data, forecast 15-min
 month_ibm = [
     201908;

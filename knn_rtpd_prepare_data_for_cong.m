@@ -2,10 +2,11 @@
 load_caiso_data;
 
 %% Load IBM data, forecast 15-min
-load_ibm_5sites;
+% load_ibm_5sites; % This is for previous Rui's data, only up to Apr. 2020
+load_ibm_5sites_carlo; % This is up to Jan. 2021
 
 %% Prepare and save data for Cong
-ar_datetime = datetime(2019,08,01, 0, 0, 0, 'TimeZone', 'UTC-8'):duration(1, 0, 0): datetime(2020,04,29, 23, 0, 0, 'TimeZone', 'UTC-8');
+ar_datetime = datetime(2019,05,01, 0, 0, 0, 'TimeZone', 'UTC-8'):duration(1, 0, 0): datetime(2021,01,01, 0, 0, 0, 'TimeZone', 'UTC-8');
 ar_datetime = ar_datetime(:);
 ar_datetime.TimeZone = 'UTC';
 
@@ -93,6 +94,7 @@ T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_mi
 T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
 T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';
 
+%% Write to files
 if write_flag
     cd('C:\Users\bxl180002\Downloads\RampSolar');
     writetable(T_rtpd_forcong, 'rtpd.csv');

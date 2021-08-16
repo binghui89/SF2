@@ -3,7 +3,9 @@ dt_rtpd = 15; % min
 
 %% Load CAISO data RTD
 if ispc
-    T_rtd = readtable('.\tmp_excels\df_rtd.csv', 'Delimiter',',');
+    T_rtd   = readtable('.\tmp_excels\df_rtd.csv', 'Delimiter',','); % This only goes to 202004
+    T_rtd_2 = readtable('.\tmp_excels\df_rtd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
+    T_rtd = [T_rtd; T_rtd_2];
 elseif isunix
     T_rtd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd.csv', 'Delimiter',',');
 end
@@ -25,7 +27,9 @@ T_rtd.FORECAST_ERROR_Brtd_Artd_solar = (-T_rtd.Solar_NP15_B_RTD-T_rtd.Solar_ZP26
 
 %% Load CAISO data RTPD
 if ispc
-    T_rtpd = readtable('.\tmp_excels\df_rtpd.csv', 'Delimiter',',');
+    T_rtpd   = readtable('.\tmp_excels\df_rtpd.csv', 'Delimiter',','); % This only goes to 202004
+    T_rtpd_2 = readtable('.\tmp_excels\df_rtpd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
+    T_rtpd = [T_rtpd; T_rtpd_2];
 elseif isunix
     T_rtpd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd.csv', 'Delimiter',',');
 end
