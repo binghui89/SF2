@@ -6,6 +6,7 @@ load_caiso_data;
 load_ibm_5sites_carlo; % This is up to Jan. 2021
 
 %% Prepare and save data for Cong
+% ar_datetime = datetime(2019,08,01, 0, 0, 0, 'TimeZone', 'UTC-8'):duration(1, 0, 0): datetime(2020,04,29, 23, 0, 0, 'TimeZone', 'UTC-8'); % This is for previous Rui's data, only up to Apr. 2020
 ar_datetime = datetime(2019,05,01, 0, 0, 0, 'TimeZone', 'UTC-8'):duration(1, 0, 0): datetime(2021,01,01, 0, 0, 0, 'TimeZone', 'UTC-8');
 ar_datetime = ar_datetime(:);
 ar_datetime.TimeZone = 'UTC';
@@ -18,7 +19,16 @@ for s = 1: 5
     T_pwr = cell_pwr{s}; % The 5th is CA_Topaz site
     T_pwr.TIME_START  = T_pwr.TIME - duration(0, dt_rtpd, 0);
     T_pwr.HOUR_START  = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
-    
+    T_pwr.k_p025(isinf(T_pwr.k_p025)) = nan;
+    T_pwr.k_p050(isinf(T_pwr.k_p050)) = nan;
+    T_pwr.k_p075(isinf(T_pwr.k_p075)) = nan;
+    T_pwr.kpv_p025(isnan(T_pwr.k_p025)) = nan;
+    T_pwr.kpv_p050(isnan(T_pwr.k_p050)) = nan;
+    T_pwr.kpv_p075(isnan(T_pwr.k_p075)) = nan;
+    T_pwr.kpv_p025(isinf(T_pwr.kpv_p025)) = nan;
+    T_pwr.kpv_p050(isinf(T_pwr.kpv_p050)) = nan;
+    T_pwr.kpv_p075(isinf(T_pwr.kpv_p075)) = nan;
+
     T_pwr_hourly = table(unique(T_pwr.HOUR_START), 'VariableNames', {'HOUR_START'});
     
     % % Classifier 1: k (50 percentile), mean
@@ -104,12 +114,6 @@ if write_flag
         writetable(cell_pwr_hourly_forcong{s}, strcat('T_site_', num2str(s),'.csv'));
     end
     cd(dirhome);
+    fprintf('csv(s) written to disk!\n');
 
 end
-
-T_rtpd_forcong = T_rtpd((T_rtpd{:, 'HOUR_START'}>=min(ar_datetime))&(T_rtpd{:, 'HOUR_START'}<=max(ar_datetime)), {'HOUR_START', 'error_max', 'error_min'});
-T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'error_max', 'error_min'});
-T_rtpd_forcong = grpstats(T_rtpd_forcong, 'HOUR_START', {'max', 'min'}, 'DataVars', {'error_max', 'error_min'});
-T_rtpd_forcong = T_rtpd_forcong(:, {'HOUR_START', 'max_error_max', 'min_error_min'});
-T_rtpd_forcong.Properties.VariableNames{'max_error_max'} = 'FRU';
-T_rtpd_forcong.Properties.VariableNames{'min_error_min'} = 'FRD';

@@ -2,7 +2,7 @@
 load_caiso_data;
 
 %% Load IBM data, forecast 15-min
-load_ibm_5sites;
+load_ibm_5sites_carlo;
 
 %% Explore different classifiers, one-dim, RTPD
 % Select month and k
@@ -21,36 +21,39 @@ for s = 1: 5
     T_pwr.TIME_START  = T_pwr.TIME - duration(0, dt_rtpd, 0);
     T_pwr.HOUR_START  = datetime(T_pwr.TIME_START.Year, T_pwr.TIME_START.Month, T_pwr.TIME_START.Day, T_pwr.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
 
-    fprintf('Baseline\n');
-    for k = karray
-        T_baseline_rtpd = array2table(unique(T_rtpd.HOUR_START((T_rtpd.HOUR_START.Month==this_month)&(T_rtpd.HOUR_START.Year==this_year))), 'VariableNames', {'HOUR_START'}); % Result container
-        for i = 1: size(T_baseline_rtpd, 1)
-            this_date = datetime(T_baseline_rtpd.HOUR_START.Year(i), T_baseline_rtpd.HOUR_START.Month(i), T_baseline_rtpd.HOUR_START.Day(i), 'TimeZone', 'UTC');
-            this_hour = T_baseline_rtpd.HOUR_START.Hour(i);
-            selected_days = (T_rtpd.TIME_START<this_date)&(T_rtpd.TIME_START>=this_date-days(k))&(T_rtpd.HOUR_START.Hour==this_hour); % We use 30 previous days
-            sample_error_max = T_rtpd{selected_days, 'error_max'};
-            sample_error_min = T_rtpd{selected_days, 'error_min'};
-            [f,x] = ecdf(sample_error_max(:));
-            T_baseline_rtpd.FRU(i) = interp1(f, x, 0.975);
-            [f,x] = ecdf(sample_error_min(:));
-            T_baseline_rtpd.FRD(i) = interp1(f, x, 0.025);
+    if s == 1 % We only need to run baseline once
+        fprintf('Baseline\n');
+        for k = karray
+            T_baseline_rtpd = array2table(unique(T_rtpd.HOUR_START((T_rtpd.HOUR_START.Month==this_month)&(T_rtpd.HOUR_START.Year==this_year))), 'VariableNames', {'HOUR_START'}); % Result container
+            for i = 1: size(T_baseline_rtpd, 1)
+                this_date = datetime(T_baseline_rtpd.HOUR_START.Year(i), T_baseline_rtpd.HOUR_START.Month(i), T_baseline_rtpd.HOUR_START.Day(i), 'TimeZone', 'UTC');
+                this_hour = T_baseline_rtpd.HOUR_START.Hour(i);
+                selected_days = (T_rtpd.TIME_START<this_date)&(T_rtpd.TIME_START>=this_date-days(k))&(T_rtpd.HOUR_START.Hour==this_hour); % We use 30 previous days
+                sample_error_max = T_rtpd{selected_days, 'error_max'};
+                sample_error_min = T_rtpd{selected_days, 'error_min'};
+                [f,x] = ecdf(sample_error_max(:));
+                T_baseline_rtpd.FRU(i) = interp1(f, x, 0.975);
+                [f,x] = ecdf(sample_error_min(:));
+                T_baseline_rtpd.FRD(i) = interp1(f, x, 0.025);
+            end
+
+            % This is the actual need of FRP
+            f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
+            fru_need_rtpd = max(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4), [], 1)';
+            f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min
+            frd_need_rtpd = min(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4), [], 1)';
+
+            % Calculate baseline FRP imbalance
+            T_baseline_rtpd.FRU_error = T_baseline_rtpd.FRU - fru_need_rtpd;
+            T_baseline_rtpd.FRD_error = T_baseline_rtpd.FRD - frd_need_rtpd;
+
+            cell_baseline_rtpd{karray==k, s} = T_baseline_rtpd;
+
+            fprintf('k = %g\n', k);
         end
-
-        % This is the actual need of FRP
-        f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
-        fru_need_rtpd = max(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4), [], 1)';
-        f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min
-        frd_need_rtpd = min(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4), [], 1)';
-
-        % Calculate baseline FRP imbalance
-        T_baseline_rtpd.FRU_error = T_baseline_rtpd.FRU - fru_need_rtpd;
-        T_baseline_rtpd.FRD_error = T_baseline_rtpd.FRD - frd_need_rtpd;
-        
-        cell_baseline_rtpd{karray==k, s} = T_baseline_rtpd;
-
-        fprintf('k = %g\n', k);
     end
     
+    tic;
     fprintf('kNN\n');
     % Select classifier
     for classifier = 1: 12
@@ -104,7 +107,7 @@ for s = 1: 5
             case 9
                 % % Classifier 9: width of k (75 - 25 percentile), variability
                 T_pwr.dw = [nan; diff(T_pwr.k_width)]; % delta k width
-                T_pwr.dw_sq = [nan; diff(T_pwr.dw)].^2; % % (delta k)^2
+                T_pwr.dw_sq = T_pwr.dw.^2; % % (delta k)^2
                 T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dw_sq'}), {'HOUR_START'}, 'mean'); 
                 T_pwr_hourly.vw = sqrt(T_pwr_hourly.mean_dw_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
                 T_pwr_hourly.Properties.VariableNames{'vw'} = 'classifier_1';
@@ -122,7 +125,7 @@ for s = 1: 5
             case 12
                 % % Classifier 12: width of k (75 - 25 percentile), variability
                 T_pwr.dwpv = [nan; diff(T_pwr.kpv_width)]; % delta k width
-                T_pwr.dwpv_sq = [nan; diff(T_pwr.dwpv)].^2; % % (delta k)^2
+                T_pwr.dwpv_sq = T_pwr.dwpv.^2; % % (delta k)^2
                 T_pwr_hourly = grpstats(T_pwr(:, {'HOUR_START', 'dwpv_sq'}), {'HOUR_START'}, 'mean'); 
                 T_pwr_hourly.vwpv = sqrt(T_pwr_hourly.mean_dwpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
                 T_pwr_hourly.Properties.VariableNames{'vwpv'} = 'classifier_1';
@@ -132,12 +135,13 @@ for s = 1: 5
         fprintf('classifier = %g\n', classifier);
         for k = karray
             % Test one month knn
-            T_results_rtpd = T_pwr_hourly(T_pwr_hourly.DATE.Month==this_month, :); % Result container
+            T_results_rtpd = T_pwr_hourly((T_pwr_hourly.DATE.Month==this_month)&(T_pwr_hourly.DATE.Year==this_year), :); % Result container
             % T_results_rtd = array2table(unique(T_rtd.HOUR_START(T_rtd.HOUR_START.Month==5)), 'VariableNames', {'HOUR_START'}); % Result container
             for i = 1: size(T_results_rtpd, 1)
                 this_date = datetime(T_results_rtpd.HOUR_START.Year(i), T_results_rtpd.HOUR_START.Month(i), T_results_rtpd.HOUR_START.Day(i), 'TimeZone', 'UTC');
                 this_hour = T_results_rtpd.HOUR_START.Hour(i);
-                T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
+%                 T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour), :);
+                T_sample = T_pwr_hourly((T_pwr_hourly.DATE<this_date)&(T_pwr_hourly.HOUR_START.Hour==this_hour)&(T_pwr_hourly.HOUR_START>=this_date-days(180)), :); % We only consider 180 days history record
                 if any(isnan(T_results_rtpd{i, 'classifier_1'}))
                     T_sample_sorted = T_sample(T_sample.DATE>=this_date-days(k), :); % We use 30 previous days, i.e., baseline, if data is nan
                     selected_days = ismember(datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, 'TimeZone', 'UTC'), T_sample_sorted.DATE(1:k)); % 30 the nearest days for baseline
