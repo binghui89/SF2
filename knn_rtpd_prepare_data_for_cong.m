@@ -61,7 +61,8 @@ for s = 1: 5
 
     % % Classifier 9: width of k (75 - 25 percentile), variability
     T_pwr.dw = [nan; diff(T_pwr.k_width)]; % delta k width
-    T_pwr.dw_sq = [nan; diff(T_pwr.dw)].^2; % % (delta k)^2
+    % T_pwr.dw_sq = [nan; diff(T_pwr.dw)].^2; % % (delta k)^2, this is not correct
+    T_pwr.dw_sq = T_pwr.dw.^2; % % (delta k)^2
     tmp = grpstats(T_pwr(:, {'HOUR_START', 'dw_sq'}), {'HOUR_START'}, 'mean'); 
     tmp.vw = sqrt(tmp.mean_dw_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
     T_pwr_hourly.v_w = tmp.vw;
@@ -76,7 +77,8 @@ for s = 1: 5
 
     % % Classifier 12: width of k (75 - 25 percentile), variability
     T_pwr.dwpv = [nan; diff(T_pwr.kpv_width)]; % delta k width
-    T_pwr.dwpv_sq = [nan; diff(T_pwr.dwpv)].^2; % % (delta k)^2
+    % T_pwr.dwpv_sq = [nan; diff(T_pwr.dwpv)].^2; % % (delta k)^2, this is not correct
+    T_pwr.dwpv_sq = T_pwr.dwpv.^2; % % (delta k)^2
     tmp = grpstats(T_pwr(:, {'HOUR_START', 'dwpv_sq'}), {'HOUR_START'}, 'mean'); 
     tmp.vwpv = sqrt(tmp.mean_dwpv_sq); % This is variability within each hour, following Inman et al. 2013, section 2.6.1
     T_pwr_hourly.v_wpv = tmp.vwpv;
