@@ -13,7 +13,11 @@ allgenlon = [-117.5,-117.94, -117.94, -117.94,-119.74, -118.63, -120.18,-117.5,-
 
 dirhome = pwd;
 cell_pwr = cell(numel(uniquegen), 1);
-dirwork = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_pwr.15min';
+if ispc
+    dirwork = 'C:\Users\bxl180002\Downloads\predictions\Processed_Predictions\F_pwr.15min';
+else
+    dirwork = './IBM/Carlo/F_pwr.15min';
+end
 for i = 1: numel(uniquegen)
     gen = uniquegen{i};
 %     for m = 1: numel(month_ibm)
@@ -27,7 +31,7 @@ for i = 1: numel(uniquegen)
 %             T_pwr = vertcat(T_pwr, readtable(csvname, 'Delimiter', ','));
 %         end
 %     end
-    csvname = strcat(dirwork, '\', 'frcst_', gen, '.csv');
+    csvname = strcat(dirwork, filesep, 'frcst_', gen, '.csv');
     T_pwr = readtable(csvname, 'Delimiter', ',');
     [~, ia, ~] = unique(T_pwr{:, {'Year', 'Month', 'Day', 'Hour', 'Minute'}}, 'rows');
     T_pwr = T_pwr(ia, :);

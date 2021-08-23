@@ -5,10 +5,12 @@ dt_rtpd = 15; % min
 if ispc
     T_rtd   = readtable('.\tmp_excels\df_rtd.csv', 'Delimiter',','); % This only goes to 202004
     T_rtd_2 = readtable('.\tmp_excels\df_rtd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
-    T_rtd = [T_rtd; T_rtd_2];
 elseif isunix
-    T_rtd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd.csv', 'Delimiter',',');
+    T_rtd   = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd.csv', 'Delimiter',',');
+    T_rtd_2 = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
 end
+T_rtd = [T_rtd; T_rtd_2];
+
 T_rtd.TIME = datetime(T_rtd.Var1, 'InputFormat', 'yyyy-MM-dd'' ''HH:mm:ssXXX', 'TimeZone', 'UTC'); % This is the time of the end of an interval
 T_rtd.TIME_START = T_rtd.TIME - duration(0, dt_rtd, 0); % This is the time of the start of an interval
 T_rtd.HOUR_START = datetime(T_rtd.TIME_START.Year, T_rtd.TIME_START.Month, T_rtd.TIME_START.Day, T_rtd.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
@@ -29,10 +31,12 @@ T_rtd.FORECAST_ERROR_Brtd_Artd_solar = (-T_rtd.Solar_NP15_B_RTD-T_rtd.Solar_ZP26
 if ispc
     T_rtpd   = readtable('.\tmp_excels\df_rtpd.csv', 'Delimiter',','); % This only goes to 202004
     T_rtpd_2 = readtable('.\tmp_excels\df_rtpd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
-    T_rtpd = [T_rtpd; T_rtpd_2];
 elseif isunix
-    T_rtpd = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd.csv', 'Delimiter',',');
+    T_rtpd   = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd.csv', 'Delimiter',',');
+    T_rtpd_2 = readtable('/home/bxl180002/git/SF2/tmp_excels/df_rtpd_2.csv', 'Delimiter',','); % This is from 202005 to 202102
 end
+T_rtpd = [T_rtpd; T_rtpd_2];
+
 T_rtpd.TIME = datetime(T_rtpd.Var1, 'InputFormat', 'yyyy-MM-dd'' ''HH:mm:ssXXX', 'TimeZone', 'UTC');
 T_rtpd.TIME_START = T_rtpd.TIME - duration(0, dt_rtpd, 0); % This is the time of the start of an interval
 T_rtpd.HOUR_START = datetime(T_rtpd.TIME_START.Year, T_rtpd.TIME_START.Month, T_rtpd.TIME_START.Day, T_rtpd.TIME_START.Hour, 0, 0, 'TimeZone', 'UTC');
