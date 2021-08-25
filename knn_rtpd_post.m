@@ -1,7 +1,16 @@
 % Post-processing kNN training data
-% First, concatenation results from multiple months
-% knn_1 = load('knn_rtpd_puresolar_1.2dim.mat');
-% knn_2 = load('knn_rtpd_puresolar_2.2dim.mat');
+% First, concatenation results from multiple months. By default, we select 
+% the 5-site PCA results from February 2020, which is used in the original 
+% submission in March 2021 using Rui's forecasts.
+if ~exist('this_month')
+    this_month = 2; 
+end
+if ~exist('knn_1')
+    knn_1 = load('knn_rtpd_puresolar_1.5site.pca.mat'); 
+end
+if ~exist('knn_2')
+    knn_2 = load('knn_rtpd_puresolar_2.5site.pca.mat'); 
+end
 
 % These tables should be the same from different mat files
 T_rtpd = knn_1.T_rtpd;
@@ -94,7 +103,7 @@ for indays = 1: numel(array_ndays)
                 T_results_rtpd.frd_imbalance_30day = nan(size(T_results_rtpd, 1), 1); % Place holder, total imbalance
 
                 % History training data
-                i_start = find(T_results_rtpd.HOUR_START.Month==2, true, 'first');
+                i_start = find(T_results_rtpd.HOUR_START.Month==this_month, true, 'first');
                 for irow = i_start:size(T_results_rtpd, 1)
                     this_hour = T_results_rtpd.HOUR_START(irow);
                     selected = (T_results_rtpd.HOUR_START<this_hour)&(T_results_rtpd.HOUR_START>=this_hour-days(ndays))&(T_results_rtpd.HOUR_START.Hour==this_hour.Hour);
@@ -118,7 +127,7 @@ for indays = 1: numel(array_ndays)
     nK = size(cell_results_rtpd, 1);
     nS = size(cell_results_rtpd, 2);
     nC = size(cell_results_rtpd, 3);
-    T_optimal_rtpd = T_baseline_rtpd(T_baseline_rtpd.HOUR_START.Month==2, 'HOUR_START');
+    T_optimal_rtpd = T_baseline_rtpd(T_baseline_rtpd.HOUR_START.Month==this_month, 'HOUR_START');
     T_optimal_rtpd.FRU = nan(size(T_optimal_rtpd, 1), 1);
     T_optimal_rtpd.FRD = nan(size(T_optimal_rtpd, 1), 1);
     T_optimal_rtpd.k_optimal_fru = nan(size(T_optimal_rtpd, 1), 1);
@@ -237,31 +246,31 @@ for s = 1:ns
     plot(frp_rtpd_freqshort_knn_hd, frp_rtpd_over_knn./1E3, '-^');
 end
 
-%% Calculate evaluation metric for the optimal kNN
-% Move actual FRU/FRD needs to the resulting table
-f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_max'}; % 15-min
-f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_min'}; % 15-min
-T_errormax_rtpd = array2table(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4)', 'VariableNames', {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'});
-T_errormin_rtpd = array2table(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4)', 'VariableNames', {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'});
-T_optimal_rtpd = [T_optimal_rtpd T_errormax_rtpd T_errormin_rtpd];
-T_optimal_rtpd.FRU_NEED = max(T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, [], 2);
-T_optimal_rtpd.FRD_NEED = min(T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, [], 2);
-
-% Calculate FRU/FRD errors for that hour and each 15-min interval
-T_fruerror_rtpd = array2table(T_optimal_rtpd.FRU-T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, 'VariableNames', {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'});
-T_frderror_rtpd = array2table(T_optimal_rtpd.FRD-T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, 'VariableNames', {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'});
-T_optimal_rtpd = [T_optimal_rtpd T_fruerror_rtpd T_frderror_rtpd];
-T_optimal_rtpd.FRU_error = T_optimal_rtpd.FRU - T_optimal_rtpd.FRU_NEED;
-T_optimal_rtpd.FRD_error = T_optimal_rtpd.FRD - T_optimal_rtpd.FRD_NEED;
-
-% Calculate evaluation metrics: Total oversupply
-fru_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRU_error(T_optimal_rtpd.FRU_error>=0)));
-frd_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRD_error(T_optimal_rtpd.FRD_error<=0)));
-frp_rtpd_over_knn = fru_rtpd_over_knn + frd_rtpd_over_knn;
-
+% %% Calculate evaluation metric for the optimal kNN
+% % Move actual FRU/FRD needs to the resulting table
+% f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_max'}; % 15-min
+% f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_optimal_rtpd.HOUR_START), 'error_min'}; % 15-min
+% T_errormax_rtpd = array2table(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4)', 'VariableNames', {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'});
+% T_errormin_rtpd = array2table(reshape(f_errormin_rtpd, 4, numel(f_errormin_rtpd)/4)', 'VariableNames', {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'});
+% T_optimal_rtpd = [T_optimal_rtpd T_errormax_rtpd T_errormin_rtpd];
+% T_optimal_rtpd.FRU_NEED = max(T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, [], 2);
+% T_optimal_rtpd.FRD_NEED = min(T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, [], 2);
 % 
-tmp = T_optimal_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
-fru_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
-tmp = T_optimal_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
-frd_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
-frp_rtpd_freqshort_knn_hd = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
+% % Calculate FRU/FRD errors for that hour and each 15-min interval
+% T_fruerror_rtpd = array2table(T_optimal_rtpd.FRU-T_optimal_rtpd{:, {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'}}, 'VariableNames', {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'});
+% T_frderror_rtpd = array2table(T_optimal_rtpd.FRD-T_optimal_rtpd{:, {'error_min_1', 'error_min_2', 'error_min_3', 'error_min_4'}}, 'VariableNames', {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'});
+% T_optimal_rtpd = [T_optimal_rtpd T_fruerror_rtpd T_frderror_rtpd];
+% T_optimal_rtpd.FRU_error = T_optimal_rtpd.FRU - T_optimal_rtpd.FRU_NEED;
+% T_optimal_rtpd.FRD_error = T_optimal_rtpd.FRD - T_optimal_rtpd.FRD_NEED;
+% 
+% % Calculate evaluation metrics: Total oversupply
+% fru_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRU_error(T_optimal_rtpd.FRU_error>=0)));
+% frd_rtpd_over_knn = abs(sum(T_optimal_rtpd.FRD_error(T_optimal_rtpd.FRD_error<=0)));
+% frp_rtpd_over_knn = fru_rtpd_over_knn + frd_rtpd_over_knn;
+% 
+% % 
+% tmp = T_optimal_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
+% fru_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
+% tmp = T_optimal_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
+% frd_rtpd_freqshort_knn_hd = sum(tmp(:))/numel(tmp);
+% frp_rtpd_freqshort_knn_hd = fru_rtpd_freqshort_knn_hd + frd_rtpd_freqshort_knn_hd;
