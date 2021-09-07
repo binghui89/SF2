@@ -1,8 +1,12 @@
 dimension = 1;
 
+if ~exist('this_month')
+    this_month = 2; 
+end
+
 switch dimension
     case 1
-        load knn_post_rtpd_puresolar_2_complete;
+        load(strcat('knn_post_rtpd_puresolar_', int2str(this_month), '_complete.mat'));
     case 2
         load('knn_post_rtpd_puresolar_2_complete.2dim.mat');
 end
@@ -47,7 +51,7 @@ end
 %%
 for i = 1 : 12
     T_baseline_rtpd = cell_baseline_rtpd{i, 1};
-    T_baseline_rtpd = T_baseline_rtpd(T_baseline_rtpd.HOUR_START.Month==2, :);
+    T_baseline_rtpd = T_baseline_rtpd(T_baseline_rtpd.HOUR_START.Month==this_month, :);
     f_errormax_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_max'}; % 15-min
     f_errormin_rtpd = T_rtpd{ismember(T_rtpd.HOUR_START, T_baseline_rtpd.HOUR_START), 'error_min'}; % 15-min
 %     T_errormax_rtpd = array2table(reshape(f_errormax_rtpd, 4, numel(f_errormax_rtpd)/4)', 'VariableNames', {'error_max_1', 'error_max_2', 'error_max_3', 'error_max_4'});
@@ -117,14 +121,15 @@ for i = 1 : 6
 end
 % h_mean = plot(frp_rtpd_freqshort_dknn_hd, frp_rtpd_over_dknn./1E3, '-k^');
 
-xlim([0.05, 0.16]);
-ylim([180, 360]);
+% xlim([0.05, 0.16]);
+% ylim([180, 360]);
 box on;
 grid on;
 set(findall(gcf,'-property','FontSize'),'FontSize',22);
-text(frp_rtpd_freqshort_dknn_hd(1), frp_rtpd_over_dknn(1)./1E3, 'N=5', 'FontSize', 18, 'Color', 'k');
-text(frp_rtpd_freqshort_dknn_hd(end), frp_rtpd_over_dknn(end)./1E3, 'N=30', 'FontSize', 18, 'Color', 'k');
+% text(frp_rtpd_freqshort_dknn_hd(1), frp_rtpd_over_dknn(1)./1E3, 'N=5', 'FontSize', 18, 'Color', 'k');
+% text(frp_rtpd_freqshort_dknn_hd(end), frp_rtpd_over_dknn(end)./1E3, 'N=30', 'FontSize', 18, 'Color', 'k');
 xlabel('Frequency of reserve shortage', 'FontSize', 22);
 ylabel('Oversupply (GWh)', 'FontSize', 22);
 legend([h; h_baseline], {'Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Baseline'}, 'FontSize', 14);
 legend boxon;
+title(this_month);
