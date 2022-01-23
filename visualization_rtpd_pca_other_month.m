@@ -501,10 +501,10 @@ yline(T_metric_over.baseline(karray==30)./1E3, 'Color','red', 'LineStyle','--');
 %% What if we scale them up, 1-d
 
 alpha = 1:0.1:3;
-frd_rtpd_freqshort_knn_hd = [];
-fru_rtpd_freqshort_knn_hd = [];
-fru_rtpd_over_knn = [];
-frd_rtpd_over_knn = [];
+frd_rtpd_freqshort_knn_hd = nan(numel(allfeature_sites), numel(allmethods)+3, numel(alpha));
+fru_rtpd_freqshort_knn_hd = nan(numel(allfeature_sites), numel(allmethods)+3, numel(alpha));
+fru_rtpd_over_knn = nan(numel(allfeature_sites), numel(allmethods)+3, numel(alpha));
+frd_rtpd_over_knn = nan(numel(allfeature_sites), numel(allmethods)+3, numel(alpha));
 % Calculate metrics: 1D feature
 for m = 1: numel(alpha)
     allfeature_sites = {};
@@ -584,6 +584,50 @@ for m = 1: numel(alpha)
         fru_rtpd_over_knn(numel(allfeature_sites), j, m)  = abs(sum(T_results_rtpd.FRU_error(T_results_rtpd.FRU_error>=0)));
         frd_rtpd_over_knn(numel(allfeature_sites), j, m)  = abs(sum(T_results_rtpd.FRD_error(T_results_rtpd.FRD_error<=0)));
     end
+    
+    % LSTM
+    T_cong_d = cell_lstm5site_rtpd1{contains(T_lstmresults.ABSPATH, 'Predictions_LSTM_3PC_FRD.csv')};
+    T_cong_u = cell_lstm5site_rtpd1{contains(T_lstmresults.ABSPATH, 'Predictions_LSTM_3PC_FRU.csv')};
+    T_results_rtpd = table(T_cong_u{:, 'LSTM'}.*alpha(m), T_cong_d{:, 'LSTM'}.*alpha(m), 'VariableNames', {'FRU', 'FRD'});
+
+    T_results_rtpd.FRU_error = T_results_rtpd.FRU - fru_need_rtpd;
+    T_results_rtpd.FRD_error = T_results_rtpd.FRD - frd_need_rtpd;
+
+    T_fruerror_rtpd = array2table(T_results_rtpd.FRU-T_errormax_rtpd{:, :}, 'VariableNames', {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'});
+    T_frderror_rtpd = array2table(T_results_rtpd.FRD-T_errormin_rtpd{:, :}, 'VariableNames', {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'});
+    T_results_rtpd = [T_results_rtpd, T_errormax_rtpd, T_errormin_rtpd, T_fruerror_rtpd, T_frderror_rtpd];
+    T_results_rtpd.FRU_short_freq_hd = sum(T_results_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0, 2)./4;
+    T_results_rtpd.FRD_short_freq_hd = sum(T_results_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0, 2)./4;
+
+    tmp = T_results_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
+    fru_rtpd_freqshort_knn_hd(numel(allfeature_sites), numel(allmethods)+2, m) = sum(tmp(:))/numel(tmp);
+    tmp = T_results_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
+    frd_rtpd_freqshort_knn_hd(numel(allfeature_sites), numel(allmethods)+2, m) = sum(tmp(:))/numel(tmp);
+
+    fru_rtpd_over_knn(numel(allfeature_sites), numel(allmethods)+2, m)  = abs(sum(T_results_rtpd.FRU_error(T_results_rtpd.FRU_error>=0)));
+    frd_rtpd_over_knn(numel(allfeature_sites), numel(allmethods)+2, m)  = abs(sum(T_results_rtpd.FRD_error(T_results_rtpd.FRD_error<=0)));
+    
+    % GRU
+    T_cong_d = cell_lstm5site_rtpd1{contains(T_lstmresults.ABSPATH, 'Predictions_GRU_3PC_FRD.csv')};
+    T_cong_u = cell_lstm5site_rtpd1{contains(T_lstmresults.ABSPATH, 'Predictions_GRU_3PC_FRU.csv')};
+    T_results_rtpd = table(T_cong_u{:, 'LSTM'}.*alpha(m), T_cong_d{:, 'LSTM'}.*alpha(m), 'VariableNames', {'FRU', 'FRD'});
+
+    T_results_rtpd.FRU_error = T_results_rtpd.FRU - fru_need_rtpd;
+    T_results_rtpd.FRD_error = T_results_rtpd.FRD - frd_need_rtpd;
+
+    T_fruerror_rtpd = array2table(T_results_rtpd.FRU-T_errormax_rtpd{:, :}, 'VariableNames', {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'});
+    T_frderror_rtpd = array2table(T_results_rtpd.FRD-T_errormin_rtpd{:, :}, 'VariableNames', {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'});
+    T_results_rtpd = [T_results_rtpd, T_errormax_rtpd, T_errormin_rtpd, T_fruerror_rtpd, T_frderror_rtpd];
+    T_results_rtpd.FRU_short_freq_hd = sum(T_results_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0, 2)./4;
+    T_results_rtpd.FRD_short_freq_hd = sum(T_results_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0, 2)./4;
+
+    tmp = T_results_rtpd{:, {'FRU_error_1', 'FRU_error_2', 'FRU_error_3', 'FRU_error_4'}}<0;
+    fru_rtpd_freqshort_knn_hd(numel(allfeature_sites), numel(allmethods)+2, m) = sum(tmp(:))/numel(tmp);
+    tmp = T_results_rtpd{:, {'FRD_error_1', 'FRD_error_2', 'FRD_error_3', 'FRD_error_4'}}>0;
+    frd_rtpd_freqshort_knn_hd(numel(allfeature_sites), numel(allmethods)+2, m) = sum(tmp(:))/numel(tmp);
+
+    fru_rtpd_over_knn(numel(allfeature_sites), numel(allmethods)+2, m)  = abs(sum(T_results_rtpd.FRU_error(T_results_rtpd.FRU_error>=0)));
+    frd_rtpd_over_knn(numel(allfeature_sites), numel(allmethods)+2, m)  = abs(sum(T_results_rtpd.FRD_error(T_results_rtpd.FRD_error<=0)));
 
 end
 
